@@ -1,2 +1,6 @@
 "DESCRIPTION","DURATION IN MS","NAME","PARENT SUITE","START TIME","STATUS","STOP TIME","SUB SUITE","SUITE","TEST CLASS","TEST METHOD"
-"","11058","Validate navigation to the Order Detail page when user enters valid Order data","StoneBerry","Tue Nov 26 11:40:51 UTC 2024","failed","Tue Nov 26 11:41:02 UTC 2024","Mason MyAccount Single Order lookup","mason_myAccountOrder.auth.spec.js","",""
+"","8206","Validate the full-width banner present below the page title which supports images and videos","StoneBerry","Tue Nov 26 11:43:03 UTC 2024","passed","Tue Nov 26 11:43:12 UTC 2024","Mason Commerce Tool Site","mason_bip.auth.spec.js","",""
+"","4661","Validate under each alphabets the brand name starting with that letter is present","StoneBerry","Tue Nov 26 11:43:14 UTC 2024","passed","Tue Nov 26 11:43:18 UTC 2024","Mason Commerce Tool Site","mason_bip.auth.spec.js","",""
+"","3837","Validate the row of alphabet links below the top brands present","StoneBerry","Tue Nov 26 11:43:13 UTC 2024","passed","Tue Nov 26 11:43:17 UTC 2024","Mason Commerce Tool Site","mason_bip.auth.spec.js","",""
+"","6327","Validate Home -> Brand breadcrumbs are shown in BIP","StoneBerry","Tue Nov 26 11:43:03 UTC 2024","passed","Tue Nov 26 11:43:10 UTC 2024","Mason Commerce Tool Site","mason_bip.auth.spec.js","",""
+"","6824","Validate the brands logos present below the full width banner","StoneBerry","Tue Nov 26 11:43:04 UTC 2024","passed","Tue Nov 26 11:43:10 UTC 2024","Mason Commerce Tool Site","mason_bip.auth.spec.js","",""
