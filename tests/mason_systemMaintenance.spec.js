@@ -39,7 +39,7 @@ test.describe("Mason System Maintenance Tests", () => {
 
 
   //SB-SM001
-  test("Validate the stoneberry logo at the center of the system maintenance page", async ({ page }, testInfo) => {
+  test("Validate the Stoneberry logo at the center of the system maintenance page", async ({ page }, testInfo) => {
     const sysMainPage = new SystemMaintenancePage(page);
     await sysMainPage.validateLogoDisplay();
     await sysMainPage.validateLogoAtCentre();
