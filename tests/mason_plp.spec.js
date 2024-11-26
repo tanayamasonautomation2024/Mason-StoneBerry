@@ -327,9 +327,7 @@ test.describe("Mason PLP Scenarios", () => {
     await pdpPage.validateProductQTYUpdateByTypeIn(plp_data.product_quantity);
   })
 
-
   test("Validate the display and functionality of products, including default product image, color variants, name, pricing, reviews, and add to cart CTA", async ({ page }) => {
-    //test.slow();
     const plpPage = new MasonPLPPage(page);
     const homePageNew = new HomePageNew(page);
     await homePageNew.selectSubCategoryFromMegaMenu(expectedCategories);
@@ -343,7 +341,7 @@ test.describe("Mason PLP Scenarios", () => {
 
   test.afterEach(async ({ page }) => {
     try {
-      const screenshotPath = `screenshots/FPScreenshot-${Date.now()}.png`;
+      const screenshotPath = `screenshots/PLP-Screenshot-${Date.now()}.png`;
       await page.screenshot({ path: screenshotPath, fullPage: true });
       allure.attachment('Full Page Screenshot', Buffer.from(await page.screenshot({ fullPage: true })), 'image/png');
     } catch (error) {

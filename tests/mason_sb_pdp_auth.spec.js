@@ -17,6 +17,12 @@ const signinpage_data = JSON.parse(JSON.stringify(require('../test_data/mason_si
 const signoutpage_data = JSON.parse(JSON.stringify(require('../test_data/mason_signout_page_data.json')));
 const myaccountpage_data = JSON.parse(JSON.stringify(require('../test_data/mason_sb_myaccount_page_data.json')));
 const pdp_data = JSON.parse(JSON.stringify(require('../test_data/mason_pdp_page_data.json')));
+const expectedCategories = [
+  'Furniture',
+  'Health + Beauty',
+  'Clothing, Shoes + Bags',
+  'Kitchen + Dining'
+];
 
 let loginSuccessful = false;
 test.describe("Mason PDP", () => {
@@ -88,7 +94,7 @@ test.describe("Mason PDP", () => {
       test.skip('Skipping test due to failed login');
     }
     const pdpPage = new PDPPage(page);
-    await page.goto(pdp_data.pdp_url);
+    await page.goto(pdp_data.pdp_url_shopalllink);
     await pdpPage.validateProductDetails();
   })
 
@@ -200,5 +206,38 @@ test.describe("Mason PDP", () => {
     await pdpPage.closeMiniCartDrawer();
     await pdpPage.minCartItemCount();
   })
+
+  //Navigation to PDP from PLP, product image link, or configured link-SB-PDP005
+  test("Navigation to PDP from PLP - Verify that Clicking on product image, name, or link redirected to the PDP", async ({ page }, testInfo) => {
+    //test.slow();
+    const homePage = new HomePageNew(page);
+    await homePage.displayCategory();
+    await homePage.selectSubCategoryFromMegaMenu(expectedCategories);
+    const cartDrawerPage = new CartDrawerPage(page);
+    await cartDrawerPage.navigateToPDPFromPLP();
+    const pdpPage = new PDPPage(page);
+    await pdpPage.validateSimilarItem();
+  })
+
+  //PDP - Handling protection plans - Test Cases ID
+  test("PDP - Handling protection plans - Verify the protection plans in PDP.", async ({ page }, testInfo) => {
+    if (!loginSuccessful) {
+      test.skip('Skipping test due to failed login');
+    }
+    const pdpPage = new PDPPage(page);
+    await page.goto(pdp_data.pdp_url_protectionplan);
+    await pdpPage.validateProtectionPlanPDP();
+    
+  })
+
+  test.afterEach(async ({ page }) => {
+    try {
+      const screenshotPath = `screenshots/PDP-Screenshoot-${Date.now()}.png`;
+      await page.screenshot({ path: screenshotPath, fullPage: true });
+      allure.attachment('Full Page Screenshot', Buffer.from(await page.screenshot({ fullPage: true })), 'image/png');
+    } catch (error) {
+      console.error('Error capturing screenshot:', error);
+    }
+  });
 
 })

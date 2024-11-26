@@ -39,7 +39,7 @@ test.describe("Mason System Maintenance Tests", () => {
 
 
   //SB-SM001
-  test("Validate the Stoneberry logo at the center of the system maintenance page", async ({ page }, testInfo) => {
+  test("Validate the stoneberry logo at the center of the system maintenance page", async ({ page }, testInfo) => {
     const sysMainPage = new SystemMaintenancePage(page);
     await sysMainPage.validateLogoDisplay();
     await sysMainPage.validateLogoAtCentre();
@@ -72,4 +72,13 @@ test.describe("Mason System Maintenance Tests", () => {
     await sysMainPage.clickOnMail();
 
   })
+  test.afterEach(async ({ page }) => {
+    try {
+      const screenshotPath = `screenshots/SystemMaintenance-Screenshoot-${Date.now()}.png`;
+      await page.screenshot({ path: screenshotPath, fullPage: true });
+      allure.attachment('Full Page Screenshot', Buffer.from(await page.screenshot({ fullPage: true })), 'image/png');
+    } catch (error) {
+      console.error('Error capturing screenshot:', error);
+    }
+  });
 })

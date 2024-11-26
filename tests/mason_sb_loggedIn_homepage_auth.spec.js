@@ -8,7 +8,7 @@ import fs from 'fs';
 require('dotenv').config();
 const creditUserFile = './credituser.json';
 const nonCreditUserFile = './noncredituser.json';
-const newUserFile = './newuser.json';
+const newUserFile = './newuseremptycart.json';
 const profileUserFile = './profileuser.json';
 
 const homepage_data = JSON.parse(JSON.stringify(require('../test_data/mason_sb_home_page_data.json')));
@@ -180,5 +180,15 @@ test.describe("Mason LoggedIn User HomePage", () => {
     console.log(testInfo.status);
 
   })
+
+  test.afterEach(async ({ page }) => {
+    try {
+      const screenshotPath = `screenshots/LoggedHomepage-Screenshoot-${Date.now()}.png`;
+      await page.screenshot({ path: screenshotPath, fullPage: true });
+      allure.attachment('Full Page Screenshot', Buffer.from(await page.screenshot({ fullPage: true })), 'image/png');
+    } catch (error) {
+      console.error('Error capturing screenshot:', error);
+    }
+  });
 
 })
