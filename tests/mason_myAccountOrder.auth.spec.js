@@ -116,7 +116,7 @@ test("Validate navigation to the Contact Us page when user clicks on ContactUs l
   })
 
 
-  test.only("Validate navigation to the Order Detail page when user enters valid Order data ",async({page},testInfo)=>{ 
+  test("Validate navigation to the Order Detail page when user enters valid Order data ",async({page},testInfo)=>{ 
     //test.slow();
     const myaccountPage = new MyAccountPage(page);
     const myaccountOrderPage = new MyAccountOrderPage(page);

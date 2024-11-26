@@ -88,7 +88,7 @@ test.describe("Mason MyAccount New User", ()=>{
   })
 
 
-  test.only("Validate user should be able to navigate to Orders Page in My account and No Order message if there are no existing orders",async({page},testInfo)=>{ 
+  test("Validate user should be able to navigate to Orders Page in My account and No Order message if there are no existing orders",async({page},testInfo)=>{ 
     if (!loginSuccessful) {
       test.skip('Skipping test due to failed login');
     }
