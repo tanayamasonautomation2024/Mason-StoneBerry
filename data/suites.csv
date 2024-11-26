@@ -1,3 +1,2 @@
 "DESCRIPTION","DURATION IN MS","NAME","PARENT SUITE","START TIME","STATUS","STOP TIME","SUB SUITE","SUITE","TEST CLASS","TEST METHOD"
-"","11818","Validate navigation to the Order Detail page when user enters valid Order data","StoneBerry","Tue Nov 26 11:32:40 UTC 2024","failed","Tue Nov 26 11:32:52 UTC 2024","Mason MyAccount Single Order lookup","mason_myAccountOrder.auth.spec.js","",""
-"","93483","Validate user should be able to navigate to Orders Page in My account and No Order message if there are no existing orders","StoneBerry","Tue Nov 26 11:32:19 UTC 2024","broken","Tue Nov 26 11:33:53 UTC 2024","Mason MyAccount New User","mason_myAccountAddress.auth.spec.js","",""
+"","11058","Validate navigation to the Order Detail page when user enters valid Order data","StoneBerry","Tue Nov 26 11:40:51 UTC 2024","failed","Tue Nov 26 11:41:02 UTC 2024","Mason MyAccount Single Order lookup","mason_myAccountOrder.auth.spec.js","",""
