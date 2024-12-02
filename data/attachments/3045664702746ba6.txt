@@ -1,0 +1,30 @@
+An error occurred while selecting a subcategory: locator.count: Target page, context or browser has been closed
+    at HomePageNew.getRandomVisibleItem (/home/runner/work/Mason-StoneBerry/Mason-StoneBerry/pages/mason_home_page1.js:550:41)
+    at HomePageNew.selectSubCategoryFromMegaMenu (/home/runner/work/Mason-StoneBerry/Mason-StoneBerry/pages/mason_home_page1.js:517:27)
+    at /home/runner/work/Mason-StoneBerry/Mason-StoneBerry/tests/mason_plp.spec.js:85:5 {
+  [Symbol(step)]: {
+    stepId: 'pw:api@21',
+    location: {
+      file: '/home/runner/work/Mason-StoneBerry/Mason-StoneBerry/pages/mason_home_page1.js',
+      line: 550,
+      column: 41,
+      function: 'HomePageNew.getRandomVisibleItem'
+    },
+    category: 'pw:api',
+    title: 'locator.count(ul[role="menu"] > li:has-text("Kitchen + Dining"))',
+    apiName: 'locator.count',
+    params: { selector: 'ul[role="menu"] > li:has-text("Kitchen + Dining")' },
+    boxedStack: undefined,
+    steps: [],
+    complete: [Function: complete],
+    endWallTime: 1733135534389,
+    error: {
+      message: 'Error: locator.count: Target page, context or browser has been closed',
+      stack: 'Error: locator.count: Target page, context or browser has been closed\n' +
+        '    at HomePageNew.getRandomVisibleItem (/home/runner/work/Mason-StoneBerry/Mason-StoneBerry/pages/mason_home_page1.js:550:41)\n' +
+        '    at HomePageNew.selectSubCategoryFromMegaMenu (/home/runner/work/Mason-StoneBerry/Mason-StoneBerry/pages/mason_home_page1.js:517:27)\n' +
+        '    at /home/runner/work/Mason-StoneBerry/Mason-StoneBerry/tests/mason_plp.spec.js:85:5',
+      cause: undefined
+    }
+  }
+}

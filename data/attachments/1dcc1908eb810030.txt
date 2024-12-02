@@ -1,0 +1,2 @@
+Selected Link: JSHandle@<a title="Pfaltzgraff" class="hover:underline" href="/brands/pfaltzgraff"> Pfaltzgraff</a>
+Selected Brand: Pfaltzgraff

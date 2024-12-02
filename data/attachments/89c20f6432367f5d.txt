@@ -1,0 +1,43 @@
+An error occurred while selecting a subcategory: locator.waitFor: Test timeout of 360000ms exceeded.
+Call log:
+  - waiting for locator('ul[role="menu"] > li:has-text("Health + Beauty")').first().locator('div.customtablescrollbar > ul > li > div').first() to be visible
+
+    at HomePageNew.getRandomVisibleItem (/home/runner/work/Mason-StoneBerry/Mason-StoneBerry/pages/mason_home_page1.js:548:31)
+    at HomePageNew.selectSubCategoryFromMegaMenu (/home/runner/work/Mason-StoneBerry/Mason-StoneBerry/pages/mason_home_page1.js:527:39)
+    at /home/runner/work/Mason-StoneBerry/Mason-StoneBerry/tests/mason_plp.spec.js:50:5 {
+  [Symbol(step)]: {
+    stepId: 'pw:api@13',
+    location: {
+      file: '/home/runner/work/Mason-StoneBerry/Mason-StoneBerry/pages/mason_home_page1.js',
+      line: 548,
+      column: 31,
+      function: 'HomePageNew.getRandomVisibleItem'
+    },
+    category: 'pw:api',
+    title: 'locator.waitFor(ul[role="menu"] > li:has-text("Health + Beauty") >> nth=0 >> div.customtablescrollbar > ul > li > div >> nth=0)',
+    apiName: 'locator.waitFor',
+    params: {
+      selector: 'ul[role="menu"] > li:has-text("Health + Beauty") >> nth=0 >> div.customtablescrollbar > ul > li > div >> nth=0',
+      strict: true,
+      omitReturnValue: true,
+      state: 'visible'
+    },
+    boxedStack: undefined,
+    steps: [],
+    complete: [Function: complete],
+    endWallTime: 1733135517426,
+    error: {
+      message: 'Error: locator.waitFor: Test timeout of 360000ms exceeded.\n' +
+        'Call log:\n' +
+        `\x1B[2m  - waiting for locator('ul[role="menu"] > li:has-text("Health + Beauty")').first().locator('div.customtablescrollbar > ul > li > div').first() to be visible\x1B[22m\n`,
+      stack: 'Error: locator.waitFor: Test timeout of 360000ms exceeded.\n' +
+        'Call log:\n' +
+        `\x1B[2m  - waiting for locator('ul[role="menu"] > li:has-text("Health + Beauty")').first().locator('div.customtablescrollbar > ul > li > div').first() to be visible\x1B[22m\n` +
+        '\n' +
+        '    at HomePageNew.getRandomVisibleItem (/home/runner/work/Mason-StoneBerry/Mason-StoneBerry/pages/mason_home_page1.js:548:31)\n' +
+        '    at HomePageNew.selectSubCategoryFromMegaMenu (/home/runner/work/Mason-StoneBerry/Mason-StoneBerry/pages/mason_home_page1.js:527:39)\n' +
+        '    at /home/runner/work/Mason-StoneBerry/Mason-StoneBerry/tests/mason_plp.spec.js:50:5',
+      cause: undefined
+    }
+  }
+}

@@ -1,0 +1,51 @@
+2
+Found 24 grid items.
+Item 1 Title: Baby Gears
+Item 1 href/link: /categories/home/baby-gear/
+Item 2 Title: Lamps + Lighting Fixtures
+Item 2 href/link: /categories/home/lamps-and-lighting-fixtures/
+Item 3 Title: Home Security Gadgets
+Item 3 href/link: /categories/home/home-security-gadgets/
+Item 4 Title: Sewing + Crafting
+Item 4 href/link: /categories/home/sewing-and-crafting/
+Item 5 Title: Pet Supplies
+Item 5 href/link: /categories/home/pet-supplies/
+Item 6 Title: Rugs
+Item 6 href/link: /categories/home/rugs/
+Item 7 Title: Luggage + Travel
+Item 7 href/link: /categories/home/luggage-and-travel
+Item 8 Title: Home Improvement
+Item 8 href/link: /categories/home/home-improvement/
+Item 9 Title: Window Treatments
+Item 9 href/link: /categories/home/window-treatments/
+Item 10 Title: Kids' Room
+Item 10 href/link: /categories/home/kids-room/
+Item 11 Title: Home Storage + Organization
+Item 11 href/link: /categories/home/home-storage-and-organization/
+Item 12 Title: Vacuums + Floor Cleaners
+Item 12 href/link: /categories/home/vacuums-and-floor-cleaners/
+Item 13 Title: Baby Gears
+Item 13 href/link: /categories/home/baby-gear/
+Item 14 Title: Lamps + Lighting Fixtures
+Item 14 href/link: /categories/home/lamps-and-lighting-fixtures/
+Item 15 Title: Home Security Gadgets
+Item 15 href/link: /categories/home/home-security-gadgets/
+Item 16 Title: Sewing + Crafting
+Item 16 href/link: /categories/home/sewing-and-crafting/
+Item 17 Title: Pet Supplies
+Item 17 href/link: /categories/home/pet-supplies/
+Item 18 Title: Rugs
+Item 18 href/link: /categories/home/rugs/
+Item 19 Title: Luggage + Travel
+Item 19 href/link: /categories/home/luggage-and-travel
+Item 20 Title: Home Improvement
+Item 20 href/link: /categories/home/home-improvement/
+Item 21 Title: Window Treatments
+Item 21 href/link: /categories/home/window-treatments/
+Item 22 Title: Kids' Room
+Item 22 href/link: /categories/home/kids-room/
+Item 23 Title: Home Storage + Organization
+Item 23 href/link: /categories/home/home-storage-and-organization/
+Item 24 Title: Vacuums + Floor Cleaners
+Item 24 href/link: /categories/home/vacuums-and-floor-cleaners/
+Found 0 grid items.
