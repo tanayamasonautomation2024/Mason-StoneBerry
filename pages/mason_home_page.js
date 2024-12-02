@@ -105,6 +105,100 @@ exports.HomePage = class HomePage {
         }
     }
 
+    async hoverOnL1() {
+        const mainMenuItemList = ['Buy Now Pay Later Kitchen + Dining'];
+        const l1Category = mainMenuItemList[Math.floor(Math.random() * mainMenuItemList.length)];
+        
+        // Locate the main menu item by matching the L1 category text
+        const mainMenuItems = await this.page.locator('#mainMenu ul[role="menu"] > li');
+        const matchingMenuItem = mainMenuItems.locator(`a:has-text("${l1Category}")`);
+    
+        // Wait for the L1 category link to be visible
+        await matchingMenuItem.waitFor({ state: 'visible' });
+    
+        if (matchingMenuItem) {
+            // Get the font weight before hovering
+            const fontWeightbefore = await matchingMenuItem.evaluate(el => window.getComputedStyle(el).fontWeight);
+            console.log('Font Weight before hover: ', fontWeightbefore);
+    
+            // Hover over the element
+            await matchingMenuItem.hover();
+            const subcategoryMenu =  matchingMenuItem.locator('+ div.custom-scrollbar');
+
+            // Wait for the submenu div to be visible
+            await subcategoryMenu.waitFor({ state: 'visible' });
+    
+            // Get the font weight after hovering
+            const fontWeight = await matchingMenuItem.evaluate(el => window.getComputedStyle(el).fontWeight);
+            console.log('Font Weight after hover: ', fontWeight);
+    
+            // Check if the font weight is bold (>=700 or exactly 'bold')
+            const isBold = parseInt(fontWeight) >= 700 || fontWeight === 'bold';
+            console.log('Is the font bold? ', isBold);
+            
+            // Ensure the font weight is bold after hovering
+            expect(isBold).toBe(true);
+        } else {
+            console.log('Element not found.');
+        }
+    }
+    
+
+async selectRandomSubCategory() {
+    
+
+    const mainMenuItemList = ['Electronics Link'];
+        const l1Category = mainMenuItemList[Math.floor(Math.random() * mainMenuItemList.length)];
+        // Locate the main menu item by matching the L1 category text
+        const mainMenuItems = await this.page.locator('#mainMenu ul[role="menu"] > li');
+        const matchingMenuItem = mainMenuItems.locator(`a[title="${l1Category}"]`);
+
+        // Wait for the L1 category link to be visible and click it
+        await matchingMenuItem.waitFor({ state: 'visible' });
+        await matchingMenuItem.hover();
+    //const subcategoryMenu = matchingMenuItem.locator('div.customtablescrollbar.group-hover\\:flex');
+    const subcategoryMenu =  matchingMenuItem.locator('+ div.custom-scrollbar');
+
+// Wait for the submenu div to be visible
+await subcategoryMenu.waitFor({ state: 'visible' });
+    // Ensure you're interacting with the right element by specifying an index or refining further
+    //await subcategoryMenu.waitFor({ state: 'visible' });
+
+    // Continue with your subcategory selection and interaction
+    const subcategoriesLocator = subcategoryMenu.locator('ul > li a.cursor-pointer');
+    const subcategoriesCount = await subcategoriesLocator.count();
+
+    // Select a random subcategory
+    const randomSubcategoryIndex = Math.floor(Math.random() * subcategoriesCount);
+    const randomSubcategory = subcategoriesLocator.nth(randomSubcategoryIndex);
+    const subCatName = await randomSubcategory.textContent();
+    console.log(subCatName);
+    // Click on the random subcategory
+    await randomSubcategory.click();
+    // Locate the breadcrumb's last 'li' element
+    await this.page.locator('nav[aria-label="Breadcrumb"] ol > li').last().waitFor({ state: 'visible' });
+    await this.page.locator('section.plpGrid').first().waitFor({ state: 'visible' });
+    const lastBreadcrumbItem = await this.page.locator('nav[aria-label="Breadcrumb"] ol > li').last();
+    // Get the text content of the last 'li' element
+    const lastBreadcrumbText = await lastBreadcrumbItem.textContent();
+    // Extract the last two words of the sub-category name
+    const lastTwoWords = subCatName.split(' ').slice(-2).join(' ');
+
+    // Escape special regex characters in the extracted words
+    const escapedPattern = lastTwoWords.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+    // Create a flexible regex pattern to:
+    // 1. Match any starting word(s) (e.g., "All").
+    // 2. Match the escaped last two words.
+    // 3. Ignore case and apostrophes.
+    const regexPattern = new RegExp(`(?:.*\\b)?${escapedPattern.replace(/\\'/g, "")}`, 'i');
+
+    // Check if the last breadcrumb text matches the flexible regex pattern
+    expect(lastBreadcrumbText.trim()).toMatch(regexPattern);
+}
+
+
+
     async getRandomL1CategoryText() {
         const elements = await this.page.$$(homepage_locator.l1categoryText);
         await elements[0].waitForElementState('visible');
@@ -228,7 +322,7 @@ exports.HomePage = class HomePage {
 
     // }
 
-    async navigateToCategoryL1(l1Category) {
+    async navigateToCategoryL1Old(l1Category) {
         const l1CategorySelector = `a:text-is("${l1Category}")`;
 
         // Wait for the L1 category link to be visible and click the first matching element
@@ -245,6 +339,30 @@ exports.HomePage = class HomePage {
         const breadcrumbSelector = await this.page.getByLabel('Breadcrumb').getByText(l1Category, { exact: true });
 
         // Wait for the breadcrumb element to be visible
+        await breadcrumbSelector.waitFor({ state: 'visible' });
+        await expect(breadcrumbSelector).toBeVisible();
+    }
+
+    async navigateToCategoryL1() {
+        //const mainMenuItemList = ['Women', 'Men', 'Kids', 'Boot Shop'];
+        const mainMenuItemList = ['Furniture','Electronics'];
+        const l1Category = mainMenuItemList[Math.floor(Math.random() * mainMenuItemList.length)];
+        // Locate the main menu item by matching the L1 category text
+        const mainMenuItems = await this.page.locator('#mainMenu ul[role="menu"] > li');
+        const matchingMenuItem = mainMenuItems.locator(`a:has-text("${l1Category}")`);
+
+        // Wait for the L1 category link to be visible and click it
+        await matchingMenuItem.first().waitFor({ state: 'visible' });
+        await matchingMenuItem.first().click();
+
+        // Wait for the page to navigate and the breadcrumb to be visible
+        await this.page.waitForNavigation();
+        await this.page.waitForSelector('nav[aria-label="Breadcrumb"]', { state: 'visible' });
+
+        // Verify the breadcrumb contains the L1 category
+        const breadcrumbSelector = this.page.locator('nav[aria-label="Breadcrumb"]').locator(`li:has-text("${l1Category}")`).first();
+
+        // Wait for the breadcrumb element to be visible and assert its visibility
         await breadcrumbSelector.waitFor({ state: 'visible' });
         await expect(breadcrumbSelector).toBeVisible();
     }

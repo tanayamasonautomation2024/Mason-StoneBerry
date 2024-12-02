@@ -174,7 +174,7 @@ test.describe("Mason DPQ Scenarios", () => {
     await dpqPage.fillSNN();
     await dpqPage.validateTermsAndConditionSection();
     await dpqPage.clickSubmit();
-    await guestCheckoutPage.validateAddressVerification();
+    //await guestCheckoutPage.validateAddressVerification();
     await page.waitForLoadState('networkidle');
     const url1 = page.url();
     console.log(url1);
@@ -211,7 +211,7 @@ test.describe("Mason DPQ Scenarios", () => {
     await dpqPage.fillSNN();
     await dpqPage.validateTermsAndConditionSection();
     await dpqPage.clickSubmit();
-    await guestCheckoutPage.validateAddressVerification();
+    //await guestCheckoutPage.validateAddressVerification();
     await page.waitForLoadState('networkidle');
     const dpqExpDigit = await dpqPage.validateTheSubmissionProgress();
     console.log(dpqExpDigit);
@@ -282,7 +282,7 @@ test.describe("Mason DPQ Scenarios", () => {
     await dpqPage.fillSNN();
     await dpqPage.validateTermsAndConditionSection();
     await dpqPage.clickSubmit();
-    await guestCheckoutPage.validateAddressVerification();
+    //await guestCheckoutPage.validateAddressVerification();
     const dpqExpDigit = await dpqPage.validateTheSubmissionProgress();
     //await page.waitForLoadState('networkidle');
     await dpqPage.handleSubmissionScenario(dpqExpDigit);

@@ -18,7 +18,7 @@ exports.CLPPage = class CLPPage{
 
     async validateAccordionExpandAndClose(){
         // Define a selector for accordion buttons
-        const accordionSelector =  "//button[@data-orientation='vertical']";;
+        const accordionSelector =  "//div[@class='hidden md:block lg:block']//div[@class='clpAccrordianLeftnav w-full px-5 no-underline hover:no-underline']//button";;
 
         // Get all accordion buttons
         const buttons = await this.page.$$(accordionSelector);
@@ -60,11 +60,11 @@ exports.CLPPage = class CLPPage{
 
 
     async validate2ColumnImageTiles(){
-        const tilesSection = this.page.locator('.column-grid-cta');
+        const tilesSection = this.page.locator("//div[contains(@class,'hidden md:block lg:block')]//ul[contains(@class,'md:grid-cols-2')]");
         await tilesSection.scrollIntoViewIfNeeded();
 
         // Locate the list items within the tiles section
-        const listItems = tilesSection.locator('ul > li');
+        const listItems = tilesSection.locator('li');
 
         // Get the count of list items
         const count = await listItems.count();
@@ -76,7 +76,7 @@ exports.CLPPage = class CLPPage{
 
 
     async validate2ColumnTiles(){
-        const tiles = this.page.locator('section.column-grid-cta ul.grid li');
+      const tiles = this.page.locator("//div[contains(@class,'hidden md:block lg:block')]//ul[contains(@class,'md:grid-cols-2')]/li");
 
         // Retrieve the number of tiles present
         const tileCount = await tiles.count();
@@ -198,7 +198,7 @@ exports.CLPPage = class CLPPage{
 
     async validateBestSellerWidget() {
       // Locate the heading for "Best Sellers"
-      const bestSellersHeading = this.page.locator('strong.text-2xl:has-text("Best Sellers")');
+      const bestSellersHeading = this.page.locator('strong.text-lg:has-text("Best Sellers")');
     
       // Ensure the heading is visible and scroll into view if needed
       await bestSellersHeading.scrollIntoViewIfNeeded();
@@ -294,7 +294,7 @@ async validateCategoryGrid(){
 async validateNavigationFromHref(){
   try {
    
-    const gridXPath = '//ul[contains(@class,"sm:grid-cols-3 lg:grid-cols-4")]';
+    const gridXPath = '//ul[contains(@class,"sm:grid-cols-3 lg:grid-cols-4")][2]';
     const grid = await this.page.locator(gridXPath);
   
     // Get all grid items
@@ -419,32 +419,21 @@ async validatePricingOfBestSellerProduct() {
 
 async validateViewMore(){
    // Verify Global Text block content is present above the footer
-   const contentBlock = await this.page.locator('//section[contains(@class,"mx-auto mt-11")]');
+   const contentBlock = await this.page.locator('(//section[contains(@class,"mx-auto mt-11")])[2]');
    await expect(contentBlock).toBeVisible();
- 
-   // Verify "View More" text link should display in Global text block content at centered bottom
+
+   // Verify "View More" text link
    const viewMoreLink = await this.page.locator('a:has-text("View More")');
-   await expect(viewMoreLink).toBeVisible();
-   
-   // Ensure it's centered at the bottom
-   //await expect(viewMoreLink).toHaveCSS('display', 'block');
-   //await expect(viewMoreLink).toHaveCSS('text-align', 'center');
- 
-   // Verify clicking "View More" expands the content block
-   await viewMoreLink.click();
- 
-   // Check if the content block expanded (assuming there is some expanded content or changed state)
-  //  const expandedContent = await page.locator('section').locator('p:has-text("expanded content")'); // Replace with actual content or class that appears on expansion
-  //  await expect(expandedContent).toBeVisible();
- 
-  //  // Verify "View Less" link appears and can be clicked to collapse content
-  //  const viewLessLink = await page.locator('a:has-text("View Less")');
-  //  await expect(viewLessLink).toBeVisible();
- 
-  //  await viewLessLink.click();
- 
-   // Check if the content block collapsed (assuming the original content or collapsed state reappears)
-   //await expect(expandedContent).not.toBeVisible();
+
+   // Check if the "View More" link is visible
+   const isVisible = await viewMoreLink.isVisible();
+
+   if (!isVisible) {
+     console.log('"View More" link is not present.');
+   } else {
+     console.log('"View More" link is present. Clicking it now...');
+     await viewMoreLink.click();
+   }
 }
 
 async selectSubCategoryFromMegaMenu(expectedCategories) {

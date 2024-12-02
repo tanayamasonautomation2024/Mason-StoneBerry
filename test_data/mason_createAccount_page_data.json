@@ -13,7 +13,7 @@
     "password_missing":"Enter a password.",
     "firstname_missing":"Enter a First Name",
     "lastname_missing":"Enter a Last Name",
-    "account_creation_success":"Account Created Successfully",
+    "account_creation_success":"You have successfully created your account",
     "invalid_email":"Please enter a valid email address"
 
 }

@@ -11,13 +11,13 @@ const view_faq="View FAQs";
 const chat_with_us="Chat with Us";
 const email="Email";
 const call_number="Call Us 1-800-704-5480";
-const category_grid="//ul[@class='grid  gap-5 grid-cols-3 md:grid-cols-6']/li";
+const category_grid="//ul[@class='grid gap-y-5 grid-cols-3 md:grid-cols-6']/li";
 const search_result_title="Results for";
 const item_count="Items";
 const popular_searches="Popular Searches";
 const popular_search_container="div.m-2.flex.flex-wrap.gap-2\\.5";
 const popular_search_terms="div.flex.gap-1\\.5.rounded-md.border.border-foggyGray.p-2";
-const auto_suggestion_container="ul.m-2\\.5 li"
+const auto_suggestion_container="ul.m-2\\.5 > li > li";
 
 exports.SearchPage = class SearchPage{
     constructor(page){
@@ -28,12 +28,13 @@ exports.SearchPage = class SearchPage{
         this.search_tips=page.getByText(search_tips);
         this.need_help=page.getByText(need_help);
         this.view_faq=page.getByRole('link', { name: view_faq });
-        this.chat_with_us=page.getByRole('link', { name: chat_with_us });
+        this.chat_with_us = page.locator('a#openchatwindow');
         this.email=page.getByRole('link', { name: email });
-        this.call_number=page.getByRole('link', { name: call_number });
+        this.call_number = page.getByRole('link', { name: /Call Us \d{1}-\d{3}-\d{3}-\d{4}/ });
         this.search_result_title=page.getByRole('heading', { name: search_result_title});
         this.itemCount = page.getByText(item_count);
         this.popular_searches=page.getByText(popular_searches);
+        this.search_result_paragraph = page.locator(`h1:has-text("${search_result_title}") + p.text-sm`);
     }
 
     async validateSearchField(search_value){
@@ -43,11 +44,13 @@ exports.SearchPage = class SearchPage{
         await this.searchicon.click();
         // Wait for the URL to match either a search results page or a no-result page
         await this.page.waitForNavigation();
-        await this.page.waitForURL(`**/?q=${search_value}`);
+        await this.page.waitForURL(new RegExp(`.*[?&]q=${search_value}`));
     }
 
     async validateSearchBreadCrumb(search_value){
-        await (this.page.getByText(`Results for"${search_value}"`, { exact: true })).waitFor({state:"visible"});
+        const breadcrumbText = `Results for"${search_value}"`;
+        const breadcrumbLocator = this.page.locator(`ol.mb-2 li:has-text("Results for\\"${search_value}\\"")`);
+        await expect(breadcrumbLocator).toBeVisible();
         await expect(this.page.locator('span').filter({ hasText: `"${search_value}"` })).toBeVisible();
 
     }
@@ -92,7 +95,7 @@ exports.SearchPage = class SearchPage{
     async validateNeedHelpsection(){
        // await this.page.waitForTimeout(2000);
         await expect(this.need_help).toBeVisible({ timeout: 10000 });
-        await expect(this.view_faq).toBeVisible();
+        await (this.view_faq).waitFor({state:'visible'});
         await expect(this.chat_with_us).toBeVisible();
         await expect(this.email).toBeVisible();
         await expect(this.call_number).toBeVisible();
@@ -125,10 +128,10 @@ exports.SearchPage = class SearchPage{
     }
 
     async validateTopCategoryImageandTitle(){
-        await this.page.waitForSelector('.grid');
+        await this.page.waitForSelector('ul.grid');
 
         // Get all the category tiles
-        const categoryTiles = await this.page.$$(category_grid);
+        const categoryTiles = await this.page.$$('ul.grid li.group');
 
         // Expectations
         expect(categoryTiles.length).toBe(6 * 3); // Check the total number of tiles
@@ -148,11 +151,11 @@ exports.SearchPage = class SearchPage{
 }
 
 async validateItemCount(){
-    await expect(this.search_result_title).toBeVisible();
+    await (this.search_result_title).waitFor({state:'visible'});
     //const regex = /(\d+) Items/;
-    const regex = /(\d+) items/i;
+    const regex = /(\d+)\s*items/i; 
 
-    const actualText = await this.search_result_title.innerText();
+    const actualText = await this.search_result_paragraph.innerText();
         console.log(actualText);
         // Check if the actual text contains the search value
         const containsSearchValue = regex.test(actualText);
@@ -167,17 +170,19 @@ async validatePopularSearch(){
     }
 
 
-async validateRecentSearches(search_value){
-    await this.search_placeholder.click();
-    await expect(this.page.getByRole('link', { name: search_value, exact: true })).toBeVisible();
-    await expect(this.page.locator('li').filter({ hasText: new RegExp(`^${search_value}$`) }).getByRole('button')).toBeVisible();
-}
+    async validateRecentSearches(search_value) {
+        await this.search_placeholder.click();
+        await this.search_placeholder.fill('');
+        //await (this.page.getByRole('link', { name: search_value, exact: true })).waitFor({state:'visible'});
+        await expect(this.page.locator('li').filter({ hasText: new RegExp(`^${search_value}$`) })).toBeVisible();
+        await expect(this.page.locator('li').filter({ hasText: new RegExp(`^${search_value}$`) }).getByRole('button')).toBeVisible();
+    }
 
 async validateClickOnRecentSearch(search_value){
     await this.search_placeholder.click();
     await this.page.getByRole('link', { name: search_value, exact: true }).click();
     await this.page.waitForNavigation();
-    await this.page.waitForURL(`**/?q=${search_value}`);
+    await this.page.waitForURL(new RegExp(`.*[?&]q=${search_value}`));
 }
 
 async validateRemoveRecentSearchEntry(search_value){

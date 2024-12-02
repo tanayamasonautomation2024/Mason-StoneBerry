@@ -143,6 +143,7 @@ test.describe("Mason Commerce Tool Site", ()=>{
     await mySearchPage.validateSearchField(search_value);
     await page.waitForLoadState('networkidle');
     await mySearchPage.validateValidSearchPageTitle(search_value); 
+    await mySearchPage.validateSearchBreadCrumb(search_value);  
     await mySearchPage.validateItemCount();
 
   })

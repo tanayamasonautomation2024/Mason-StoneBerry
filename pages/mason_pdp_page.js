@@ -39,7 +39,7 @@ exports.PDPPage = class PDPPage {
         this.qtyInputTextBox = page.locator('input.numberInputCounter');
         this.qtyText = page.getByText('Qty:');
         this.availabilityText = page.getByText('Availability:');
-        this.addtoCartButton = page.getByRole('button', { name: 'Add to Cart' });
+        this.addtoCartButton = page.getByRole('button', { name: 'Add to Cart' }).nth(1);
         this.addtoWishListButton = page.getByRole('button', { name: 'Add to Wish List' });
         this.miniCartHeaderText = page.getByRole('button', { name: 'My Cart' });
         this.miniCart = page.locator('img[alt="Mini Cart"]');
@@ -323,35 +323,39 @@ exports.PDPPage = class PDPPage {
     }
 
     async clickOnPDPSizeVariantButton() {
-        // Wait for the first size variant button to be visible
-        await this.page.locator('section.pb-6.pt-2').waitFor({ state: 'visible' });
-        const firstButtonVisible = await this.pdp_sizevariant_button.first().isVisible();
-        // Initialize sizeVariantCount based on the visibility of the first button
-        const sizeVariantCount = firstButtonVisible ? await this.pdp_sizevariant_button.count() : 0;
+        // Wait for the size variant section to be visible
+        await this.page.locator('section.flex.flex-wrap.items-center.gap-2\\.5.pt-4').first().waitFor({ state: 'visible' });
 
-        if (sizeVariantCount > 0) {
+        // Find all enabled size variant buttons
+        const enabledButtons = await this.page.locator('section.flex.flex-wrap.items-center.gap-2\\.5.pt-4 button:not([disabled])');
+
+        // Check the count of enabled buttons
+        const enabledButtonCount = await enabledButtons.count();
+
+        if (enabledButtonCount > 0) {
             let addToCartButtonEnabled = false;
 
             while (!addToCartButtonEnabled) {
-                // Select a random button index
-                const randomIndex = Math.floor(Math.random() * sizeVariantCount);
+                // Select a random enabled button
+                const randomIndex = Math.floor(Math.random() * enabledButtonCount);
 
-                // Click the randomly selected button
-                await this.pdp_sizevariant_button.nth(randomIndex).click();
-                console.log(`Clicked button with index: ${randomIndex}`);
+                // Click the randomly selected enabled button
+                await enabledButtons.nth(randomIndex).click();
+                console.log(`Clicked enabled button with index: ${randomIndex}`);
 
                 // Check if the Add to Cart button is enabled
                 addToCartButtonEnabled = await this.addtoCartButton.isEnabled();
 
                 if (addToCartButtonEnabled) {
                     console.log('Add to Cart button is enabled.');
-                    return; // Exit the function once Add to Cart button is enabled
+                    return; // Exit the function once the Add to Cart button is enabled
                 }
             }
         } else {
-            console.log('No buttons found');
+            console.log('No enabled buttons found');
         }
     }
+
 
     async validateSelectColorValue() {
         await this.clickOnPDPColorVariantButton();

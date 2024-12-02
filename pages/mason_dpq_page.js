@@ -10,6 +10,46 @@ const get_prequalifiedText = 'Get Pre-Qualified Instantlyfor Stoneberry Credit w
 const create_account_text = 'Use your account to see your available credit, save time checking out, and more! Already have a Stoneberry account? Sign In to complete this form.';
 const terms_and_conditions = '*I agree that I am providing \'written instructions\' to Stoneberry under the Fair Credit Reporting Act authorizing the company to obtain information from my personal credit report. This authorization allows Stoneberry to obtain such information solely to conduct a pre-qualification for credit. Checking the box above constitutes my electronic signature.';
 const electronic_communication = 'I consent to receive disclosures from you electronically through this website. By consenting, I agree that you may provide electronically any and all communications concerning your products and services, my transactions with you, your privacy policy and other agreements between me and you, and any further disclosures required by federal or state law (the “Disclosures”). My consent applies to all products or services that I obtain from you. I understand that Disclosures may be made available to me on your website, and I must have a personal computer with Internet access through a web browser to access the Disclosures and the ability to either print or electronically store the Disclosures. I represent that I have the hardware, software, email address and email capacities described above. I may withdraw my consent to electronic receipt of Disclosures at any time by contacting you. I have the option to receive any Disclosures that you provide electronically in paper form at no cost to me.';
+const addresses = [
+  {
+    streetAddress: '100 Irish Ivy Ct',
+    city: 'Boyd',
+    state: 'TX',
+    zipCode: '76023-4067'
+  },
+  {
+    streetAddress: '11 Falmouth Pl',
+    city: 'Albertson',
+    state: 'NY',
+    zipCode: '11507-2003'
+  },
+  {
+    streetAddress: '138C Gg25 Rd',
+    city: 'Fall River',
+    state: 'KS',
+    zipCode: '67047-4721'
+  },
+  {
+    streetAddress: '7 Yo Yo Rd',
+    city: 'Cana',
+    state: 'VA',
+    zipCode: '24317-3987'
+  },
+  {
+    streetAddress: '2 JJ Rd',
+    city: 'Charlotte',
+    state: 'AR',
+    zipCode: '72522-9645'
+  },
+  {
+    streetAddress: '103 Nnptc Cir',
+    city: 'Goose Creek',
+    state: 'SC',
+    zipCode: '29445-6324'
+  }
+];
+
+
 
 exports.MasonDPQPage = class MasonDPQPage {
   constructor(page) {
@@ -203,7 +243,7 @@ exports.MasonDPQPage = class MasonDPQPage {
   }
 
   async validateCreateAccountSection() {
-    await expect(this.page.getByText('Create an Account')).toBeVisible();
+    await (this.page.getByText('Create Account')).waitFor({state:'visible'});
     await expect(this.page.getByText(create_account_text)).toBeVisible();
     await expect(this.page.getByLabel('*Email Address')).toBeVisible();
     await expect(this.page.getByLabel('*Password')).toBeVisible();
@@ -308,14 +348,16 @@ exports.MasonDPQPage = class MasonDPQPage {
 
 
   async addAddress() {
+    const randomAddress = addresses[Math.floor(Math.random() * addresses.length)];
     const address = faker.location.streetAddress();
-    await (this.yourInfo_address1).fill(address);
+    await (this.yourInfo_address1).fill(randomAddress.streetAddress);
     const city = faker.location.city();
-    await (this.yourInfo_city).fill(city);
+    await (this.yourInfo_city).fill(randomAddress.city);
     const state = faker.location.state({ abbreviated: true });
-    await (this.yourInfo_state).selectOption(state);
-    const zipCode = faker.location.zipCode().substring(0, 5); // Get only the first 5 digits
-    await (this.yourInfo_zipcode).fill(zipCode);
+    await (this.yourInfo_state).selectOption(randomAddress.state);
+    const zipCode = faker.location.zipCode('#####-####');
+    //faker.location.zipCode().substring(0, 5); // Get only the first 5 digits
+    await (this.yourInfo_zipcode).fill(randomAddress.zipCode);
     const phoneNumber = faker.phone.number();
     const phoneNumberPattern = new RegExp(/\(\d{3}\) \d{3}-\d{4}/);
     //await this.page.type('#phoneNumber', phoneNumber);
@@ -342,7 +384,8 @@ exports.MasonDPQPage = class MasonDPQPage {
   async validateSubmissionSuccess() {
     await (this.page.getByText('Congratulations,')).waitFor({ state: "visible" });
     await expect(this.page.getByText('You are pre-qualified for a $')).toBeVisible();
-    await expect(this.page.getByText('Stoneberry Credit limit!*')).toBeVisible();
+    await expect(this.page.getByText('Stoneberry Credit', { exact: true })).toBeVisible();
+    await expect(this.page.getByText('limit!*')).toBeVisible(); 
     await expect(this.page.getByRole('link', { name: 'Start Shopping Now' })).toBeVisible();
     await expect(this.page.locator('body')).toContainText('By accepting this offer, you agree that you are requesting an extension of credit and authorizing a review of your credit history that will result in a hard inquiry on your customer credit report. *Credit offer expires');
   }
@@ -350,7 +393,9 @@ exports.MasonDPQPage = class MasonDPQPage {
   async validateSubmissionSuccessWithDownPayment() {
     await (this.page.getByText('Congratulations,')).waitFor({ state: "visible" });
     await expect(this.page.getByText('You are pre-qualified for a $')).toBeVisible();
-    await expect(this.page.getByText('Stoneberry Credit limit!*')).toBeVisible();
+   // await expect(this.page.getByText('Stoneberry Credit limit!*')).toBeVisible();
+    await expect(this.page.getByText('Stoneberry Credit', { exact: true })).toBeVisible();
+    await expect(this.page.getByText('limit!*')).toBeVisible();
     await expect(this.page.getByText('A down payment of $')).toBeVisible();
     await expect(this.page.getByText('is required when you place your first order')).toBeVisible();
     await expect(this.page.getByRole('link', { name: 'Start Shopping Now' })).toBeVisible();

@@ -50,16 +50,16 @@ test.describe("Mason SignIn Scenarios", () => {
   })
 
 
-  //SB-LOGREG009
-  test("Account - SignIn - Validate the Loader icon when user tries to sign-in", async ({ page }) => {
-    const signinPage = new SignInPage(page);
-    await signinPage.clickSignIn();
-    //await signinPage.validateSignInDialog();
-    await signinPage.login(process.env.NON_CREDIT_USER, process.env.NON_CREDIT_PASSWORD);
-    await signinPage.clickSignIn();
-    await signinPage.checkLoaderwhileSignIn();
+  //SB-LOGREG009 this test case is NA now as loader icon has been removed.
+  // test("Account - SignIn - Validate the Loader icon when user tries to sign-in", async ({ page }) => {
+  //   const signinPage = new SignInPage(page);
+  //   await signinPage.clickSignIn();
+  //   //await signinPage.validateSignInDialog();
+  //   await signinPage.login(process.env.NON_CREDIT_USER, process.env.NON_CREDIT_PASSWORD);
+  //   await signinPage.clickSignIn();
+  //   await signinPage.checkLoaderwhileSignIn();
 
-  })
+  // })
 
 
   //SB-LOGREG012

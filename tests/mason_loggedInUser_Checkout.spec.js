@@ -469,7 +469,8 @@ test.describe("Mason Checkout - LoggedIn Users - Scenarios", () => {
       await guestCheckoutPage.clickOnContinueToPayment();
       await guestCheckoutPage.validatePaymentMethods();
       await guestCheckoutPage.validateMyCreditIsSelectedbyDefault();
-      //await guestCheckoutPage.clickCreditCard();
+      await guestCheckoutPage.clickCreditCard();
+      await guestCheckoutPage.clickEditCard();
       await guestCheckoutPage.clickEditBillingAddress();
       await guestCheckoutPage.validateEditAddressMessageForCreditUser();
       await guestCheckoutPage.validateBillingAddressEditCreditAccountHolder();

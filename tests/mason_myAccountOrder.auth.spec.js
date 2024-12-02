@@ -120,7 +120,7 @@ test.describe("Mason MyAccount Single Order lookup", () => {
     const myaccountOrderPage = new MyAccountOrderPage(page);
     const orderDetailsPage = new OrderDetailsPage(page);
     await myaccountPage.clickMyAccountOrderStatusLink();
-    await page.waitForLoadState('networkidle');
+    //await page.waitForLoadState('networkidle');
     await myaccountOrderPage.validateSingleOrderLookupSection();
     await myaccountOrderPage.enterOrderNumber(myaccountpage_data.valid_order);
     await myaccountOrderPage.enterZipCode(myaccountpage_data.valid_zip);

@@ -15,8 +15,8 @@ const savedAddress = myaccountpage_data.myaccount_newaddress_firstname + " " + m
 const editAddress = myaccountpage_data.myaccount_editaddress_firstname + " " + myaccountpage_data.myaccount_editaddress_lastname + " " + myaccountpage_data.myaccount_editaddress_addressline1;
 const expectedCategories = [
   'Furniture',
-  'Health + Beauty',
-  'Clothing, Shoes + Bags',
+  'Electronics',
+  'Outdoor Living + Tools',
   'Kitchen + Dining'
 ];
 test.describe("Mason HomePage Scenarios", () => {
@@ -54,7 +54,7 @@ test.describe("Mason HomePage Scenarios", () => {
     // console.log(l1Count);
     const [l1CategoryText, index] = await homePage.getRandomL1CategoryText();
     console.log(l1CategoryText);
-    await homePage.checkIfcategoryL1isBold(l1CategoryText);
+    await homePage.hoverOnL1();
     await homePage.l2andl3TobeVisibleOnL1Hover(index);
 
   })
@@ -77,7 +77,7 @@ test.describe("Mason HomePage Scenarios", () => {
 
     await homePage.categoryL1ToBeVisibleOnDepartmentHover();
     const [l1CategoryText, index] = await homePage.getRandomL1CategoryText();
-    await homePage.navigateToCategoryL1(l1CategoryText);
+    await homePage.navigateToCategoryL1();
 
   })
 
@@ -85,8 +85,9 @@ test.describe("Mason HomePage Scenarios", () => {
   test("MegaNav - Validate User is redirected to L2 when clicked on the hyperlink", async ({ page }) => {
     //test.slow();
     const homePage = new HomePage(page);
-    await homePage.displayCategory();
-    await homePage.selectSubCategoryFromMegaMenu(expectedCategories);
+   // await homePage.displayCategory();
+    await homePage.categoryL1ToBeVisibleOnDepartmentHover();
+    await homePage.selectRandomSubCategory();
 
   })
 
@@ -94,8 +95,8 @@ test.describe("Mason HomePage Scenarios", () => {
   test("MegaNav - Validate User is redirected to L3 when clicked on the hyperlink", async ({ page }) => {
     //test.slow();
     const homePage = new HomePage(page);
-    await homePage.displayCategory();
-    await homePage.selectSubCategoryFromMegaMenu(expectedCategories);
+    await homePage.categoryL1ToBeVisibleOnDepartmentHover();
+    await homePage.selectRandomSubCategory();
   })
 
   //Ensure that clicking any area outside of the Mega Menu collapses it.
