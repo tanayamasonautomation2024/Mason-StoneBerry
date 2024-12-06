@@ -106,12 +106,12 @@ exports.HomePage = class HomePage {
     }
 
     async hoverOnL1() {
-        const mainMenuItemList = ['Buy Now Pay Later Kitchen + Dining'];
+        const mainMenuItemList = ['Outdoor Living + Tools', 'Health + Beauty'];
         const l1Category = mainMenuItemList[Math.floor(Math.random() * mainMenuItemList.length)];
         
         // Locate the main menu item by matching the L1 category text
         const mainMenuItems = await this.page.locator('#mainMenu ul[role="menu"] > li');
-        const matchingMenuItem = mainMenuItems.locator(`a:has-text("${l1Category}")`);
+        const matchingMenuItem = mainMenuItems.locator('a.cursor-pointer', { hasText: l1Category, exact: true });
     
         // Wait for the L1 category link to be visible
         await matchingMenuItem.waitFor({ state: 'visible' });
@@ -147,11 +147,11 @@ exports.HomePage = class HomePage {
 async selectRandomSubCategory() {
     
 
-    const mainMenuItemList = ['Electronics Link'];
+    const mainMenuItemList = ['Outdoor Living + Tools', 'Health + Beauty'];
         const l1Category = mainMenuItemList[Math.floor(Math.random() * mainMenuItemList.length)];
         // Locate the main menu item by matching the L1 category text
         const mainMenuItems = await this.page.locator('#mainMenu ul[role="menu"] > li');
-        const matchingMenuItem = mainMenuItems.locator(`a[title="${l1Category}"]`);
+        const matchingMenuItem = mainMenuItems.locator('a.cursor-pointer', { hasText: l1Category, exact: true });
 
         // Wait for the L1 category link to be visible and click it
         await matchingMenuItem.waitFor({ state: 'visible' });
@@ -200,8 +200,8 @@ await subcategoryMenu.waitFor({ state: 'visible' });
 
 
     async getRandomL1CategoryText() {
-        const elements = await this.page.$$(homepage_locator.l1categoryText);
-        await elements[0].waitForElementState('visible');
+        const elements = await this.page.locator('#mainMenu ul[role="menu"] > li');
+        await elements.first().waitFor({ state: 'visible' });
 
 
         // const texts = [];
@@ -218,9 +218,12 @@ await subcategoryMenu.waitFor({ state: 'visible' });
             const text = await elements[i].innerText();
             texts.push(text);
         }
+        // Select a random text from the extracted list
         const randomIndex = Math.floor(Math.random() * texts.length);
-        console.log(texts[randomIndex]);
-        return [texts[randomIndex], randomIndex];
+        const randomText = texts[randomIndex];
+
+        console.log(randomText);
+        return [randomText, randomIndex];
     }
 
     async l2andl3TobeVisibleOnL1Hover(index) {
@@ -345,7 +348,7 @@ await subcategoryMenu.waitFor({ state: 'visible' });
 
     async navigateToCategoryL1() {
         //const mainMenuItemList = ['Women', 'Men', 'Kids', 'Boot Shop'];
-        const mainMenuItemList = ['Furniture','Electronics'];
+        const mainMenuItemList = ['Electronics'];
         const l1Category = mainMenuItemList[Math.floor(Math.random() * mainMenuItemList.length)];
         // Locate the main menu item by matching the L1 category text
         const mainMenuItems = await this.page.locator('#mainMenu ul[role="menu"] > li');
@@ -468,5 +471,34 @@ await subcategoryMenu.waitFor({ state: 'visible' });
         const fontWeight = await element.evaluate((el) => window.getComputedStyle(el).fontWeight);
         // Font weight 700 or greater typically indicates bold styling
         return parseInt(fontWeight) >= 700;
+    }
+
+    async validateSubCategoriesVisibilityOnL1Hover(index) {
+        // Locate the main menu items
+        const mainMenuItems = await this.page.locator('#mainMenu ul[role="menu"] > li');
+
+        // Ensure the index is within the range
+        const mainMenuItemCount = await mainMenuItems.count();
+        if (index >= mainMenuItemCount) {
+            console.error(`Index ${index} is out of range. Only ${mainMenuItemCount} main menu items available.`);
+            return;
+        }
+
+        // Hover over the L1 category at the specified index
+        const mainMenuItem = mainMenuItems.nth(index);
+        await mainMenuItem.hover();
+
+        try {
+            // Check if L2 subcategories are visible
+            const l2Selector = await mainMenuItem.locator('ul li div.cursor-pointer');
+            await this.page.waitForSelector(l2Selector, { visible: true, timeout: 5000 });
+
+            // Check if L3 subcategories (if they exist) are visible
+            const l3Selector = await mainMenuItem.locator('ul li ul li div.cursor-pointer');
+            await this.page.waitForSelector(l3Selector, { visible: true, timeout: 5000 });
+
+        } catch (error) {
+            console.error(`L2 or L3 subcategory not visible within the timeout for L1 category at index ${index}.`);
+        }
     }
 }

@@ -212,35 +212,42 @@ exports.MasonDPQPage = class MasonDPQPage {
   }
 
   async validateTheSubmissionProgress() {
+    // Wait for the "Please wait while we process" heading and label to be visible
     await this.page.getByRole('heading', { name: 'Please wait while we process' }).waitFor({ state: "visible" });
     await this.page.getByLabel('Please wait while we process').waitFor({ state: "visible" });
+    
+    // Check if the warning text is visible
     await expect(this.page.getByText('Don’t click the back button,')).toBeVisible();
+  
     let dpqExpDigit;
-
+  
     try {
-      // Wait for navigation to a URL matching the pattern /\/\?dpq_exp=\d+/ with a longer timeout
-      await this.page.waitForURL(/\/\?dpq_exp=\d+/, { timeout: 15000 });
-
+      // Wait for the URL to match the dpq_exp parameter pattern (using a flexible regex)
+      await this.page.waitForURL(/dpq_exp=\d+/, { timeout: 15000 });
+  
       // Get the current URL
       const currentUrl = await this.page.url();
-
-      // Extract the digit after dpq_exp=
+  
+      // Extract the dpq_exp digit from the URL using regex
       const match = currentUrl.match(/dpq_exp=(\d+)/);
       if (match && match[1]) {
         dpqExpDigit = match[1];
       } else {
         throw new Error('Unable to extract dpq_exp digit from URL.');
       }
-
-      // Assert the URL matches the expected pattern (optional)
-      expect(currentUrl).toMatch(/\/\?dpq_exp=\d+/);
-
+  
+      // Optionally assert that the URL matches the expected pattern (you can adjust this if needed)
+      expect(currentUrl).toMatch(/dpq_exp=\d+/);
+  
     } catch (error) {
+      // If an error occurs, throw a more detailed message
       throw new Error(`Error during navigation and URL assertion: ${error.message}`);
     }
-
+  
+    // Return the extracted dpq_exp digit
     return dpqExpDigit;
   }
+  
 
   async validateCreateAccountSection() {
     await (this.page.getByText('Create Account')).waitFor({state:'visible'});

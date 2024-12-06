@@ -49,7 +49,7 @@ test.describe("Mason MyAccount MyProfile", () => {
 
 
   //SB-MyA266
-  test.skip("Validate My Profile page", async ({ page }, testInfo) => {
+  test("Validate My Profile page", async ({ page }, testInfo) => {
     if (!loginSuccessful) {
       test.skip('Skipping test due to failed login');
     }

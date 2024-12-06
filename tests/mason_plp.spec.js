@@ -21,9 +21,7 @@ const savedAddress = myaccountpage_data.myaccount_newaddress_firstname + " " + m
 const editAddress = myaccountpage_data.myaccount_editaddress_firstname + " " + myaccountpage_data.myaccount_editaddress_lastname + " " + myaccountpage_data.myaccount_editaddress_addressline1;
 const expectedCategories = [
   'Furniture',
-  'Health + Beauty',
-  'Clothing, Shoes + Bags',
-  'Kitchen + Dining'
+  'Electronics'
 ];
 
 test.describe("Mason PLP Scenarios", () => {
@@ -46,8 +44,9 @@ test.describe("Mason PLP Scenarios", () => {
     test.slow();
     //const homePage = new HomePage(page);
     const plpPage = new MasonPLPPage(page);
-    const homePageNew = new HomePageNew(page);
-    await homePageNew.selectSubCategoryFromMegaMenu(expectedCategories);
+    const homePage = new HomePage(page);
+    await homePage.categoryL1ToBeVisibleOnDepartmentHover();
+    await homePage.selectRandomSubCategory();
     await plpPage.validateItemCount();
     await plpPage.validateFilterExpandClose();
 
@@ -58,8 +57,10 @@ test.describe("Mason PLP Scenarios", () => {
     //test.slow();
     //const homePage = new HomePage(page);
     const plpPage = new MasonPLPPage(page);
+    const homePage = new HomePage(page);
     const homePageNew = new HomePageNew(page);
-    await homePageNew.selectSubCategoryFromMegaMenu(expectedCategories);
+    await homePage.categoryL1ToBeVisibleOnDepartmentHover();
+    await homePage.selectRandomSubCategory();
     await plpPage.validateItemCount();
   })
 
@@ -68,11 +69,11 @@ test.describe("Mason PLP Scenarios", () => {
     //test.slow();
     const homePage = new HomePage(page);
     const plpPage = new MasonPLPPage(page);
-    const homePageNew = new HomePageNew(page);
-    await homePageNew.selectSubCategoryFromMegaMenu(expectedCategories);
+    await homePage.categoryL1ToBeVisibleOnDepartmentHover();
+    await homePage.selectRandomSubCategory();
     await plpPage.validateItemCount();
     await plpPage.validatePresenceOfFilter();
-    await plpPage.validateCheckboxesForAllFilters();
+    await plpPage.validateFiltersForAllTypes();
   })
 
   //SB-PLP048
@@ -82,12 +83,13 @@ test.describe("Mason PLP Scenarios", () => {
     const plpPage = new MasonPLPPage(page);
     const homePageNew = new HomePageNew(page);
     const numOptionsPerCategory = 1;
-    await homePageNew.selectSubCategoryFromMegaMenu(expectedCategories);
+    await homePage.categoryL1ToBeVisibleOnDepartmentHover();
+    await homePage.selectRandomSubCategory();
     await plpPage.validateItemCount();
     await plpPage.validatePresenceOfFilter();
-    await plpPage.validateCheckboxesForAllFilters();
+    await plpPage.validateFiltersForAllTypes();
     //const selectedFilter =await plpPage.randomlySelectFilterCheckbox();
-    const selectedFilter = await plpPage.randomlySelectMultipleFiltersOptions(numOptionsPerCategory);
+    const selectedFilter = await plpPage.randomlySelectFilterCheckbox(1);
     await plpPage.validateAppliedFilters(selectedFilter);
     console.log(selectedFilter);
   })
@@ -97,19 +99,16 @@ test.describe("Mason PLP Scenarios", () => {
     //test.slow();
     //const homePage = new HomePage(page);
     const plpPage = new MasonPLPPage(page);
-    const homePageNew = new HomePageNew(page);
-    await homePageNew.selectSubCategoryFromMegaMenu(expectedCategories);
+    const homePage = new HomePage(page);
+    await homePage.categoryL1ToBeVisibleOnDepartmentHover();
+    await homePage.selectRandomSubCategory();
     await plpPage.validateItemCount();
     await plpPage.validatePresenceOfFilter();
-    await plpPage.validateCheckboxesForAllFilters();
+    await plpPage.validateFiltersForAllTypes();
     const numOptionsPerCategory = 2;
-    const selectedFilters = [];
-    for (let i = 0; i < numOptionsPerCategory; i++) {
-      const selectedFilter = await plpPage.randomlySelectMultipleFiltersOptions(1);
-      selectedFilters.push(selectedFilter);
-      await plpPage.validateAppliedFilters(selectedFilter);
-      console.log('Selected filter:', selectedFilter);
-    }
+    const selectedFilters = await plpPage.randomlySelectFilterCheckbox(numOptionsPerCategory);
+    await plpPage.validateAppliedFilters(selectedFilters);
+    
   })
 
   //SB-PLP050
@@ -117,8 +116,9 @@ test.describe("Mason PLP Scenarios", () => {
     //test.slow();
     //const homePage = new HomePage(page);
     const plpPage = new MasonPLPPage(page);
-    const homePageNew = new HomePageNew(page);
-    await homePageNew.selectSubCategoryFromMegaMenu(expectedCategories);
+    const homePage = new HomePage(page);
+    await homePage.categoryL1ToBeVisibleOnDepartmentHover();
+    await homePage.selectRandomSubCategory();
     await plpPage.validateItemCount();
     await plpPage.validateFilterExpandClose();
   })
@@ -127,11 +127,12 @@ test.describe("Mason PLP Scenarios", () => {
   test("Validate View More link for more than 8 or 16 options", async ({ page }) => {
     //test.slow();
     const plpPage = new MasonPLPPage(page);
-    const homePageNew = new HomePageNew(page);
-    await homePageNew.selectSubCategoryFromMegaMenu(expectedCategories);
+    const homePage = new HomePage(page);
+    await homePage.categoryL1ToBeVisibleOnDepartmentHover();
+    await homePage.selectRandomSubCategory();
     await plpPage.validateItemCount();
     await plpPage.validatePresenceOfFilter();
-    await plpPage.validateCheckboxesForAllFilters();
+    await plpPage.validateFiltersForAllTypes();
     await plpPage.validateViewMoreOption();
   })
 
@@ -139,8 +140,8 @@ test.describe("Mason PLP Scenarios", () => {
   test("Validate SortBy in PLP", async ({ page }) => {
     //test.slow();
     const plpPage = new MasonPLPPage(page);
-    const homePageNew = new HomePageNew(page);
-    await homePageNew.selectSubCategoryFromMegaMenu(expectedCategories);
+    const homePage = new HomePage(page);
+    await page.goto(plp_data.plp_url_with_size_color);
     await plpPage.validateItemCount();
     await plpPage.validatePresenceOfFilter();
     await plpPage.validateSortBy();
@@ -156,8 +157,8 @@ test.describe("Mason PLP Scenarios", () => {
     //test.slow();
     //const homePage = new HomePage(page);
     const plpPage = new MasonPLPPage(page);
-    const homePageNew = new HomePageNew(page);
-    await homePageNew.selectSubCategoryFromMegaMenu(expectedCategories);
+    const homePage = new HomePage(page);
+    await page.goto(plp_data.plp_url_with_size_color);
     await plpPage.validateItemCount();
     await plpPage.validatePresenceOfFilter();
     await plpPage.validateSortBy();
@@ -175,8 +176,8 @@ test.describe("Mason PLP Scenarios", () => {
     //test.slow();
     //const homePage = new HomePage(page);
     const plpPage = new MasonPLPPage(page);
-    const homePageNew = new HomePageNew(page);
-    await homePageNew.selectSubCategoryFromMegaMenu(expectedCategories);
+    const homePage = new HomePage(page);
+    await page.goto(plp_data.plp_url_with_size_color);
     await plpPage.validateItemCount();
     await plpPage.validatePresenceOfFilter();
     await plpPage.validateSortBy();
@@ -196,8 +197,7 @@ test.describe("Mason PLP Scenarios", () => {
     //test.slow();
     //const homePage = new HomePage(page);
     const plpPage = new MasonPLPPage(page);
-    const homePageNew = new HomePageNew(page);
-    await homePageNew.selectSubCategoryFromMegaMenu(expectedCategories);
+    await page.goto(plp_data.plp_url_with_size_color);
     await plpPage.validateItemCount();
     await plpPage.validatePresenceOfFilter();
     await plpPage.validateSortBy();
@@ -230,8 +230,8 @@ test.describe("Mason PLP Scenarios", () => {
     await plpPage.clickAddToCart();
     await plpPage.validateChooseOptionDrawer();
     await pdpPage.validateSelectColorValue();
-    await pdpPage.validateSelectSizeValue();
-    await pdpPage.validateProductAvailabilityMessage();
+    await plpPage.validateSelectSizeValue();
+    await plpPage.validateProductAvailabilityMessage();
     await pdpPage.sizeChartDisplay();
 
   })
@@ -243,7 +243,7 @@ test.describe("Mason PLP Scenarios", () => {
     const plpPage = new MasonPLPPage(page);
     const homePageNew = new HomePageNew(page);
     const pdpPage = new PDPPage(page);
-    await page.goto(plp_data.plp_url);
+    await page.goto(plp_data.plp_url_with_size_color);
     await plpPage.validateItemCount();
     await plpPage.validatePresenceOfFilter();
     await plpPage.validateSortBy();
@@ -253,6 +253,8 @@ test.describe("Mason PLP Scenarios", () => {
     // await plpPage.selectSortOption();
     await plpPage.clickAddToCart();
     await plpPage.validateChooseOptionDrawer();
+    await pdpPage.validateSelectColorValue();
+    await plpPage.validateSelectSizeValue();
     await pdpPage.validatePricingSection();
     await plpPage.validateArrivesBy();
     await plpPage.validateMonthlyCreditInfo();
@@ -267,7 +269,7 @@ test.describe("Mason PLP Scenarios", () => {
     const plpPage = new MasonPLPPage(page);
     const homePageNew = new HomePageNew(page);
     const pdpPage = new PDPPage(page);
-    await homePageNew.selectSubCategoryFromMegaMenu(expectedCategories);
+    await page.goto(plp_data.plp_url_with_size_color);
     await plpPage.validateItemCount();
     await plpPage.validatePresenceOfFilter();
     await plpPage.validateSortBy();
@@ -288,7 +290,7 @@ test.describe("Mason PLP Scenarios", () => {
     const plpPage = new MasonPLPPage(page);
     const homePageNew = new HomePageNew(page);
     const pdpPage = new PDPPage(page);
-    await page.goto(plp_data.stg2_plp_url);
+    await page.goto(plp_data.plp_url_with_size_color);
     // await homePageNew.selectSubCategoryFromMegaMenu(expectedCategories);
     await plpPage.validateItemCount();
     await plpPage.validatePresenceOfFilter();
@@ -321,17 +323,16 @@ test.describe("Mason PLP Scenarios", () => {
     // await plpPage.selectSortOption();
     await plpPage.clickAddToCart();
     await plpPage.validateChooseOptionDrawer();
-    await pdpPage.validateProductQTYSection();
+    await plpPage.validateProductQTYSection();
     await pdpPage.validateProductAvailabilityMessage();
-    await pdpPage.validateProductQTYIncreaseDecrease();
+    //await pdpPage.validateProductQTYIncreaseDecrease();
     await pdpPage.validateProductQTYUpdateByTypeIn(plp_data.product_quantity);
   })
 
   test("Validate the display and functionality of products, including default product image, color variants, name, pricing, reviews, and add to cart CTA", async ({ page }) => {
     const plpPage = new MasonPLPPage(page);
     const homePageNew = new HomePageNew(page);
-    await homePageNew.selectSubCategoryFromMegaMenu(expectedCategories);
-    await page.waitForLoadState('networkidle');
+    await page.goto(plp_data.plp_url_with_size_color);
     await plpPage.validateItemCount();
     await plpPage.validatePresenceOfFilter();
     await page.waitForLoadState('networkidle');

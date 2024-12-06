@@ -2,8 +2,8 @@ import test, { expect } from 'playwright/test';
 
 const cartProductNameLinkLocator = 'p.text-base.font-bold.leading-\\[20\\.8px\\].text-black';
 const cartItemTotalPriceLocator = 'p:has-text("Total Price:") strong';
-const cartAvailabilityLocator = 'p:has-text("Availability:") strong';
-const cartArrivesByLocator = 'p:has-text("Arrives by") strong';
+const cartAvailabilityLocator = 'p:has-text("Availability:")';
+const cartArrivesByLocator = 'p:has-text("Arrives by")';
 const cartDeleviringTo = 'section.-ml-1.mt-1.flex p';
 const cartEditButton = 'button:has-text("Edit")';
 const cartRemoveButton = 'button:has-text("Remove")';
@@ -30,7 +30,7 @@ const cartNeedHelp = 'Need Help?';
 exports.CartPage = class CartPage {
     constructor(page) {
         this.page = page;
-        this.cartShoppingCartHeaderText = page.locator('strong', { hasText: 'Shopping Cart' });
+        this.cartShoppingCartHeaderText = page.locator('h1', { hasText: 'Shopping Cart' });
         this.cartTotalItems = this.cartShoppingCartHeaderText.locator('xpath=following-sibling::p[1]');
         this.cartOrderTotalText = page.locator('p.text-base.font-normal.leading-\\[22\\.4px\\]', { hasText: 'Order Total' });
         this.cartOrderTotal = this.cartOrderTotalText.locator('xpath=preceding-sibling::strong[1]');
@@ -74,7 +74,7 @@ exports.CartPage = class CartPage {
         this.cartPromoCodeRedColor = page.locator('p:has-text("Promo code") strong.text-scarletRed');
         this.cartPromoSection = page.locator('mt-5 border-t border-silverGray pt-4');
         this.cartOrderSummary = page.locator('section:has-text("Order Summary")');
-        this.prodNameOnPDP = page.locator('section.pb-6.pt-2 h1');
+        this.prodNameOnPDP = page.locator('section.py-6 h1');
 
     }
 
@@ -237,7 +237,7 @@ exports.CartPage = class CartPage {
         console.log(`Product Name: ${productName}`);
 
         // Try to locate the reviews element and extract text content
-        await this.page.locator('section.flex.gap-x-0\\.5.pl-2\\.5').waitFor({ state: 'visible' });
+        await this.page.locator('section.flex.gap-x-0\\.5 >> text=/\\(\\d+ Reviews?\\)/').waitFor({ state: 'visible' });
         let reviewsText = '';
         let noReviewsPresent = false;
         try {
@@ -582,30 +582,50 @@ exports.CartPage = class CartPage {
         const expectedLabels = [
             cartOrderSummarySubTotal,
             cartOrderSummaryEstShipping,
-            cartOrderSummaryEstSurcharge,
             cartOrderSummaryEstSalesTax,
             cartOrderSummaryOrderTotal
         ];
 
-        // Check visibility for each label
+        // Check visibility and extract text content for mandatory labels
         for (const label of expectedLabels) {
             await expect(this.page.getByText(label)).toBeVisible();
         }
 
-        // Extract and validate text content
+        // Extract and validate text content for mandatory labels
         const subTotalText = await this.page.getByText(cartOrderSummarySubTotal).locator('..').locator('p:last-child').textContent();
-        const estShippingText = await this.page.getByText(cartOrderSummaryEstShipping).locator('..').locator('p:last-child').textContent();
-        const estSurchargeText = await this.page.getByText(cartOrderSummaryEstSurcharge).locator('..').locator('p:last-child').textContent();
+        //const estShippingText = await this.page.getByText(cartOrderSummaryEstShipping).locator('..').locator('p:last-child').textContent();
         const estSalesTaxText = await this.page.getByText(cartOrderSummaryEstSalesTax).locator('..').locator('p:last-child').textContent();
         const orderTotalText = await this.page.getByText(cartOrderSummaryOrderTotal).locator('..').locator('strong:last-child').textContent();
 
         // Match each value against the currency format regex
         expect(subTotalText.trim()).toMatch(/^\$\d+(\.\d{2})?$/);
-        expect(estShippingText.trim()).toMatch(/^\$\d+(\.\d{2})?$/);
-        expect(estSurchargeText.trim()).toMatch(/^\$\d+(\.\d{2})?$/);
+        //expect(estShippingText.trim()).toMatch(/^\$\d+(\.\d{2})?$/);
         expect(estSalesTaxText.trim()).toMatch(/^\$\d+(\.\d{2})?$/);
         expect(orderTotalText.trim()).toMatch(/^\$\d+(\.\d{2})?$/);
 
+        // Handle Est. Shipping label
+        const estShippingLocator = this.page.getByText(cartOrderSummaryEstShipping).locator('..');
+
+        // Check if the shipping cost is provided as a price or "FREE"
+        const isFreeShipping = await estShippingLocator.locator('strong.text-scarletRed').isVisible();
+
+        if (isFreeShipping) {
+            const freeShippingText = await estShippingLocator.locator('strong.text-scarletRed').textContent();
+            expect(freeShippingText.trim()).toBe('FREE');
+        } else {
+            const estShippingText = await estShippingLocator.locator('p:last-child').textContent();
+            expect(estShippingText.trim()).toMatch(/^\$\d+(\.\d{2})?$/);
+        }
+
+        // Handle optional Est. Surcharge label
+        const isSurchargeVisible = await this.page.getByText(cartOrderSummaryEstSurcharge).isVisible();
+
+        if (isSurchargeVisible) {
+            const estSurchargeText = await this.page.getByText(cartOrderSummaryEstSurcharge).locator('..').locator('p:last-child').textContent();
+            expect(estSurchargeText.trim()).toMatch(/^\$\d+(\.\d{2})?$/);
+        } else {
+            console.log('Est. Surcharge label is not visible.');
+        }
     }
 
     async validateNeedHelp() {

@@ -64,10 +64,10 @@ test.describe("Mason Cart Page Guest User", () => {
 
     const pdpPage = new PDPPage(page);
     const cartDrawerPage = new CartDrawerPage(page);
-    await page.goto(pdp_data.pdp_url_limitedStock);
+    await page.goto(pdp_data.pdp_url_no_size_color);
     const cartItemCount = await pdpPage.getCartItemCount();
     if (cartItemCount === '0') {
-      await pdpPage.clickOnPDPSizeVariantButton();
+     // await pdpPage.clickOnPDPSizeVariantButton();
       await pdpPage.addtoCart();
       await cartDrawerPage.miniCartClickViewCartButton();
     } else {
@@ -85,10 +85,10 @@ test.describe("Mason Cart Page Guest User", () => {
 
     const pdpPage = new PDPPage(page);
     const cartDrawerPage = new CartDrawerPage(page);
-    await page.goto(pdp_data.pdp_url_limitedStock);
+    await page.goto(pdp_data.pdp_url_no_size_color);
     const cartItemCount = await pdpPage.getCartItemCount();
     if (cartItemCount === '0') {
-      await pdpPage.clickOnPDPSizeVariantButton();
+     // await pdpPage.clickOnPDPSizeVariantButton();
       await pdpPage.addtoCart();
       await cartDrawerPage.miniCartClickViewCartButton();
     } else {

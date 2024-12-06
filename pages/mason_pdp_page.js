@@ -585,41 +585,109 @@ exports.PDPPage = class PDPPage {
 
     async validateProductQTYIncreaseDecrease() {
         await this.qtyText.waitFor({ state: 'visible' });
-        // Check if both buttons are disabled
-        const isMinusButtonDisabled = await this.qtyMinusButton.isDisabled();
-        const isPlusButtonDisabled = await this.defaultQtyPlusButton.isDisabled();
+        await this.clickOnMultiplePDPSizeVariantButton();
 
-        // If both buttons are disabled, assert that the quantity cannot be updated
-        if (isMinusButtonDisabled && isPlusButtonDisabled) {
-            console.log("Both buttons are disabled. Quantity cannot be updated.");
-            const initialInputValue = await this.qtyInputTextBox.inputValue();
+        // // Check if the Plus button is displayed and enabled
+        // const isPlusButtonDisplayed = await this.page.locator('.whitespace-nowrap').nth(1).isVisible();
+        // const isPlusButtonDisabled = isPlusButtonDisplayed ? await this.page.locator('.whitespace-nowrap').nth(1).isDisabled() : true;
+
+        // // Check if the Minus button is enabled
+        // const isMinusButtonDisabled = await this.page.locator('.whitespace-nowrap').first().isDisabled();
+
+        // Locate buttons by aria-label to be more specific
+    const plusButton = await this.page.locator('[aria-label="Increase quantity"]');
+    const minusButton = await this.page.locator('[aria-label="Decrease quantity"]');
+    
+    // Check if the Plus button is displayed and enabled
+    const isPlusButtonDisplayed = await plusButton.isVisible();
+    const isPlusButtonDisabled = isPlusButtonDisplayed ? await plusButton.isDisabled() : true;
+
+    // Check if the Minus button is displayed and enabled
+    const isMinusButtonDisplayed = await minusButton.isVisible();
+    const isMinusButtonDisabled = isMinusButtonDisplayed ? await minusButton.isDisabled() : true;
+
+        // Get the initial input value
+        const initialInputValue = await this.qtyInputTextBox.inputValue();
+
+        // If both buttons are disabled or only the Plus button is displayed but disabled, assert that the quantity cannot be updated
+        if (isMinusButtonDisabled && (isPlusButtonDisplayed ? isPlusButtonDisabled : true)) {
+            console.log("Both buttons are disabled or only Plus button is displayed but disabled. Quantity cannot be updated.");
+
+            // Attempt to change the quantity and assert no change
             await this.qtyMinusButton.click(); // Attempt to change the quantity
             const updatedMinusValue = await this.qtyInputTextBox.inputValue();
-            expect(initialInputValue).toBe(updatedMinusValue, 'Quantity should not change when both buttons are disabled');
-            await this.defaultQtyPlusButton.click(); // Attempt to change the quantity
-            const updatedPlusValue = await this.qtyInputTextBox.inputValue();
-            expect(initialInputValue).toBe(updatedPlusValue, 'Quantity should not change when both buttons are disabled');
-        } else {
-            // If either button is enabled, update the quantity accordingly
-            const initialInputValue = await this.qtyInputTextBox.inputValue();
+            expect(initialInputValue).toBe(updatedMinusValue, 'Quantity should not change when both buttons are disabled or only Plus button is disabled');
 
-            if (!isMinusButtonDisabled) {
-                // Click the minus button to decrease the quantity
-                await this.qtyMinusButton.click();
-                const newValueAfterMinus = await this.qtyInputTextBox.inputValue();
-                expect(parseInt(newValueAfterMinus)).toBe(parseInt(initialInputValue) - 1, 'Quantity should decrease by 1');
+            if (isPlusButtonDisplayed) {
+                await this.defaultQtyPlusButton.click(); // Attempt to change the quantity
+                const updatedPlusValue = await this.qtyInputTextBox.inputValue();
+                expect(parseInt(updatedPlusValue)).toBe(parseInt(initialInputValue) + 1, 'Quantity should increase by 1 when Plus button is clicked');
             }
-
+        } else {
+            // If Plus button is enabled and displayed, or Minus button is enabled
             if (!isPlusButtonDisabled) {
-                // Click the plus button to increase the quantity
-                const updatedInputValue = await this.qtyInputTextBox.inputValue();
+                // Click the Plus button to increase the quantity
                 await this.defaultQtyPlusButton.click();
                 const newValueAfterPlus = await this.qtyInputTextBox.inputValue();
-                expect(parseInt(newValueAfterPlus)).toBe(parseInt(updatedInputValue) + 1, 'Quantity should increase by 1');
+                expect(parseInt(newValueAfterPlus)).toBe(parseInt(initialInputValue) + 1, 'Quantity should increase by 1');
+            }
+
+            if (!isMinusButtonDisabled) {
+                // Click the Minus button to decrease the quantity
+                const updatedInputValue = await this.qtyInputTextBox.inputValue();
+                await this.qtyMinusButton.click();
+                const newValueAfterMinus = await this.qtyInputTextBox.inputValue();
+                expect(parseInt(newValueAfterMinus)).toBe(parseInt(updatedInputValue) - 1, 'Quantity should decrease by 1');
+            }
+        }
+    }
+
+    async clickOnMultiplePDPSizeVariantButton() {
+        await this.page.waitForTimeout(5000);
+        await this.page.locator('section.flex.flex-wrap.items-center.gap-2\\.5.pt-4').first().waitFor({ state: 'visible' });
+        // Locate all sections that contain the size variants
+        const sections = await this.page.locator('section.flex.flex-wrap.items-center.gap-2\\.5.pt-4');
+
+        // Get the total number of sections
+        const sectionCount = await sections.count();
+
+        for (let i = 0; i < sectionCount; i++) {
+            // Wait for the current section to be visible
+            await sections.nth(i).waitFor({ state: 'visible' });
+
+            // Find all enabled size variant buttons within the current section
+            const enabledButtons = await sections.nth(i).locator('button:not([disabled])');
+
+            // Check the count of enabled buttons
+            const enabledButtonCount = await enabledButtons.count();
+
+            if (enabledButtonCount > 0) {
+                let addToCartButtonEnabled = false;
+
+                while (!addToCartButtonEnabled) {
+                    // Select a random enabled button
+                    const randomIndex = Math.floor(Math.random() * enabledButtonCount);
+
+                    // Click the randomly selected enabled button
+                    await enabledButtons.nth(randomIndex).click();
+                    console.log(`Clicked enabled button with index: ${randomIndex} in section: ${i}`);
+
+                    // Check if the Add to Cart button is enabled
+                    addToCartButtonEnabled = await this.addtoCartButton.isEnabled();
+
+                    if (addToCartButtonEnabled) {
+                        console.log('Add to Cart button is enabled.');
+                        return; // Exit the function once the Add to Cart button is enabled
+                    }
+                }
+            } else {
+                console.log(`No enabled buttons found in section: ${i}`);
             }
         }
 
+        console.log('No enabled buttons found in any section');
     }
+
 
     async validateProductQTYUpdateByTypeIn(enterProductQty) {
         const initialQtyValue = await this.qtyInputTextBox.inputValue();

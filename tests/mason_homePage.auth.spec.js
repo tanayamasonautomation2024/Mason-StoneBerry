@@ -54,8 +54,8 @@ test.describe("Mason HomePage Scenarios", () => {
     // console.log(l1Count);
     const [l1CategoryText, index] = await homePage.getRandomL1CategoryText();
     console.log(l1CategoryText);
-    await homePage.hoverOnL1();
-    await homePage.l2andl3TobeVisibleOnL1Hover(index);
+    //await homePage.hoverOnL1();
+    await homePage.validateSubCategoriesVisibilityOnL1Hover(index);
 
   })
 

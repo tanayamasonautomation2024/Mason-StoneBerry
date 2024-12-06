@@ -92,10 +92,13 @@ test.describe("Mason MyAccount Wishlist", () => {
     const myaccountPage = new MyAccountPage(page);
     await myaccountPage.redirectToMyAccount();
     const myaccountWishListPage = new MyAccountWishListPage(page);
-    //await myaccountPage.displayMyAccountLeftNavigationLink();
     await myaccountPage.clickOnMyAccountLink();
     //await myaccountPage.validateMyAccountDashboardNavigation();
     await myaccountPage.clickMyAccountWishListLink();
+    await page.reload();
+    await page.waitForLoadState('networkidle');
+    await myaccountPage.clickMyAccountWishListLink();
+    await page.waitForLoadState('networkidle');
     await myaccountWishListPage.validateItemCountIsDisplayed();
     await myaccountWishListPage.validateTheWishListedItem();
 
@@ -138,6 +141,7 @@ test.describe("Mason MyAccount Wishlist", () => {
     await page.reload();
     await page.waitForLoadState('networkidle');
     await myaccountPage.clickMyAccountWishListLink();
+    await page.waitForLoadState('networkidle');
     await myaccountWishListPage.validateItemCountIsDisplayed();
     await myaccountWishListPage.validatePricingFormatNew();
   })
@@ -157,6 +161,7 @@ test.describe("Mason MyAccount Wishlist", () => {
     await myaccountPage.clickOnMyAccountLink();
     //await myaccountPage.validateMyAccountDashboardNavigation();
     await myaccountPage.clickMyAccountWishListLink();
+    await page.waitForLoadState('networkidle');
     await myaccountWishListPage.validateItemCountIsDisplayed();
     await myaccountWishListPage.validateHeartIconIsFilled();
   })
@@ -175,6 +180,7 @@ test.describe("Mason MyAccount Wishlist", () => {
     //await myaccountPage.clickOnMyAccountLink();
     //await myaccountPage.validateMyAccountDashboardNavigation();
     await myaccountPage.clickMyAccountWishListLink();
+    await page.waitForLoadState('networkidle');
     await myaccountWishListPage.validateItemCountIsDisplayed();
     await myaccountWishListPage.validateRemoveItemFromWishList();
   })
@@ -207,6 +213,7 @@ test.describe("Mason MyAccount Wishlist", () => {
     const myaccountWishListPage = new MyAccountWishListPage(page);
     await myaccountPage.displayMyAccountLeftNavigationLink();
     await myaccountPage.clickMyAccountWishListLink();
+    await page.waitForLoadState('networkidle');
     await myaccountWishListPage.validateItemCountIsDisplayed();
     await myaccountWishListPage.validatePDPNavigationFromImageLink();
   })

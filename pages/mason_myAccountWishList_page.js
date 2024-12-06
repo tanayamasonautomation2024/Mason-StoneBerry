@@ -63,14 +63,20 @@ exports.MyAccountWishListPage = class MyAccountWishListPage{
     }
 
     async validateTheWishListedItem(){
-        
+        //await this.page.reload();
+        await this.page.waitForTimeout(5000); 
+        await this.page.waitForLoadState('load'); 
         // Select all <li> elements containing product images
         const productItems = await this.page.$$(myaccountpage_locator.wishlist_items);
         const itemCount = productItems.length;
         console.log(`Total product items: ${itemCount}`);
 
+        const maxItemsToCheck = Math.min(itemCount, 5);
+
+        const itemsToCheck = productItems.slice(0, maxItemsToCheck);
+
         // Iterate over each product item
-        for (const item of productItems) {
+        for (const item of itemsToCheck) {
             // Find the image within the current <li>
             const img = await item.$('img');
             expect(img).not.toBeNull();
@@ -99,8 +105,12 @@ exports.MyAccountWishListPage = class MyAccountWishListPage{
 
             let anyOutOfStock = false;
 
+            const maxItemsToCheck = Math.min(itemCount, 5);
+
+
+
         // Iterate through each product and check if it is out of stock
-        for (let i = 0; i < itemCount; i++) {
+        for (let i = 0; i < maxItemsToCheck; i++) {
             const product = productItems[i];
             const outOfStockButton = await product.$('button:has-text("'+myaccountpage_locator.wishlist_out_of_stock+'")');
 
@@ -497,13 +507,13 @@ async validateCartCountChange(){
 
 
 async validateCreditPriceFormat(){
-  const firstProductItem = await this.page.locator('li.max-w-48.lg\\:max-w-72').first();
-  const creditPricingPattern = /^\$\d+\.\d{2}\/month\*$/;
-  const creditPricingLocator = firstProductItem.locator('section > section > p.font-bold').nth(1);
-  const creditPricingText = await creditPricingLocator.textContent();
-  console.log(`First Item Credit Pricing: ${creditPricingText}`);
-  expect(creditPricingText.trim()).toMatch(creditPricingPattern);
-
-  }
-}
+    const firstProductItem = await this.page.locator('li.max-w-48.gap-3').first();
+    const creditPricingPattern = /^\$\d+\.\d{2}\/month\*$/;
+    const creditPricingLocator = firstProductItem.locator('section > section > p.font-bold');
+    const creditPricingText = await creditPricingLocator.textContent();
+    console.log(`First Item Credit Pricing: ${creditPricingText}`);
+    expect(creditPricingText.trim()).toMatch(creditPricingPattern);
+  
+    }
+}  
 

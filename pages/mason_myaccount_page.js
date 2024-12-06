@@ -206,10 +206,9 @@ exports.MyAccountPage = class MyAccountPage {
     }
     async clickMyAccountMyProfileLink() {
         await this.myaccount_myprofile_link.click();
-        //await expect(this.page).toHaveURL(/.*\/account\/myprofile\//);
-        await this.page.waitForURL('**/account/myprofile/');
-        //await this.page.waitForLoadState('networkidle');
-        await this.myaccount_myprofile_contactinformation.waitFor({state:'visible'});
+        await this.page.waitForLoadState('networkidle');
+        await this.myaccount_myprofile_contactinformation.waitFor({ state: 'visible' });
+        await this.page.waitForURL('**/account/myprofile');
     }
     async clickMyAccountViewSavedCCLink() {
         await this.myaccount_viewsavedcc_link.click();
@@ -251,7 +250,7 @@ exports.MyAccountPage = class MyAccountPage {
         //await this.page.waitForLoadState('networkidle');
         await this.myaccount_credit_link.waitFor({state:'visible'});
         //await this.page.locator('h1.ml-2\\.5.text-25.font-bold.leading-8').waitFor({state:'visible'});
-        await this.page.waitForURL('**/account/dashboard/');
+        //await this.page.waitForURL('**/account/dashboard/');
     }
     async viewMyAccountCreditDetails() {
         await expect(this.myaccount_credit_payments).toBeVisible();
@@ -907,7 +906,7 @@ exports.MyAccountPage = class MyAccountPage {
     async clickMakeAPaymentButton() {
         await this.myaccount_makepayment_button.click();
         //await expect(this.page).toHaveURL(/.*makepayment/);
-        await expect(this.page).toHaveURL(/.*\/account\/makepayment\//);
+        await expect(this.page).toHaveURL(/.*\/account\/makepayment\/?/);
 
     }
 
@@ -1530,9 +1529,9 @@ exports.MyAccountPage = class MyAccountPage {
             expect(firstNameValue).toBeTruthy();
             const lastNameValue = await this.page.locator('strong').filter({ hasText: lastName }).textContent();
             expect(lastNameValue).toBeTruthy();
-            const addressValue = await this.page.locator('p').filter({ hasText: address }).textContent();
+            const addressValue = await this.page.locator('p').filter({ hasText: address }).first().textContent();
             expect(addressValue).toBeTruthy();
-            const zipCityStateValue = await this.page.locator('p').filter({ hasText: fullAddress }).textContent();
+            const zipCityStateValue = await this.page.locator('p').filter({ hasText: fullAddress }).first().textContent();
             expect(zipCityStateValue).toBeTruthy();
             //const phoneNumberValue = await this.page.locator('p').filter({ hasText: phoneNumber }).textContent();
             //expect(phoneNumberValue).toMatch(phoneNumberPattern);

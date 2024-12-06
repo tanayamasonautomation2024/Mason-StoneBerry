@@ -1,6 +1,7 @@
 const { chromium } = require('playwright');
 import { test, expect } from '@playwright/test';
 import { HomePageNew } from '../pages/mason_home_page1';
+import { HomePage } from '../pages/mason_home_page';
 import { SignInPageNew } from '../pages/mason_signin_page1';
 import { MyAccountPage } from '../pages/mason_myaccount_page';
 import { CartDrawerPage } from '../pages/mason_cart_drawer_page';
@@ -72,9 +73,9 @@ test.describe("Mason Guest User Home Page", () => {
   //Global Persistent Header (Guest) - Mega Menu Navigation-SB-GPH002
   test("GPH-Mega Menu Navigation - Verify Mega Menu Navigation opens on hovering within the CTA", async ({ page }, testInfo) => {
     //test.slow();
-    const homePage = new HomePageNew(page);
-    await homePage.displayCategory();
-    await homePage.selectSubCategoryFromMegaMenu(expectedCategories);
+    const homePage = new HomePage(page);
+    await homePage.categoryL1ToBeVisibleOnDepartmentHover();
+    await homePage.selectRandomSubCategory();
 
   })
 
@@ -250,8 +251,8 @@ test.describe("Mason Guest User Home Page", () => {
   test("GPH-Mega Menu Navigation - Verify Mega Menu Navigation opens on hovering within the CTA and on selecting the subcategory it redirected to the corresponding PLP", async ({ page }, testInfo) => {
     //test.slow();
     const homePage = new HomePageNew(page);
-    await homePage.displayCategory();
-    await homePage.selectSubCategoryFromMegaMenu(expectedCategories);
+    await homePage.categoryL1ToBeVisibleOnDepartmentHover();
+    await homePage.selectRandomSubCategory();
     const cartDrawerPage = new CartDrawerPage(page);
     await cartDrawerPage.clickAddtoCartPLP();
   })

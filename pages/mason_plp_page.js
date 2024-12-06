@@ -14,12 +14,27 @@ const filters_list='ul.grid li';
 const filter_view_more='button:has-text("View More")';
 const sort_by='select.ais-SortBy-select';
 
+const sortingOptions = [
+    'Featured',
+    'Price: Low to High',
+    'Price: High to Low',
+    'Best-Selling',
+    'Highest-Rated',
+    'Newest'
+];
+
 
 exports.MasonPLPPage = class MasonPLPPage{
     constructor(page){
         this.page=page;
         //this.itemCount = page.getByText(item_count);
-        this.itemCountElement = page.locator(`p:has-text("${item_count}")`);
+        this.itemCountElement = page.locator(`section.mt-4 p:has-text("${item_count}")`);
+        this.addtoCartButton = page.getByRole('button', { name: 'Add to Cart' });
+        this.availabilityText = page.getByText('Availability:');
+        this.qtyText = page.getByText('Qty:');
+        this.qtyInputTextBox = page.locator('input.numberInputCounter');
+        this.qtyMinusButton = page.getByRole('button', { name: 'Decrease quantity' });
+        this.qtyPlusButton = page.getByRole('button', { name: 'Increase quantity' });
     }
 
     async categoryL1ToBeVisibleOnDepartmentHover()
@@ -31,7 +46,7 @@ exports.MasonPLPPage = class MasonPLPPage{
 
     
     async validateItemCount(){
-        await expect(this.itemCountElement).toBeVisible();
+        await (this.itemCountElement).waitFor({state:'visible'});
         const regex = /(\d+) items/i;
     
         const actualText = await this.itemCountElement.innerText();
@@ -97,7 +112,7 @@ async validateAppliedFilters(selectedFilters) {
 }
 
 
-async randomlySelectFilterCheckbox() {
+async randomlySelectFilterCheckboxOld() {
     // Find all checkbox elements within the filter
     const checkboxElements = await this.page.$$(filter_checkbox);
 
@@ -116,8 +131,72 @@ async randomlySelectFilterCheckbox() {
    return selectedFilter;
 }
 
+async randomlySelectFilterCheckbox(numberOfFiltersToSelect) {
+    // Wait for checkboxes to be visible
+    await this.page.waitForSelector('input.custom-checkbox');
 
-async randomlySelectMultipleFiltersOptions(numOptionsPerCategory) {
+    // Get all checkbox elements
+    const checkboxes = await this.page.$$('input.custom-checkbox');
+
+    // Ensure there are checkboxes available
+    if (checkboxes.length === 0) {
+        throw new Error("No checkboxes found on the page.");
+    }
+
+    // Ensure the number of filters to select is within the available filters
+    const filtersToSelectCount = Math.min(numberOfFiltersToSelect, checkboxes.length);
+
+    // Shuffle and select the required number of checkboxes
+    const selectedCheckboxes = checkboxes.sort(() => Math.random() - 0.5).slice(0, filtersToSelectCount);
+
+    // Array to hold the text content of the selected filters
+    const selectedFilterTexts = [];
+
+    // Iterate over the selected checkboxes
+    for (const checkbox of selectedCheckboxes) {
+        try {
+            // Ensure the checkbox is visible and enabled
+            //await checkbox.scrollIntoViewIfNeeded();
+            const isVisible = await checkbox.isVisible();
+            const isEnabled = await checkbox.isEnabled();
+
+            if (isVisible && isEnabled) {
+                // Click the checkbox
+                await checkbox.click();
+            } else {
+                console.warn('Checkbox is either not visible or not enabled.');
+                continue;  // Skip this checkbox and move to the next one
+            }
+
+            // Get the associated label text if available
+            const checkboxId = await checkbox.getAttribute('id');
+            if (checkboxId) {
+                const label = await this.page.locator(`label[for="${checkboxId}"]`).first();
+                if (await label.isVisible()) {
+                    const labelText = await label.textContent();
+                    if (labelText) {
+                        selectedFilterTexts.push(labelText.trim());
+                        console.log(`Selected filter: ${labelText.trim()}`);
+                    } else {
+                        console.warn(`Label with ID ${checkboxId} does not contain text.`);
+                    }
+                } else {
+                    console.warn(`Label for checkbox with ID ${checkboxId} is not visible.`);
+                }
+            } else {
+                console.warn("Checkbox does not have an ID attribute.");
+            }
+        } catch (error) {
+            console.error(`Error selecting checkbox: ${error.message}`);
+        }
+    }
+
+    // Return the text content of the selected filters
+    return selectedFilterTexts;
+}
+
+
+async randomlySelectMultipleFiltersOptionsOld(numOptionsPerCategory) {
     const filterOptions = {}; // Object to store checkbox elements by category
 
     // Find all checkbox elements within the filter
@@ -150,6 +229,105 @@ async randomlySelectMultipleFiltersOptions(numOptionsPerCategory) {
 
     return selectedOptions;
 }
+
+async randomlySelectMultipleFiltersOptions(numOptionsPerCategory) {
+
+    const filterOptions = {}; // Object to store checkbox elements by category
+
+
+
+    // Find all checkbox elements within the filter
+
+    const checkboxElements = await this.page.$$(filter_checkbox);
+
+
+
+    // Group checkbox elements by their category (filter name)
+
+    for (const checkbox of checkboxElements) {
+
+        const labelText = await checkbox.evaluate(node => node.parentNode.textContent.trim());
+
+        if (labelText in filterOptions) {
+
+            filterOptions[labelText].push(checkbox);
+
+        } else {
+
+            filterOptions[labelText] = [checkbox];
+
+        }
+
+    }
+
+
+
+    // Randomly select multiple checkboxes from each category
+
+    const selectedOptions = [];
+
+    for (const category in filterOptions) {
+
+        const checkboxes = filterOptions[category];
+
+        const numberToSelect = Math.min(numOptionsPerCategory, checkboxes.length);
+
+
+
+        for (let i = 0; i < numberToSelect; i++) {
+
+            const randomIndex = Math.floor(Math.random() * checkboxes.length);
+
+            const randomCheckbox = checkboxes[randomIndex];
+
+
+
+            // Scroll to the checkbox element before clicking
+
+            await this.page.evaluate(el => el.scrollIntoView(), randomCheckbox);
+
+
+
+            // Wait for the checkbox to be visible and enabled
+
+            await this.page.waitForFunction(
+
+                el => el.offsetParent !== null && el.isIntersectingViewport,
+
+                { timeout: 10000 }, // Adjust timeout as needed
+
+                randomCheckbox
+
+            );
+
+
+
+            await randomCheckbox.click();
+
+            selectedOptions.push(await randomCheckbox.evaluate(node => node.parentNode.textContent.trim()));
+
+
+
+            // Optionally wait for the page to update after each click
+
+            await this.page.waitForTimeout(500); // Adjust duration if needed
+
+        }
+
+    }
+
+
+
+    // Wait for some time to let the page update after selecting the checkboxes
+
+    await this.page.waitForTimeout(2000); // Adjust the duration as needed
+
+
+
+    return selectedOptions;
+
+}
+
 
 async validateFilterExpandClose(){
      // Get all filter buttons
@@ -212,10 +390,8 @@ async validateViewMoreOption(){
     }
 }
 
-async validateSortBy(){
-    //await expect(this.page.getByText('Sort By:')).toBeVisible();
-    await (this.page.getByText('Sort By:').nth(1)).waitFor({state:"visible"});
-    //await expect(this.page.getByRole('combobox')).toBeVisible();
+async validateSortBy() {
+    await (this.page.getByText('Sort By:')).waitFor({ state: "visible" });
 }
 
 async validateFeatureIsDefaultSort(){
@@ -227,31 +403,13 @@ async validateFeatureIsDefaultSort(){
 }
 
 
-async validateSortOptions(){
-   
-    const sortingOptions = [
-        'Featured',
-        'Price: Low to High',
-        'Price: High to Low',
-        'Best-Selling',
-        'Highest-Rated',
-        'Newest'
-    ];
-
-    
-
+async validateSortOptions() {
+    // Select all the sorting option elements
     const options = await this.page.$$('ul[role="listbox"] li[role="option"]');
-
-    // Extract text from each option
-    const optionTexts = await Promise.all(options.map(option => option.innerText()));
-     expect(optionTexts).toEqual([
-         'Featured',
-         'Price: Low to High',
-         'Price: High to Low',
-         'Best-Selling',
-         'Highest-Rated',
-         'Newest'
-     ]);
+    // Extract and trim text from each option
+    const optionTexts = await Promise.all(options.map(async (option) => (await option.innerText()).trim()));
+    // Verify that the extracted texts match the expected sorting options
+    expect(optionTexts).toEqual(sortingOptions);
 }
 
 async clickSortBy(){
@@ -265,23 +423,27 @@ async clickSortBy(){
 }
 
 
-async selectSortOption(){
-    
-    // Get all options in the dropdown
-    const options = await this.page.$$('ul[role="listbox"] li[role="option"]');
+async selectSortOption() {
+    // Get all options in the dropdown using Locator API
+    const options = this.page.locator('ul[role="listbox"] li[role="option"]');
+
+    // Get the count of available options
+    const optionCount = await options.count();
 
     // Select a random option
-    const randomIndex = Math.floor(Math.random() * options.length);
-    const randomOption = options[randomIndex];
-    const randomText = await randomOption.innerText();
+    const randomIndex = Math.floor(Math.random() * optionCount);
+    const randomOption = options.nth(randomIndex);
+    const randomText = (await randomOption.innerText()).trim();
+
+    // Click the randomly selected option
     await randomOption.click();
-    console.log(randomText);
-  //  await this.page.getByRole('button', { name: randomOption }).click();
-    // Verify that the selected option matches the clicked option
-    const selectedOption = await this.page.locator('li[aria-selected="true"]');
-    const selectedText = await selectedOption.innerText();
-    expect(selectedText).toEqual(randomText);
+    console.log(`Selected option: ${randomText}`);
+
+    // Wait for a specified period to ensure any UI updates or async actions complete
+    await this.page.waitForTimeout(2000); // Adjust the time (in milliseconds) as needed
+    await expect(this.page.getByText(`Sort By:${randomText}`).first()).toBeVisible();
 }
+
 
 
 async clickAddToCart(){
@@ -537,7 +699,7 @@ async clickThroughSwipers() {
     await this.logProductDetails(product);
 
     }
-    await this.clickThroughSwipers();
+    //await this.clickThroughSwipers();
        
   }
 
@@ -554,5 +716,152 @@ async clickThroughSwipers() {
         await this.verifyProducts();
     }
 }
+async validateFiltersForAllTypes() {
+    // Locate the parent elements that contain the filters
+    const parentElements = await this.page.$$(filter_container);
+
+    // Loop through each parent element
+    for (const parentElement of parentElements) {
+        // Extract the filter name
+        const filterName = await parentElement.innerText();
+
+        // Construct the selector for checkboxes or buttons
+        const checkboxSelector = `h3:has-text("${filterName}") + div input[type="checkbox"]`;
+        const buttonSelector = `h3:has-text("${filterName}") + div button[type="button"]`;
+
+        // Check if checkboxes exist
+        const checkboxes = await this.page.$$(checkboxSelector);
+        if (checkboxes.length > 0) {
+            // Wait for the checkboxes to be visible
+            await Promise.all(checkboxes.map(checkbox => this.page.waitForSelector(checkboxSelector, { timeout: 5000 })));
+        } else {
+            // Check if the buttons exist
+            const buttons = await this.page.$$(buttonSelector);
+            if (buttons.length > 0) {
+                // Wait for the buttons to be visible
+                await Promise.all(buttons.map(button => this.page.waitForSelector(buttonSelector, { timeout: 5000 })));
+            } else {
+                // If neither checkboxes nor buttons are found, log a message
+                console.log(`No checkboxes or buttons found for filter: ${filterName}`);
+            }
+        }
+    }
+}
+
+async clickOnMultiplePDPSizeVariantButton() {
+    await this.page.waitForTimeout(5000);
+    await this.page.locator('section.flex.flex-wrap.items-center.gap-2\\.5.pt-4').first().waitFor({ state: 'visible' });
+    // Locate all sections that contain the size variants
+    const sections = await this.page.locator('section.flex.flex-wrap.items-center.gap-2\\.5.pt-4');
+
+    // Get the total number of sections
+    const sectionCount = await sections.count();
+
+    for (let i = 0; i < sectionCount; i++) {
+        // Wait for the current section to be visible
+        await sections.nth(i).waitFor({ state: 'visible' });
+
+        // Find all enabled size variant buttons within the current section
+        const enabledButtons = await sections.nth(i).locator('button:not([disabled])');
+
+        // Check the count of enabled buttons
+        const enabledButtonCount = await enabledButtons.count();
+
+        if (enabledButtonCount > 0) {
+            let addToCartButtonEnabled = false;
+
+            while (!addToCartButtonEnabled) {
+                // Select a random enabled button
+                const randomIndex = Math.floor(Math.random() * enabledButtonCount);
+
+                // Click the randomly selected enabled button
+                await enabledButtons.nth(randomIndex).click();
+                console.log(`Clicked enabled button with index: ${randomIndex} in section: ${i}`);
+
+                // Check if the Add to Cart button is enabled
+                addToCartButtonEnabled = await this.addtoCartButton.isEnabled();
+
+                if (addToCartButtonEnabled) {
+                    console.log('Add to Cart button is enabled.');
+                    return; // Exit the function once the Add to Cart button is enabled
+                }
+            }
+        } else {
+            console.log(`No enabled buttons found in section: ${i}`);
+        }
+    }
+
+    console.log('No enabled buttons found in any section');
+}
+
+
+async clickOnPDPSizeVariantButton() {
+    // Wait for the size variant section to be visible
+    await this.page.locator('section.flex.flex-wrap.items-center.gap-2\\.5.pt-4').first().waitFor({ state: 'visible' });
+
+    // Find all enabled size variant buttons
+    const enabledButtons = await this.page.locator('section.flex.flex-wrap.items-center.gap-2\\.5.pt-4 button:not([disabled])');
+
+    // Check the count of enabled buttons
+    const enabledButtonCount = await enabledButtons.count();
+
+    if (enabledButtonCount > 0) {
+        let addToCartButtonEnabled = false;
+
+        while (!addToCartButtonEnabled) {
+            // Select a random enabled button
+            const randomIndex = Math.floor(Math.random() * enabledButtonCount);
+
+            // Click the randomly selected enabled button
+            await enabledButtons.nth(randomIndex).click();
+            console.log(`Clicked enabled button with index: ${randomIndex}`);
+
+            // Check if the Add to Cart button is enabled
+            addToCartButtonEnabled = await this.addtoCartButton.isEnabled();
+
+            if (addToCartButtonEnabled) {
+                console.log('Add to Cart button is enabled.');
+                return; // Exit the function once the Add to Cart button is enabled
+            }
+        }
+    } else {
+        console.log('No enabled buttons found');
+    }
+}
+
+async validateSelectSizeValue() {
+    await this.clickOnPDPSizeVariantButton();
+    const selectedSizeValue = await this.page.locator('p:has-text("Size") + strong.font-bold').textContent();
+    expect(selectedSizeValue).toBeTruthy();
 
 }
+
+async validateProductAvailabilityMessage() {
+    await this.clickOnMultiplePDPSizeVariantButton();
+    await this.availabilityText.waitFor({ state: 'visible' });
+    await expect(this.availabilityText).toBeVisible();
+    // Locate the p element with the text "Availability:"
+    const pElement = await this.page.locator('p:has-text("Availability:")');
+    // Locate the strong element that follows the p element
+    const strongElement = pElement.locator('xpath=following-sibling::strong');
+    // Get the text content of the strong element
+    const strongText = await strongElement.textContent();
+    expect(strongText).toBeTruthy();
+}
+
+async validateProductQTYSection() {
+    await this.qtyText.waitFor({ state: 'visible' });
+    await expect(this.qtyText).toBeVisible();
+    const initialInputValue = await this.qtyInputTextBox.inputValue();
+    if (initialInputValue == 1) {
+        //await expect(this.qtyMinusButton).toBeDisabled();
+        await expect(this.qtyPlusButton).toBeVisible();
+    } else {
+        await expect(this.qtyMinusButton).toBeVisible();
+        await expect(this.qtyPlusButton).toBeVisible();
+    }
+    await expect(this.qtyInputTextBox).toBeVisible();
+}
+
+}
+
