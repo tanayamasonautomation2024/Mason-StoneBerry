@@ -3,11 +3,12 @@ import { test, expect } from '@playwright/test';
 import { HomePageNew } from '../pages/mason_home_page1';
 import { SignInPageNew } from '../pages/mason_signin_page1';
 import { MyAccountPage } from '../pages/mason_myaccount_page';
+import { MyAccountWishListPage } from '../pages/mason_myAccountWishList_page';
 import { allure } from 'allure-playwright';
 import fs from 'fs';
 require('dotenv').config();
 
-const creditUserFile = './credituser.json';
+const creditUserFile = './creditUser2.json';
 const nonCreditUserFile = './noncredituser.json';
 
 const homepage_data = JSON.parse(JSON.stringify(require('../test_data/mason_sb_home_page_data.json')));
@@ -273,9 +274,10 @@ test.describe("Mason MyAccount Longstanding Customer", () => {
       test.skip('Skipping test due to failed login');
     }
     const myaccountPage = new MyAccountPage(page);
+    const myaccountWishListPage = new MyAccountWishListPage(page);
     await myaccountPage.redirectToMyAccount();
     await myaccountPage.clickMyAccountWishListLink();
-    await myaccountPage.validateProductImagesWishlist();
+    await myaccountWishListPage.validateTheWishListedItem();
   })
 
   test.afterEach(async ({ page }) => {

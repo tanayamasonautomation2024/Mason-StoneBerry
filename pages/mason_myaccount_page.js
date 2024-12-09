@@ -93,7 +93,7 @@ exports.MyAccountPage = class MyAccountPage {
         this.myaccount_myprofile_email = page.getByLabel(myaccountpage_locator.myaccount_myprofile_email);
         this.myaccount_changepassword_link = page.getByRole('link', { name: myaccountpage_locator.myaccount_changepassword, exact: true }).first();
         this.myaccount_changepassword_button = page.getByRole('button', { name: myaccountpage_locator.myaccount_changepassword });
-        this.myaccount_changepassword_currentpassword = page.getByLabel(myaccountpage_locator.myaccount_changepassword_currentpassword);
+        this.myaccount_changepassword_currentpassword = page.getByLabel(myaccountpage_locator.myaccount_changepassword_currentpassword1);
         this.myaccount_changepassword_newpassword = page.getByLabel(myaccountpage_locator.myaccount_changepassword_newpassword);
         this.myaccount_orders_vieworderdetails = page.getByRole('link', { name: myaccountpage_locator.myaccount_orders_vieworderdetails }).first();
         this.myaccount_orders_withoutordersbutton = page.getByRole('button', { name: myaccountpage_locator.myaccount_orders_withoutordersbutton });
@@ -212,28 +212,29 @@ exports.MyAccountPage = class MyAccountPage {
     }
     async clickMyAccountViewSavedCCLink() {
         await this.myaccount_viewsavedcc_link.click();
-        await this.page.waitForURL('**/account/savedcreditcard/');
-        await expect(this.page).toHaveURL(/.*\/account\/savedcreditcard\//);
+        await this.page.waitForURL('**/account/savedcreditcard');
+        await expect(this.page).toHaveURL(/.*\/account\/savedcreditcard/);
     }
     async clickMyAccountViewMyProfileLink() {
         await this.myaccount_viewmyprofile_link.click();
-        await this.page.waitForURL('**/account/myprofile/');
-        await expect(this.page).toHaveURL(/.*\/account\/myprofile\//);
+        await this.page.waitForURL('**/account/myprofile');
+        await expect(this.page).toHaveURL(/.*\/account\/myprofile/);
     }
     async clickMyAccountViewOrderLink() {
         await this.myaccount_vieworders_link.click();
-        await this.page.waitForURL('**/account/orders/');
-        await expect(this.page).toHaveURL(/.*\/account\/orders\//);
+        await this.page.waitForURL('**/account/orders');
+        await expect(this.page).toHaveURL(/.*\/account\/orders/);
     }
     async clickMyAccountViewAddressLink() {
         await this.myaccount_viewaddresses_link.click();
-        await this.page.waitForURL('**/account/addresses/');
-        await expect(this.page).toHaveURL(/.*\/account\/addresses\//);
+        await this.page.waitForURL('**/account/addresses');
+        await expect(this.page).toHaveURL(/.*\/account\/addresses/);
     }
     async clickMyAccountViewWishListLink() {
         await this.myaccount_viewwishlist_link.click();
-        await this.page.waitForURL('**/account/wishlist/');
-        await expect(this.page).toHaveURL(/.*\/account\/wishlist\//);
+        await this.page.waitForTimeout(5000);
+        await this.page.waitForURL('**/account/wishlist');
+        await expect(this.page).toHaveURL(/.*\/account\/wishlist/);
     }
     async clickAddNewAddressButton() {
         await this.myaccount_addnewaddress_button.click();
@@ -463,7 +464,7 @@ exports.MyAccountPage = class MyAccountPage {
 
         // Define the expected <a> text and URL pattern
         const aTextPattern = /View Order Details/;
-        const aHrefPattern = /\/account\/orders\/orderdetails\/\?orderId=\d+/;
+        const aHrefPattern = /\/account\/orders\/orderdetails\?orderId=\d+(&.*)?/;
 
         // Get all elements matching the "Order #" criteria
         const orderElements = await orderLocators.all();
@@ -532,7 +533,7 @@ exports.MyAccountPage = class MyAccountPage {
         console.log('Order Date Count :' + orderLocatorsCount);
     
         const aTextPattern = /View Order Details/;
-        const aHrefPattern = /\/account\/orders\/orderdetails\/\?orderId=\d+/;
+        const aHrefPattern = /\/account\/orders\/orderdetails\?orderId=\d+(&.*)?/;
     
         const orderElements = await orderLocators.all();
         expect(orderElements.length).toBeGreaterThan(0);
@@ -564,7 +565,7 @@ exports.MyAccountPage = class MyAccountPage {
                 aElement.click(),
             ]);
     
-            await expect(this.page).toHaveURL(/.*\/account\/orders\/orderdetails\/\?orderId=\d+&zipCode=\d+$/);
+            await expect(this.page).toHaveURL(/.*\/account\/orders\/orderdetails\?orderId=\d+&zipCode=\d+($|\/)/);
     
             await this.page.goBack();
         }
@@ -582,7 +583,7 @@ exports.MyAccountPage = class MyAccountPage {
         console.log('Order Date Count :' + orderLocatorsCount);
     
         const aTextPattern = /View Order Details/;
-        const aHrefPattern = /\/account\/orders\/orderdetails\/\?orderId=\d+/;
+        const aHrefPattern = /\/account\/orders\/orderdetails\?orderId=\d+(&.*)?/;
     
         const orderElements = await orderLocators.all();
         expect(orderElements.length).toBeGreaterThan(0);
@@ -614,7 +615,7 @@ exports.MyAccountPage = class MyAccountPage {
                 aElement.click(),
             ]);
     
-            await expect(this.page).toHaveURL(/.*\/account\/orders\/orderdetails\/\?orderId=\d+&zipCode=\d+$/);
+            await expect(this.page).toHaveURL(/.*\/account\/orders\/orderdetails\?orderId=\d+&zipCode=\d+($|\/)/);
     
             await this.page.goBack();
         }
@@ -674,7 +675,7 @@ exports.MyAccountPage = class MyAccountPage {
         await expect(this.page.getByText('HomeMy AccountSaved Credit')).toBeVisible();
         await expect(this.page.locator(`button:text("Add New Credit/Debit Card")[data-state="closed"]`)).toBeVisible();
         await expect(this.page.locator('button:text("Add New Credit/Debit Card")').first()).toBeVisible();
-        await this.page.waitForSelector('p:text("Default Credit Card")');
+        await this.page.waitForSelector('h2:text("Default Credit Card")');
 
     }
 
@@ -836,19 +837,21 @@ exports.MyAccountPage = class MyAccountPage {
         await expect(creditLimitElement).toHaveText(/\$\d+(\.\d{1,2})?/);
 
         //const availableCreditTextElement = await this.page.$('section.flex p.text-22');
-        const availableCreditTextElement = await this.page.locator('section.flex p.text-22');
+        const availableCreditTextElement = await this.page.locator('section p.text-\\[22px\\].text-green-700');
+
         // Extract the text content of the value element
-        const availableCreditValue = await availableCreditTextElement.textContent();
+       // const availableCreditValue = await availableCreditTextElement.textContent();
         await expect(availableCreditTextElement).toHaveText(/\$\d+(\.\d{1,2})?/);
 
         // Output the content and values
         console.log('Credit Limit Text:', creditLimitText);
-        console.log('Available Credit Value:', availableCreditValue);
+       // console.log('Available Credit Value:', availableCreditValue);
     }
 
     async validateAvailableCreditValueColor() {
         //const availableCreditTextElement = await this.page.$('section.flex p.text-22');
-        const availableCreditTextElement = await this.page.locator('section.flex p.text-22');
+        const availableCreditTextElement = await this.page.locator('section p.text-\\[22px\\].text-green-700');
+
         // Extract the text content of the value element
         const availableCreditValue = await availableCreditTextElement.textContent();
         // Parse the price value (remove the $ and convert to a number)
@@ -938,8 +941,8 @@ exports.MyAccountPage = class MyAccountPage {
     }
 
     async clickOnProductNamePlacedOrder() {
-        await this.page.locator('section.truncate a.text-sm').first().click();
-        await expect(this.page).toHaveURL(/.*\/account\/orders\/orderdetails\//);
+        await this.page.locator('a.text-sm').first().click();
+        await expect(this.page).toHaveURL(/\/account\/orders\/orderdetails/);
     }
 
     async validateDefaultShippingandBillingAddressSection() {
@@ -1550,28 +1553,37 @@ exports.MyAccountPage = class MyAccountPage {
         await this.page.locator('section.mb-4').first().waitFor({ state: 'visible' });
         const addressSections = await this.page.locator('section.mb-4');
         const addressSectionsCount = await addressSections.count();
-        const deleteAddressCount = (addressSectionsCount - 1);
         console.log('Total Saved Address Count:', addressSectionsCount);
+    
+        if (addressSectionsCount === 0) {
+            console.log('No addresses to delete.');
+            return;  // Exit early if no addresses are found
+        }
+    
+        const deleteAddressCount = addressSectionsCount - 1;
         console.log('Total Delete Address Count:', deleteAddressCount);
-
-        await this.page.getByRole('button', { name: myaccountpage_locator.myaccount_savedaddress_remove_button }).nth(deleteAddressCount).click();
-        await expect(this.page.locator('.text-forestGreen').filter({ hasText: 'Address deleted successfully' })).toBeVisible();
-        await this.page.locator('.text-forestGreen').filter({ hasText: 'Address deleted successfully' }).waitFor({ state: 'hidden' });
-
-        // Verify that the form submission was successful
-        const successMessage = await this.page.$('.text-forestGreen');
+        
+        const removeButton = this.page.getByRole('button', { name: myaccountpage_locator.myaccount_savedaddress_remove_button }).nth(deleteAddressCount);
+        
+        // Ensure the button is visible and scroll to it if needed
+        await removeButton.scrollIntoViewIfNeeded();  // Scrolls the element into view if it's off-screen
+        await removeButton.waitFor({ state: 'visible', timeout: 15000 });  // Wait for button to be visible
+        await removeButton.click();
+    
+        await this.page.getByText('Address deleted successfully').waitFor({ state: "visible" });
+    
+        const successMessage = await this.page.getByText('Address deleted successfully');
         if (successMessage) {
             const deletedAddressSections = await this.page.locator('section.mb-4');
             const deletedAddressSectionsCount = await deletedAddressSections.count();
-            //await expect(deletedAddressSections).toHaveCount(deleteAddressCount);
             console.log('Address deleted successfully!');
-            console.log('Address deleted Count!' + deletedAddressSectionsCount);
+            console.log('Address deleted Count: ' + deletedAddressSectionsCount);
         } else {
             console.log('Failed to delete address.');
         }
+    }    
 
-    }
-
+    
     async undoRemoveAddress() {
         //await this.page.reload();
         await this.page.locator('section.mb-4').first().waitFor({ state: 'visible' });
@@ -1680,16 +1692,16 @@ exports.MyAccountPage = class MyAccountPage {
             console.log('Address updated successfully!');
 
             // Check if the input fields retain the entered data
-            const firstNameValue = await this.page.locator('strong').filter({ hasText: firstName }).textContent();
+            const firstNameValue = await this.page.locator('strong').filter({ hasText: firstName }).first().textContent();
             //expect(firstNameValue).toMatch(firstName);
             expect(firstNameValue).toBeTruthy();
-            const lastNameValue = await this.page.locator('strong').filter({ hasText: lastName }).textContent();
+            const lastNameValue = await this.page.locator('strong').filter({ hasText: lastName }).first().textContent();
             //expect(lastNameValue).toMatch(lastName);
             expect(lastNameValue).toBeTruthy();
-            const addressValue = await this.page.locator('p').filter({ hasText: address }).textContent();
+            const addressValue = await this.page.locator('p').filter({ hasText: address }).first().textContent();
             //expect(addressValue).toMatch(address);
             expect(addressValue).toBeTruthy();
-            const zipCityStateValue = await this.page.locator('p').filter({ hasText: fullAddress }).textContent();
+            const zipCityStateValue = await this.page.locator('p').filter({ hasText: fullAddress }).first().textContent();
             //expect(zipCityStateValue).toMatch(fullAddress);
             expect(zipCityStateValue).toBeTruthy();
             //const phoneNumberValue = await this.page.locator('p').filter({ hasText: phoneNumber }).textContent();
@@ -1784,7 +1796,7 @@ exports.MyAccountPage = class MyAccountPage {
             await expect(this.page.getByText('Default Billing & Shipping Address')).toBeVisible();
             await this.page.reload({ timeout: 15000 });
             await this.displayAddressSection();
-            const defaultShippingFirstName = await this.page.locator('section.mb-4.rounded-md.border.border-foggyGray > strong').first().textContent();
+            const defaultShippingFirstName = await this.page.locator('section.gbmask strong').first().textContent();
             expect(defaultShippingFirstName).toMatch(noDefaultAddressFirstName);
 
         }
@@ -1827,7 +1839,7 @@ exports.MyAccountPage = class MyAccountPage {
         await expect(this.page.getByText('Address added successfully')).toBeVisible();
         await this.validateDefaultShippingFirstSection();
         await this.page.reload();
-        const defaultShippingFirstName = await this.page.locator('section.mb-4.rounded-md.border.border-foggyGray > strong').nth(0).textContent();
+        const defaultShippingFirstName = await this.page.locator('section.gbmask strong').nth(0).textContent();
         expect(defaultShippingFirstName).toMatch(firstName);
 
     }
