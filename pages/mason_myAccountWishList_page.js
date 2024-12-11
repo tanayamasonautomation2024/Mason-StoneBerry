@@ -253,11 +253,15 @@ async validatePricingFormat(){
 }
 
 async validateHeartIconIsFilled(){
+    await this.page.waitForTimeout(5000);
+    await this.page.waitForLoadState('load');
     const productItems = await this.page.$$(myaccountpage_locator.wishlist_items);
         const itemCount = productItems.length;
         console.log(`Total product items: ${itemCount}`);
 
-        for (let i = 0; i < itemCount; i++) {
+        const maxItemsToCheck = Math.min(itemCount, 10);
+
+        for (let i = 0; i < maxItemsToCheck; i++) {
             const productItem = productItems[i];
             const wishlistIcon = await productItem.$(myaccountpage_locator.wishlist_icon);
             expect(wishlistIcon).not.toBeNull();

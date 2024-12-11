@@ -13,7 +13,7 @@ const newuser_myaccount_paymentpage_dobradiobutton="Date of birth";
 const newuser_myaccount_paymentpage_dobtextbox="*Date of Birth (MM/DD/YYYY)";
 const newuser_myaccount_paymentpage_continuebutton="Continue";
 const newuser_myaccount_orderspage_breadcrumb="HomeMy AccountOrders";
-const newuser_myaccount_orderspage_headertext="//section[@class='flex items-center gap-2']//p[contains(text(),'Orders')]";
+const newuser_myaccount_orderspage_headertext="Orders";
 const newuser_myaccount_orderspage_norecentordertext="There are no recent orders in your account, but let’s see if we can find the order you’re looking for.";
 const newuser_myaccount_addresspage_breadcrumb="HomeMy AccountAddresses";
 const newuser_myaccount_addresspage_headertext="//section[@class='flex items-center gap-x-4']//h1[contains(text(),'Addresses')]";
@@ -26,7 +26,7 @@ const newuser_myaccount_saveccpage_addnewccbuttondd="(//button[contains(text(),'
 const newuser_myaccount_saveccpage_savedefaultcccheckbox="(//button[@role='checkbox'])[1]";
 const newuser_myaccount_saveccpage_savedefaultbillshipcheckbox="(//button[@role='checkbox'])[2]";
 const newuser_myaccount_wishlistpage_breadcrumb="HomeMy AccountWishlist";
-const newuser_myaccount_wishlistpage_headertext="Wish List0 Items";
+const newuser_myaccount_wishlistpage_headertext="Wish List";
 const newuser_myaccount_wishlistpage_norecentcctext="There are currently no items saved to your wish list.";
 
 
@@ -45,7 +45,7 @@ exports.NewUserMyAccountPage = class NewUserMyAccountPage{
         this.newuser_myaccount_paymentpage_dobtextbox=page.getByText(newuser_myaccount_paymentpage_dobtextbox);
         this.newuser_myaccount_paymentpage_continuebutton=page.getByRole('button', { name: newuser_myaccount_paymentpage_continuebutton });
         this.newuser_myaccount_orderspage_breadcrumb=page.getByText(newuser_myaccount_orderspage_breadcrumb);
-        this.newuser_myaccount_orderspage_headertext=page.locator(newuser_myaccount_orderspage_headertext);
+        this.newuser_myaccount_orderspage_headertext=page.locator(`h1:has-text("${newuser_myaccount_orderspage_headertext}")`);
         this.newuser_myaccount_orderspage_norecentordertext=page.getByText(newuser_myaccount_orderspage_norecentordertext);
         this.newuser_myaccount_addresspage_breadcrumb=page.getByText(newuser_myaccount_addresspage_breadcrumb);
         this.newuser_myaccount_addresspage_headertext=page.locator(newuser_myaccount_addresspage_headertext);
@@ -58,9 +58,9 @@ exports.NewUserMyAccountPage = class NewUserMyAccountPage{
         this.newuser_myaccount_saveccpage_savedefaultcccheckbox=page.locator(newuser_myaccount_saveccpage_savedefaultcccheckbox);
         this.newuser_myaccount_saveccpage_savedefaultbillshipcheckbox=page.locator(newuser_myaccount_saveccpage_savedefaultbillshipcheckbox);
         this.newuser_myaccount_wishlistpage_breadcrumb=page.getByText(newuser_myaccount_wishlistpage_breadcrumb);
-        this.newuser_myaccount_wishlistpage_headertext=page.getByText(newuser_myaccount_wishlistpage_headertext);
+        this.newuser_myaccount_wishlistpage_headertext=page.locator(`h1:has-text("${newuser_myaccount_wishlistpage_headertext}")`);
         this.newuser_myaccount_wishlistpage_norecentcctext=page.getByText(newuser_myaccount_wishlistpage_norecentcctext);
-        this.newuser_myaccount_wishlistpage_wishlistimgicon=page.locator('section').filter({ hasText: /^Wish List0 Items$/ }).getByRole('img');
+        this.newuser_myaccount_wishlistpage_wishlistimgicon=page.locator('section').filter({ hasText: /^Wish List$/ }).locator('svg');
     }
 
     async validateNewUserStoneBerryCreditSection(firstLinkName,secondLinkName){
@@ -72,7 +72,8 @@ exports.NewUserMyAccountPage = class NewUserMyAccountPage{
         expect(logoSrc).toContain('ZBSite-creditPaymentLogo');
 
         // Verify "Get Pre-Qualified" link display and redirection
-        const getPreQualifiedLink = await this.page.$('a[href="/credit-limit-prequalification/"]');
+        await this.page.waitForSelector('a[href="/credit-limit-prequalification"]', { visible: true });
+        const getPreQualifiedLink = await this.page.$('a[href="/credit-limit-prequalification"]');
         expect(getPreQualifiedLink).not.toBeNull();
 
         const getPreQualifiedLinkText = await getPreQualifiedLink.innerText();
@@ -80,14 +81,17 @@ exports.NewUserMyAccountPage = class NewUserMyAccountPage{
 
         // Verify "Get Pre-Qualified" link redirection
         await getPreQualifiedLink.click();
-        await this.page.waitForNavigation();
+        await this.page.waitForNavigation({ timeout: 15000 }); 
         //expect(this.page.url()).toContain('/credit-limit-prequalification/');
-        expect(this.page).toHaveURL(/.*credit-limit-prequalification/);
+        //expect(this.page).toHaveURL(/.*credit-limit-prequalification/);
+        const currentUrl = await this.page.url();
+        expect(currentUrl).toContain('credit-limit-prequalification');
 
         // Navigate back to the original page
         await this.page.goBack();
-
+        await this.page.waitForNavigation({ timeout: 15000 }); 
         // Verify "Learn More" button display and navigation
+        await this.page.waitForSelector('button:has-text("' + secondLinkName + '")', { visible: true });
         const learnMoreButton = await this.page.$(`button:has-text("${secondLinkName}")`);
         expect(learnMoreButton).not.toBeNull();
 
@@ -96,8 +100,8 @@ exports.NewUserMyAccountPage = class NewUserMyAccountPage{
 
         // Verify "Learn More" button navigation
         await learnMoreButton.click();
-        await this.page.waitForNavigation();
-        expect(this.page).toHaveURL(/.*buynowpaylater/);
+        await this.page.waitForNavigation({ timeout: 15000 }); 
+        expect(this.page).toHaveURL(/.*buy-now-pay-later/);
     }
 
     async enterCustomerAccountNumber(enterCustomerAccountNumber){
@@ -125,19 +129,21 @@ exports.NewUserMyAccountPage = class NewUserMyAccountPage{
     }
 
     async validateCreditAccountVerificationDisplay(){
-        await expect(this.newuser_myaccount_paymentpage_breadcrumb).toBeVisible();
-        await expect(this.newuser_myaccount_paymentpage_pageheader).toBeVisible();
-        await expect(this.newuser_myaccount_paymentpage_step1).toBeVisible();
-        await expect(this.newuser_myaccount_paymentpage_customernumber_textbox).toBeVisible();
-        await expect(this.newuser_myaccount_paymentpage_c2text).toBeVisible();
-        await expect(this.newuser_myaccount_paymentpage_step2).toBeVisible();
-        await expect(this.newuser_myaccount_paymentpage_ssnradiobutton).toBeVisible();
-        await expect(this.newuser_myaccount_paymentpage_dobradiobutton).toBeVisible();
-        await expect(this.newuser_myaccount_paymentpage_continuebutton).toBeVisible();
+        await (this.newuser_myaccount_paymentpage_breadcrumb).waitFor({state:'visible'});
+        await (this.newuser_myaccount_paymentpage_pageheader).waitFor({state:'visible'});
+        await (this.newuser_myaccount_paymentpage_step1).waitFor({state:'visible'});
+        await (this.newuser_myaccount_paymentpage_customernumber_textbox).waitFor({state:'visible'});
+        await (this.newuser_myaccount_paymentpage_c2text).waitFor({state:'visible'});
+        await (this.newuser_myaccount_paymentpage_step2).waitFor({state:'visible'});
+        await (this.newuser_myaccount_paymentpage_ssnradiobutton).waitFor({state:'visible'});
+        await (this.newuser_myaccount_paymentpage_dobradiobutton).waitFor({state:'visible'});
+        await (this.newuser_myaccount_paymentpage_continuebutton).waitFor({state:'visible'});
     }
 
     async navigatetoMakeAPaymentNonCreditUser(){
-        await this.page.waitForURL('**/account/creditaccountverification/?destination=payment');
+        await this.page.waitForURL(/.*\/account\/creditaccountverification\?destination=payment/, {
+            timeout: 90000  // Timeout set to 90 seconds
+          });
         await this.newuser_myaccount_paymentpage_pageheader.waitFor({ state: 'visible' });
 
     }
@@ -151,23 +157,23 @@ exports.NewUserMyAccountPage = class NewUserMyAccountPage{
     }
 
     async validateNoRecentOrdersSection(){
-        await expect(this.newuser_myaccount_orderspage_breadcrumb).toBeVisible();
+        await (this.newuser_myaccount_orderspage_breadcrumb).waitFor({state:'visible'});
         await expect(this.newuser_myaccount_orderspage_headertext).toBeVisible();
-        await expect(this.newuser_myaccount_orderspage_norecentordertext).toBeVisible();
+        await (this.newuser_myaccount_orderspage_norecentordertext).waitFor({state:'visible'});
     }
 
     async validateNoRecentAddressesSection(){
-        await expect(this.newuser_myaccount_addresspage_breadcrumb).toBeVisible();
-        await expect(this.newuser_myaccount_addresspage_headertext).toBeVisible();
-        await expect(this.newuser_myaccount_addresspage_norecentaddresstext).toBeVisible();
+        await (this.newuser_myaccount_addresspage_breadcrumb).waitFor({state:'visible'});
+        await (this.newuser_myaccount_addresspage_headertext).waitFor({state:'visible'});
+        await (this.newuser_myaccount_addresspage_norecentaddresstext).waitFor({state:'visible'});
     }
 
     async validateNoSavedCCSection(){
-        await expect(this.newuser_myaccount_saveccpage_breadcrumb).toBeVisible();
-        await expect(this.newuser_myaccount_saveccpage_headertext).toBeVisible();
-        await expect(this.newuser_myaccount_saveccpage_norecentcctext).toBeVisible();
-        await expect(this.newuser_myaccount_saveccpage_addnewccbutton).toBeVisible();
-        await expect(this.newuser_myaccount_saveccpage_addnewccbuttondd).toBeVisible();
+        await (this.newuser_myaccount_saveccpage_breadcrumb).waitFor({state:'visible'});
+        await (this.newuser_myaccount_saveccpage_headertext).waitFor({state:'visible'});
+        await (this.newuser_myaccount_saveccpage_norecentcctext).waitFor({state:'visible'});
+        await (this.newuser_myaccount_saveccpage_addnewccbutton).waitFor({state:'visible'});
+        await (this.newuser_myaccount_saveccpage_addnewccbuttondd).waitFor({state:'visible'});
     }
 
     async clickAddNewCCButton(){
@@ -183,10 +189,10 @@ exports.NewUserMyAccountPage = class NewUserMyAccountPage{
     }
 
     async validateNoWishlistSection(){
-        await expect(this.newuser_myaccount_wishlistpage_breadcrumb).toBeVisible();
-        await expect(this.newuser_myaccount_wishlistpage_headertext).toBeVisible();
-        await expect(this.newuser_myaccount_wishlistpage_norecentcctext).toBeVisible();
-        await expect(this.newuser_myaccount_wishlistpage_wishlistimgicon).toBeVisible();
+        await (this.newuser_myaccount_wishlistpage_breadcrumb).waitFor({state:'visible'});
+        await (this.newuser_myaccount_wishlistpage_headertext).waitFor({state:'visible'});
+        await (this.newuser_myaccount_wishlistpage_norecentcctext).waitFor({state:'visible'});
+        await (this.newuser_myaccount_wishlistpage_wishlistimgicon).waitFor({state:'visible'});
     }
 
     async redirectToMyAccount() {

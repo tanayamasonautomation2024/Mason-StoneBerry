@@ -266,7 +266,7 @@ exports.MasonDPQPage = class MasonDPQPage {
   }
 
   async validateElectronicCommunication() {
-    await expect(this.page.getByRole('button', { name: 'Electronic Communications' })).toBeVisible();
+    await (this.page.getByRole('button', { name: 'Electronic Communications' })).waitFor({state:'visible'});
     await this.page.getByRole('button', { name: 'Electronic Communications' }).click();
     await expect(this.page.getByLabel('Electronic Communications').locator('div')).toContainText(electronic_communication);
     await expect(this.page.locator('section').filter({ hasText: /^Submit$/ })).toBeVisible();

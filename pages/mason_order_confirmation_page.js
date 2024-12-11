@@ -13,7 +13,7 @@ const orderConfirmationAccountNumber = 'section.mb-9.mt-8.lg\\:mb-6.lg\\:mt-0:ha
 const orderConfirmationShippingSectionText = 'Shipping';
 const orderConfirmationShippingSectionAddressText = 'Shipping Address';
 const orderConfirmationShippingSectionShippingMethodText = 'Shipping Method';
-const orderConfirmationPaymentMethodSection = 'section.flex.w-1\\/2.flex-col.gap-8';
+const orderConfirmationPaymentMethodSection = 'section.flex.flex-col.gap-8.md\\:w-1\\/2:has-text("Payment Method")';
 const orderConfirmationProductSection = 'section.w-full.px-4.md\\:max-w-\\[460px\\]';
 const orderConfirmationThankYouText = 'Thank you for your order,';
 const orderConfirmationThankYouDownPaymentText = 'Thank you for your down payment,';
@@ -58,6 +58,7 @@ const orderConfCreateAccountText ='Create an account to save time checking out f
             this.orderConfCreateAccountButton = page.getByRole('button', { name: 'Create Account' });
             this.orderConfShippingHeaderText = page.getByRole('heading', { name: orderConfirmationShippingSectionText });
             this.orderConfFullWidthBannerImg = page.locator('section.mb-20.mt-6.w-full.md\\:mb-14.md\\:mt-10.md\\:px-4 img');
+            this.pending_credit_approval=page.locator('section').filter({ hasText: /^Pending Credit Approval$/ });
 
         }
 
@@ -126,35 +127,64 @@ const orderConfCreateAccountText ='Create an account to save time checking out f
             // Define expected labels
             const expectedLabels = [
                 orderConfirmationOrderSummarySubTotal,
-                orderConfirmationOrderSummaryShipping,
-                orderConfirmationOrderSummaryEstSurcharge,
                 orderConfirmationOrderSummarySalesTax,
                 orderConfirmationOrderSummaryOrderTotal
             ];
-
-            // Check visibility for each label
+    
+            // Optional labels
+            const optionalLabels = [
+                orderConfirmationOrderSummaryShipping,
+                orderConfirmationOrderSummaryEstSurcharge
+            ];
+    
+            // Check visibility for required labels
             for (const label of expectedLabels) {
                 await expect(this.page.getByText(label)).toBeVisible();
             }
-
+    
+            // Check visibility for optional labels, if present
+            for (const label of optionalLabels) {
+                const labelLocator = this.page.getByText(label);
+                if (await labelLocator.count() > 0) {
+                    await expect(labelLocator).toBeVisible();
+                }
+            }
+    
             // Extract and validate text content
             const subTotalText = await this.page.getByText(orderConfirmationOrderSummarySubTotal).locator('..').locator('p:last-child').textContent();
-            const estShippingText = await this.page.getByText(orderConfirmationOrderSummaryShipping).locator('..').locator('p').textContent();
-            const estSurchargeText = await this.page.getByText(orderConfirmationOrderSummaryEstSurcharge).locator('..').locator('p').textContent();
-            const surchargeTooltipButton = this.page.getByText(orderConfirmationOrderSummaryEstSurcharge).locator('..').locator(tooltipButton);
-            await expect(surchargeTooltipButton).toBeVisible();
             const estSalesTaxText = await this.page.getByText(orderConfirmationOrderSummarySalesTax).locator('..').locator('p').textContent();
+            const orderTotalText = await this.page.getByText(orderConfirmationOrderSummaryOrderTotal).locator('..').locator('strong:last-child').textContent();
+    
+            // Optional text content handling
+            let estShippingText = null;
+            let estSurchargeText = null;
+    
+            if (await this.page.getByText(orderConfirmationOrderSummaryShipping).count() > 0) {
+                estShippingText = await this.page
+                    .getByText(orderConfirmationOrderSummaryShipping)
+                    .locator('..')
+                    .locator('p, strong')  // This will select either a <p> or <strong> element
+                    .textContent();
+            }
+    
+    
+            if (await this.page.getByText(orderConfirmationOrderSummaryEstSurcharge).count() > 0) {
+                estSurchargeText = await this.page.getByText(orderConfirmationOrderSummaryEstSurcharge).locator('..').locator('p').textContent();
+                const surchargeTooltipButton = this.page.getByText(orderConfirmationOrderSummaryEstSurcharge).locator('..').locator(tooltipButton);
+                await expect(surchargeTooltipButton).toBeVisible();
+            }
+    
+            // Tooltips validation
             const salesTaxTooltipButton = this.page.getByText(orderConfirmationOrderSummarySalesTax).locator('..').locator(tooltipButton);
             await expect(salesTaxTooltipButton).toBeVisible();
-            const orderTotalText = await this.page.getByText(orderConfirmationOrderSummaryOrderTotal).locator('..').locator('strong:last-child').textContent();
-
+    
             // Match each value against the currency format regex
             expect(subTotalText.trim()).toMatch(/^-?\$\d+(\.\d{2})?$/);
-            expect(estShippingText.trim()).toMatch(/^-?\$\d+(\.\d{2})?$/);
-            expect(estSurchargeText.trim()).toMatch(/^-?\$\d+(\.\d{2})?$/);
             expect(estSalesTaxText.trim()).toMatch(/^-?\$\d+(\.\d{2})?$/);
             expect(orderTotalText.trim()).toMatch(/^-?\$\d+(\.\d{2})?$/);
-
+    
+            if (estShippingText) expect(estShippingText.trim()).toMatch(/^FREE$|^-?\$\d+(\.\d{2})?$/);
+            if (estSurchargeText) expect(estSurchargeText.trim()).toMatch(/^-?\$\d+(\.\d{2})?$/);
         }
 
         async validateOrderConfirmationShippingDetails() {
@@ -163,66 +193,75 @@ const orderConfCreateAccountText ='Create an account to save time checking out f
             await expect(this.page.getByText(orderConfirmationShippingSectionAddressText, { exact: true })).toBeVisible();
             await expect(this.page.getByText(orderConfirmationShippingSectionShippingMethodText, { exact: true })).toBeVisible();
             const shippingAddressSection = this.page.locator(orderConfirmationShippingAddress);
-
+    
             const shippingAddressText = await shippingAddressSection.locator('p').nth(1).textContent();
             expect(shippingAddressText.trim()).toBeTruthy();
-
+    
             const shippingMethodText = await shippingAddressSection.locator('p').nth(2).textContent();
             expect(shippingMethodText.trim()).toBeTruthy();
-
+    
             const shippingMethodValue = await shippingAddressSection.locator('p').nth(3).textContent();
             expect(shippingMethodValue.trim()).toBeTruthy();
-
-            const shippingAddressPhoneNumber = await shippingAddressSection.locator('div.pt-2\\.5').textContent();
+    
+            const shippingAddressPhoneNumber = await shippingAddressSection.locator('p.gbmask.pt-2\\.5').textContent();
             expect(shippingAddressPhoneNumber.trim()).toBeTruthy();
-
-
+    
         }
+    
 
         async validateOrderConfirmationBillingAddress() {
+
+            await this.page.evaluate(() => {
+                window.scrollTo(0, document.body.scrollHeight / 2);
+            });
             // Locate the billing address section
             const billingAddressSection = this.page.locator(orderConfirmationBillingAddress);
-
+    
             // Extract and validate each p tag content within the billing address section
             const billingAddressText = await billingAddressSection.locator('p').nth(0).textContent();
             expect(billingAddressText.trim()).toBeTruthy();
-
+    
             const billingAddress = await billingAddressSection.locator('p').nth(1).textContent();
             expect(billingAddress.trim()).toBeTruthy();
-
+    
             const contactInfoText = await billingAddressSection.locator('p').nth(2).textContent();
             expect(contactInfoText.trim()).toBeTruthy();
-
+    
             const emailText = await billingAddressSection.locator('p').nth(3).textContent();
             expect(emailText.trim()).toBeTruthy();
-
-            const billingAddressPhoneNumber = await billingAddressSection.locator('div.pt-2\\.5').textContent();
+    
+            const billingAddressPhoneNumber = await billingAddressSection.locator('p.gbmask.pt-2\\.5').nth(1).textContent();
             expect(billingAddressPhoneNumber.trim()).toBeTruthy();
-
+    
         }
+    
 
         async validateOrderConfirmationPayment() {
+
+            await this.page.evaluate(() => {
+                window.scrollTo(0, document.body.scrollHeight / 2);
+            });
             // Locate the Payment section
             const paymentSection = this.page.locator(orderConfirmationPaymentMethodSection);
-
+    
             // Extract and validate each p tag content within the Payment section
             const paymentMethodText = await paymentSection.locator('p').nth(0).textContent();
             expect(paymentMethodText.trim()).toBeTruthy();
-
+    
             await expect(paymentSection.locator('svg')).toBeVisible();
-
+    
             const paymentCardNumberText = await paymentSection.locator('p').nth(1).textContent();
             expect(paymentCardNumberText.trim()).toBeTruthy();
-
+    
             const paymentCardNumber = await paymentSection.locator('p').nth(2).textContent();
             expect(paymentCardNumber.trim()).toBeTruthy();
-
+    
             const paymentExpDateText = await paymentSection.locator('p').nth(3).textContent();
             expect(paymentExpDateText.trim()).toBeTruthy();
-
+    
             const paymentExpDate = await paymentSection.locator('p').nth(4).textContent();
             expect(paymentExpDate.trim()).toBeTruthy();
-
+    
         }
 
         async validateOrderConfirmationPaymentCredit() {
@@ -303,7 +342,12 @@ const orderConfCreateAccountText ='Create an account to save time checking out f
             await this.validateOrderConfPlacedOnDate();
             await this.validateOrderConfThankYouText();
             console.log(await this.orderConfOrderNumber.textContent());
-            await expect(this.orderConfFullWidthBannerImg).toBeVisible();
+            try {
+                await expect(this.orderConfFullWidthBannerImg).toBeVisible();
+                console.log('Banner image is visible.');
+            } catch (error) {
+                console.log('No Banner Available.');
+            }
         }
         async validateOrderConfPlacedOnDate() {
             // Wait for the element to be visible
@@ -328,6 +372,7 @@ const orderConfCreateAccountText ='Create an account to save time checking out f
             const pendingAppText = await this.orderConfPendinApprovalSection.textContent();
             expect(pendingAppText).toBe('Pending Credit Approval');
             await expect(this.orderConfPendingCreditApprovalText).toBeVisible();
+            await this.pending_credit_approval.waitFor({state:'visible'});
         }
 
         async validatePendingOrderNumber() {

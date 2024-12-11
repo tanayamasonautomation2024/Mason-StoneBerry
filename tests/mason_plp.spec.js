@@ -324,9 +324,29 @@ test.describe("Mason PLP Scenarios", () => {
     await plpPage.clickAddToCart();
     await plpPage.validateChooseOptionDrawer();
     await plpPage.validateProductQTYSection();
-    await pdpPage.validateProductAvailabilityMessage();
+    //await pdpPage.validateProductAvailabilityMessage();
     //await pdpPage.validateProductQTYIncreaseDecrease();
     await pdpPage.validateProductQTYUpdateByTypeIn(plp_data.product_quantity);
+  })
+
+  test("Validate Availability in Choose Options drawer in PLP", async ({ page }) => {
+    //test.slow();
+    //const homePage = new HomePage(page);
+    const plpPage = new MasonPLPPage(page);
+    const homePageNew = new HomePageNew(page);
+    const pdpPage = new PDPPage(page);
+    await page.goto(plp_data.plp_url);
+    await plpPage.validateItemCount();
+    await plpPage.validatePresenceOfFilter();
+    await plpPage.validateSortBy();
+    await plpPage.clickSortBy();
+    await plpPage.validateFeatureIsDefaultSort();
+    await plpPage.validateSortOptions();
+    // await plpPage.selectSortOption();
+    await plpPage.clickAddToCart();
+    await plpPage.validateChooseOptionDrawer();
+    await pdpPage.validateProductAvailabilityMessage();
+    
   })
 
   test("Validate the display and functionality of products, including default product image, color variants, name, pricing, reviews, and add to cart CTA", async ({ page }) => {

@@ -106,11 +106,11 @@ test.describe("Mason Cart Page Guest User", () => {
 
     const pdpPage = new PDPPage(page);
     const cartDrawerPage = new CartDrawerPage(page);
-    await page.goto(pdp_data.pdp_url);
+    await page.goto(pdp_data.pdp_url_no_size_color);
     await page.waitForLoadState('networkidle');
     const cartItemCount = await pdpPage.getCartItemCount();
     if (cartItemCount === '0') {
-      await pdpPage.clickOnPDPSizeVariantButton();
+     // await pdpPage.clickOnPDPSizeVariantButton();
       await pdpPage.addtoCart();
       await cartDrawerPage.miniCartClickViewCartButton();
     } else {
@@ -131,7 +131,7 @@ test.describe("Mason Cart Page Guest User", () => {
     await page.goto(pdp_data.pdp_url);
     const cartItemCount = await pdpPage.getCartItemCount();
     if (cartItemCount === '0') {
-      await pdpPage.clickOnPDPSizeVariantButton();
+      await pdpPage.clickOnMultiplePDPSizeVariantButton();
       await pdpPage.addtoCart();
       await pdpPage.miniCartDrawer();
       await cartDrawerPage.miniCartClickViewCartButton();
@@ -158,7 +158,7 @@ test.describe("Mason Cart Page Guest User", () => {
     await page.goto(pdp_data.pdp_url);
     const cartItemCount = await pdpPage.getCartItemCount();
     if (cartItemCount === '0') {
-      await pdpPage.clickOnPDPSizeVariantButton();
+      await pdpPage.clickOnMultiplePDPSizeVariantButton();
       await pdpPage.addtoCart();
       await pdpPage.miniCartDrawer();
       await cartDrawerPage.miniCartClickViewCartButton();
@@ -180,10 +180,10 @@ test.describe("Mason Cart Page Guest User", () => {
 
     const pdpPage = new PDPPage(page);
     const cartDrawerPage = new CartDrawerPage(page);
-    await page.goto(pdp_data.pdp_url);
+    await page.goto(pdp_data.pdp_url_no_size_color);
     const cartItemCount = await pdpPage.getCartItemCount();
     if (cartItemCount === '0') {
-      await pdpPage.clickOnPDPSizeVariantButton();
+     // await pdpPage.clickOnMultiplePDPSizeVariantButton();
       await pdpPage.addtoCart();
       await pdpPage.miniCartDrawer();
       await cartDrawerPage.miniCartClickViewCartButton();
@@ -208,10 +208,10 @@ test.describe("Mason Cart Page Guest User", () => {
 
     const pdpPage = new PDPPage(page);
     const cartDrawerPage = new CartDrawerPage(page);
-    await page.goto(pdp_data.pdp_url);
+    await page.goto(pdp_data.pdp_url_no_size_color);
     const cartItemCount = await pdpPage.getCartItemCount();
     if (cartItemCount === '0') {
-      await pdpPage.clickOnPDPSizeVariantButton();
+    //  await pdpPage.clickOnMultiplePDPSizeVariantButton();
       await pdpPage.addtoCart();
       await pdpPage.miniCartDrawer();
       await cartDrawerPage.miniCartClickViewCartButton();
@@ -234,10 +234,10 @@ test.describe("Mason Cart Page Guest User", () => {
 
     const pdpPage = new PDPPage(page);
     const cartDrawerPage = new CartDrawerPage(page);
-    await page.goto(pdp_data.pdp_url);
+    await page.goto(pdp_data.pdp_url_no_size_color);
     const cartItemCount = await pdpPage.getCartItemCount();
     if (cartItemCount === '0') {
-      await pdpPage.clickOnPDPSizeVariantButton();
+     // await pdpPage.clickOnMultiplePDPSizeVariantButton();
       await pdpPage.addtoCart();
       await pdpPage.miniCartDrawer();
       await cartDrawerPage.miniCartClickViewCartButton();
@@ -266,11 +266,11 @@ test.describe("Mason Cart Page Guest User", () => {
   test("Cart - Save Item for Later Functionality - Verify Move to cart button is shown and clicking on it product moves from save for later to cart section.", async ({ page }, testInfo) => {
 
     const pdpPage = new PDPPage(page);
-    await page.goto(pdp_data.pdp_url);
+    await page.goto(pdp_data.pdp_url_no_size_color);
     const cartDrawerPage = new CartDrawerPage(page);
     const cartItemCount = await pdpPage.getCartItemCount();
     if (cartItemCount === '0') {
-      await pdpPage.clickOnPDPSizeVariantButton();
+     // await pdpPage.clickOnMultiplePDPSizeVariantButton();
       await pdpPage.addtoCart();
       await pdpPage.miniCartDrawer();
       await cartDrawerPage.miniCartClickViewCartButton();
@@ -296,10 +296,10 @@ test.describe("Mason Cart Page Guest User", () => {
 
     const pdpPage = new PDPPage(page);
     const cartDrawerPage = new CartDrawerPage(page);
-    await page.goto(pdp_data.pdp_url);
+    await page.goto(pdp_data.pdp_url_no_size_color);
     const cartItemCount = await pdpPage.getCartItemCount();
     if (cartItemCount === '0') {
-      await pdpPage.clickOnPDPSizeVariantButton();
+      //await pdpPage.clickOnMultiplePDPSizeVariantButton();
       await pdpPage.addtoCart();
       await pdpPage.miniCartDrawer();
       await cartDrawerPage.miniCartClickViewCartButton();
@@ -318,10 +318,10 @@ test.describe("Mason Cart Page Guest User", () => {
 
     const pdpPage = new PDPPage(page);
     const cartDrawerPage = new CartDrawerPage(page);
-    await page.goto(pdp_data.pdp_url);
+    await page.goto(pdp_data.pdp_url_no_size_color);
     const cartItemCount = await pdpPage.getCartItemCount();
     if (cartItemCount === '0') {
-      await pdpPage.clickOnPDPSizeVariantButton();
+     // await pdpPage.clickOnMultiplePDPSizeVariantButton();
       await pdpPage.addtoCart();
       await pdpPage.miniCartDrawer();
       await cartDrawerPage.miniCartClickViewCartButton();
@@ -346,10 +346,10 @@ test.describe("Mason Cart Page Guest User", () => {
 
     const pdpPage = new PDPPage(page);
     const cartDrawerPage = new CartDrawerPage(page);
-    await page.goto(pdp_data.pdp_url);
+    await page.goto(pdp_data.pdp_url_no_size_color);
     const cartItemCount = await pdpPage.getCartItemCount();
     if (cartItemCount === '0') {
-      await pdpPage.clickOnPDPSizeVariantButton();
+      //await pdpPage.clickOnMultiplePDPSizeVariantButton();
       await pdpPage.addtoCart();
       await pdpPage.miniCartDrawer();
       await cartDrawerPage.miniCartClickViewCartButton();
@@ -373,10 +373,10 @@ test.describe("Mason Cart Page Guest User", () => {
 
     const pdpPage = new PDPPage(page);
     const cartDrawerPage = new CartDrawerPage(page);
-    await page.goto(pdp_data.pdp_url);
+    await page.goto(pdp_data.pdp_url_no_size_color);
     const cartItemCount = await pdpPage.getCartItemCount();
     if (cartItemCount === '0') {
-      await pdpPage.clickOnPDPSizeVariantButton();
+     // await pdpPage.clickOnMultiplePDPSizeVariantButton();
       await pdpPage.addtoCart();
       await pdpPage.miniCartDrawer();
       await cartDrawerPage.miniCartClickViewCartButton();
@@ -401,10 +401,10 @@ test.describe("Mason Cart Page Guest User", () => {
 
     const pdpPage = new PDPPage(page);
     const cartDrawerPage = new CartDrawerPage(page);
-    await page.goto(pdp_data.pdp_url);
+    await page.goto(pdp_data.pdp_url_no_size_color);
     const cartItemCount = await pdpPage.getCartItemCount();
     if (cartItemCount === '0') {
-      await pdpPage.clickOnPDPSizeVariantButton();
+    //  await pdpPage.clickOnMultiplePDPSizeVariantButton();
       await pdpPage.addtoCart();
       await pdpPage.miniCartDrawer();
       await cartDrawerPage.miniCartClickViewCartButton();
@@ -431,10 +431,10 @@ test.describe("Mason Cart Page Guest User", () => {
 
     const pdpPage = new PDPPage(page);
     const cartDrawerPage = new CartDrawerPage(page);
-    await page.goto(pdp_data.pdp_url);
+    await page.goto(pdp_data.pdp_url_no_size_color);
     const cartItemCount = await pdpPage.getCartItemCount();
     if (cartItemCount === '0') {
-      await pdpPage.clickOnPDPSizeVariantButton();
+     // await pdpPage.clickOnMultiplePDPSizeVariantButton();
       await pdpPage.addtoCart();
       await pdpPage.miniCartDrawer();
       await cartDrawerPage.miniCartClickViewCartButton();
@@ -466,7 +466,7 @@ test.describe("Mason Cart Page Guest User", () => {
     await page.goto(pdp_data.pdp_url);
     const cartItemCount = await pdpPage.getCartItemCount();
     if (cartItemCount === '0') {
-      await pdpPage.clickOnPDPSizeVariantButton();
+      await pdpPage.clickOnMultiplePDPSizeVariantButton();
       await pdpPage.addtoCart();
       await pdpPage.miniCartDrawer();
       await cartDrawerPage.miniCartClickViewCartButton();
@@ -486,10 +486,10 @@ test.describe("Mason Cart Page Guest User", () => {
 
     const pdpPage = new PDPPage(page);
     const cartDrawerPage = new CartDrawerPage(page);
-    await page.goto(pdp_data.pdp_url);
+    await page.goto(pdp_data.pdp_url_no_size_color);
     const cartItemCount = await pdpPage.getCartItemCount();
     if (cartItemCount === '0') {
-      await pdpPage.clickOnPDPSizeVariantButton();
+     // await pdpPage.clickOnMultiplePDPSizeVariantButton();
       await pdpPage.addtoCart();
       await pdpPage.miniCartDrawer();
       await cartDrawerPage.miniCartClickViewCartButton();
@@ -509,10 +509,10 @@ test.describe("Mason Cart Page Guest User", () => {
 
     const pdpPage = new PDPPage(page);
     const cartDrawerPage = new CartDrawerPage(page);
-    await page.goto(pdp_data.pdp_url);
+    await page.goto(pdp_data.pdp_url_no_size_color);
     const cartItemCount = await pdpPage.getCartItemCount();
     if (cartItemCount === '0') {
-      await pdpPage.clickOnPDPSizeVariantButton();
+     // await pdpPage.clickOnMultiplePDPSizeVariantButton();
       await pdpPage.addtoCart();
       await pdpPage.miniCartDrawer();
       await cartDrawerPage.miniCartClickViewCartButton();
@@ -538,7 +538,7 @@ test.describe("Mason Cart Page Guest User", () => {
     await page.goto(pdp_data.pdp_url);
     const cartItemCount = await pdpPage.getCartItemCount();
     if (cartItemCount === '0') {
-      await pdpPage.clickOnPDPSizeVariantButton();
+      await pdpPage.clickOnMultiplePDPSizeVariantButton();
       await pdpPage.addtoCart();
       await pdpPage.miniCartDrawer();
       await cartDrawerPage.miniCartClickViewCartButton();
@@ -568,10 +568,10 @@ test.describe("Mason Cart Page Guest User", () => {
 
     const pdpPage = new PDPPage(page);
     const cartDrawerPage = new CartDrawerPage(page);
-    await page.goto(pdp_data.pdp_url);
+    await page.goto(pdp_data.pdp_url_no_size_color);
     const cartItemCount = await pdpPage.getCartItemCount();
     if (cartItemCount === '0') {
-      await pdpPage.clickOnPDPSizeVariantButton();
+      //await pdpPage.clickOnMultiplePDPSizeVariantButton();
       await pdpPage.addtoCart();
       await pdpPage.miniCartDrawer();
       await cartDrawerPage.miniCartClickViewCartButton();
@@ -597,10 +597,10 @@ test.describe("Mason Cart Page Guest User", () => {
 
     const pdpPage = new PDPPage(page);
     const cartDrawerPage = new CartDrawerPage(page);
-    await page.goto(pdp_data.pdp_url);
+    await page.goto(pdp_data.pdp_url_no_size_color);
     const cartItemCount = await pdpPage.getCartItemCount();
     if (cartItemCount === '0') {
-      await pdpPage.clickOnPDPSizeVariantButton();
+      //await pdpPage.clickOnPDPSizeVariantButton();
       await pdpPage.addtoCart();
       await pdpPage.miniCartDrawer();
       await cartDrawerPage.miniCartClickViewCartButton();
@@ -626,10 +626,10 @@ test.describe("Mason Cart Page Guest User", () => {
 
     const pdpPage = new PDPPage(page);
     const cartDrawerPage = new CartDrawerPage(page);
-    await page.goto(pdp_data.pdp_url);
+    await page.goto(pdp_data.pdp_url_no_size_color);
     const cartItemCount = await pdpPage.getCartItemCount();
     if (cartItemCount === '0') {
-      await pdpPage.clickOnPDPSizeVariantButton();
+      //await pdpPage.clickOnMultiplePDPSizeVariantButton();
       await pdpPage.addtoCart();
       await pdpPage.miniCartDrawer();
       await cartDrawerPage.miniCartClickViewCartButton();

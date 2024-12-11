@@ -837,7 +837,7 @@ async validateSelectSizeValue() {
 }
 
 async validateProductAvailabilityMessage() {
-    await this.clickOnMultiplePDPSizeVariantButton();
+    //await this.clickOnMultiplePDPSizeVariantButton();
     await this.availabilityText.waitFor({ state: 'visible' });
     await expect(this.availabilityText).toBeVisible();
     // Locate the p element with the text "Availability:"

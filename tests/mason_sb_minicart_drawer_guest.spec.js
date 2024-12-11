@@ -48,8 +48,11 @@ test.describe("Mason Cart Drawer", () => {
     const homePage = new HomePageNew(page);
     const cartDrawerPage = new CartDrawerPage(page);
     const pdpPage = new PDPPage(page);
-    await homePage.selectSubCategoryFromMegaMenu(expectedCategories);
-    await cartDrawerPage.clickAddtoCartPLP();
+    await page.goto(pdp_data.pdp_url);
+    await page.waitForTimeout(3000);
+    await pdpPage.clickOnPDPColorVariantButton();
+    await pdpPage.clickOnPDPSizeVariantButton();
+    await pdpPage.addtoCart();
     await pdpPage.miniCartDrawer();
   })
 
@@ -149,8 +152,9 @@ test.describe("Mason Cart Drawer", () => {
     const pdpPage = new PDPPage(page);
     const cartDrawerPage = new CartDrawerPage(page);
     await page.goto(pdp_data.pdp_url_limitedStock);
-    await pdpPage.selectSize('S')
+    await pdpPage.selectSize('M', '1')
     await pdpPage.addtoCart();
+    await cartDrawerPage.clickQtyIncreaseButton();
     await cartDrawerPage.miniCartUpdateInStockQty();
     await pdpPage.closeMiniCartDrawer();
   })
@@ -192,7 +196,8 @@ test.describe("Mason Cart Drawer", () => {
     //   await pdpPage.miniCartDrawer();
     // }
     await page.goto(pdp_data.pdp_url_limitedStock);
-    await pdpPage.selectSize('S');
+    await pdpPage.clickOnPDPColorVariantButton();
+    await pdpPage.clickOnPDPSizeVariantButton();
     await pdpPage.addtoCart();
     await cartDrawerPage.miniCartQtyUpdateByTypeIn();
     await pdpPage.closeMiniCartDrawer();
@@ -286,7 +291,7 @@ test.describe("Mason Cart Drawer", () => {
     await pdpPage.validatePersonalization();
     await pdpPage.validatePersonalizationContent();
     //await pdpPage.miniCartDrawer();
-    // await pdpPage.validateMiniCartPersonalizationContent();
+    await pdpPage.validateMiniCartPersonalizationContent();
     //await cartDrawerPage.validateProtectionPlanCartDrawer();
 
   })

@@ -949,10 +949,11 @@ exports.MyAccountPage = class MyAccountPage {
         // Locate the section containing the default billing and shipping address
         await this.page.getByText(myaccountpage_locator.myaccount_defaultShippingandbillingaddress).waitFor({ state: 'visible' });
         const addressSection = this.page.locator(`section:has-text("${myaccountpage_locator.myaccount_defaultShippingandbillingaddress}")`);
-        await expect(this.page.getByText(myaccountpage_locator.myaccount_defaultShippingandbillingaddress)).toBeVisible();
+        await (this.page.getByText(myaccountpage_locator.myaccount_defaultShippingandbillingaddress)).waitFor({ state: 'visible' });
 
         // Verify the presence and content of the name
         const nameLocator = this.page.locator('strong.text-lg.font-semibold').nth(0);
+        await nameLocator.waitFor({state:'visible'});
         await expect(nameLocator).toHaveText(/[\s\S]+/);
 
         // Verify the presence and content of the address lines
@@ -1181,8 +1182,8 @@ exports.MyAccountPage = class MyAccountPage {
     }
 
     async validateCreditStatementAddress() {
-        await this.page.locator('section.pr-24.pt-6.text-base.font-normal.leading-6').waitFor({ state: 'visible' });
-        const addressSection = this.page.locator('section.pr-24.pt-6.text-base.font-normal.leading-6');
+        await this.page.locator('section.pr-24.pt-6.font-normal.leading-6').waitFor({ state: 'visible' });
+        const addressSection = this.page.locator('section.pr-24.pt-6.font-normal.leading-6');
 
         // Verifying the texts inside the address section using regex
         await expect(addressSection.locator('p').nth(0)).toHaveText(/[\s\S]+/);
@@ -1190,7 +1191,7 @@ exports.MyAccountPage = class MyAccountPage {
         await expect(addressSection.locator('p').nth(2)).toHaveText(/[\s\S]+|[A-Za-z\s]+, [A-Z]{2} \d{5}(-\d{4})?/);
 
         // Locator for the phone number
-        const phoneNumber = this.page.locator('p.pt-3.text-base.font-normal.leading-6');
+        const phoneNumber = this.page.locator('p.gbmask.pt-3.font-normal.leading-6');
 
         // Verifying the phone number text using regex
         await expect(phoneNumber).toHaveText(/\(\d{3}\) \d{3}-\d{4}/);
@@ -1867,11 +1868,15 @@ exports.MyAccountPage = class MyAccountPage {
     }
 
     async validatedSuccessMessage() {
-        // Wait for the page to navigate or for a success message
-        await Promise.race([
-            //this.page.waitForNavigation({ timeout: 5000 }), // Adjust timeout as needed
-            this.page.waitForSelector('.text-forestGreen') // Assuming there's a success message
-        ]);
+        // Locate the first <p> with the classes and wait for it to be visible
+        const successMessageLocator = this.page.locator('p.text-forestGreen.font-medium.leading-6').first();
+    
+        // Ensure the element is visible
+        await successMessageLocator.waitFor({ state: 'visible' });
+    
+        // Check the content of the message
+        const messageText = await successMessageLocator.innerText();
+        console.log('Success message found:', messageText);
     }
 
     async setDefaultCreditCard() {
@@ -1883,8 +1888,8 @@ exports.MyAccountPage = class MyAccountPage {
         while (!buttonVisible && retries < maxRetries) {
             await this.clickAddNewCC();
             await this.validateNewCCSection();
-            await this.enterCCNumber('4111111111111111');
-            await this.enterCCExpDate('12/34');
+            await this.enterCCNumber('4012000077777777');
+            await this.enterCCExpDate('12/25');
             await this.enterCCSecurityCode('123');
             await this.clickSaveCardButton();
             //await this.validatedSuccessMessage();
@@ -1899,17 +1904,17 @@ exports.MyAccountPage = class MyAccountPage {
         if (!buttonVisible) {
             throw new Error('Failed to find the "Set as Default" button after multiple attempts');
         } else {
-            const defaultCardNumber = await this.page.locator('section.m-4.rounded-md p.font-semibold').nth(1).textContent();
+            const defaultCardNumber = await this.page.locator('section.my-4.rounded-md p.font-semibold').nth(1).textContent();
             console.log('Default Card Number:' + defaultCardNumber);
 
             // Click on the first "Set as Default" button
             await this.page.getByRole('button', { name: 'Set as Default' }).first().click();
-            await this.page.getByText('Primary card updated successfully').waitFor({ state: 'visible' });
-            await expect(this.page.getByText('Primary card updated successfully')).toBeVisible();
-            await expect(this.page.getByText('Default Credit Card')).toBeVisible();
+            await this.page.getByText('Your default credit card was successfully updated').waitFor({ state: 'visible' });
+            await expect(this.page.getByText('Your default credit card was successfully updated')).toBeVisible();
+            await expect(this.page.getByText('Default Credit Card', { exact: true })).toBeVisible();
             await this.page.reload();
-            await this.page.locator('section.m-4.rounded-md p.font-semibold').first().waitFor({ state: 'visible' });
-            const setDefaultCreditCardNumber = await this.page.locator('section.m-4.rounded-md p.font-semibold').nth(0).textContent();
+            await this.page.locator('section.my-4.rounded-md p.font-semibold').first().waitFor({ state: 'visible' });
+            const setDefaultCreditCardNumber = await this.page.locator('section.my-4.rounded-md p.font-semibold').nth(0).textContent();
             expect(setDefaultCreditCardNumber).toMatch(defaultCardNumber);
 
         }
@@ -1917,33 +1922,32 @@ exports.MyAccountPage = class MyAccountPage {
     }
 
     async removeCreditCard() {
-        await this.page.locator('section.m-4').first().waitFor({ state: 'visible' });
-        const addressSections = await this.page.locator('section.m-4');
+        await this.page.locator('section.my-4.rounded-md').first().waitFor({ state: 'visible' });
+        const addressSections = await this.page.locator('section.my-4.rounded-md');
         const addressSectionsCount = await addressSections.count();
         const deleteAddressCount = (addressSectionsCount - 1);
         console.log('Total Saved Address Count:', addressSectionsCount);
         console.log('Total Delete Address Count:', deleteAddressCount);
 
         await this.page.getByRole('button', { name: myaccountpage_locator.myaccount_savedaddress_remove_button }).nth(deleteAddressCount).click();
-        await expect(this.page.locator('.text-forestGreen').filter({ hasText: 'Credit card deleted successfully' })).toBeVisible();
-        await this.page.locator('.text-forestGreen').filter({ hasText: 'Credit card deleted successfully' }).waitFor({ state: 'hidden' });
+        await expect(this.page.locator('.text-forestGreen').filter({ hasText: 'Your credit card was successfully removed.' })).toBeVisible();
+       // await this.page.locator('.text-forestGreen').filter({ hasText: 'Your credit card was successfully removed.' }).waitFor({ state: 'hidden' });
         const successMessage = await this.page.$('.text-forestGreen');
         if (successMessage) {
-            const deletedAddressSections = await this.page.locator('section.m-4');
+            const deletedAddressSections = await this.page.locator('section.my-4.rounded-md');
             const deletedAddressSectionsCount = await deletedAddressSections.count();
             //await expect(deletedAddressSections).toHaveCount(deleteAddressCount);
-            console.log('Credit card deleted successfully!');
+            console.log('Your credit card was successfully removed.!');
             console.log('Credit Card deleted Count!' + deletedAddressSectionsCount);
         } else {
             console.log('Failed to delete credit card.');
         }
 
     }
-
     async undoRemoveCreditCard() {
         //await this.page.reload();
-        await this.page.locator('section.m-4').first().waitFor({ state: 'visible' });
-        const addressSections = await this.page.locator('section.m-4');
+        await this.page.locator('section.my-4.rounded-md').first().waitFor({ state: 'visible' });
+        const addressSections = await this.page.locator('section.my-4.rounded-md');
         const addressSectionsCount = await addressSections.count();
         let nthIndex = 0;
         if (addressSectionsCount > 1) {
@@ -1955,10 +1959,10 @@ exports.MyAccountPage = class MyAccountPage {
         //console.log('Total Delete Credit Card Count:', deleteAddressCount);
 
         await this.page.getByRole('button', { name: myaccountpage_locator.myaccount_savedaddress_remove_button }).nth(nthIndex).click();
-        await expect(this.page.locator('.text-forestGreen').filter({ hasText: 'Credit card deleted successfully' })).toBeVisible();
+        await expect(this.page.locator('.text-forestGreen').filter({ hasText: 'Your credit card was successfully removed.' })).toBeVisible();
         await expect(this.page.getByRole('button', { name: 'Undo' })).toBeVisible();
         await this.page.getByRole('button', { name: 'Undo' }).click();
-        await this.page.locator('.text-forestGreen').filter({ hasText: 'Credit card deleted successfully' }).waitFor({ state: 'hidden' });
+        await this.page.locator('.text-forestGreen').filter({ hasText: 'Your credit card was successfully removed.' }).waitFor({ state: 'hidden' });
         //await expect(this.page.locator('section.m-4')).toHaveCount(addressSectionsCount);
 
     }
@@ -2004,22 +2008,52 @@ exports.MyAccountPage = class MyAccountPage {
     }
 
     async updateCreditCardSuccessMessage() {
-        await this.page.waitForSelector('div[role="dialog"]', { timeout: 15000 });
-        const addressModalVisible = await this.page.locator('div[role="dialog"][data-state="open"]').isVisible();
+        const successMessages = [
+            'Card details have been updated successfully',
+            'Credit card added successfully'
+        ];
 
-        //console.log('modal visible' + addressModalVisible);
-        if (addressModalVisible) {
-            await this.page.getByLabel('Use Original Address').click();
-            await this.page.getByRole('button', { name: 'Continue' }).click();
-            await this.page.getByText('Card details have been updated successfully').waitFor({ state: 'visible' });
-            await expect(this.page.getByText('Card details have been updated successfully')).toBeVisible();
-        } else {
-            // Address suggestion modal is not visible, verify the success message and then proceed
-            await this.page.getByText('Card details have been updated successfully').waitFor({ state: 'visible' });
-            await expect(this.page.getByText('Card details have been updated successfully')).toBeVisible();
+        try {
+            // Create an array of promises to check for each success message's visibility
+            const messagePromises = successMessages.map(async (message) => {
+                const messageLocator = this.page.getByText(message);
+                await messageLocator.waitFor({ state: 'visible' });
+                return messageLocator;
+            });
+
+            // Use Promise.any to wait for any one of the success messages to be visible
+            const successMessageLocator = await Promise.any(messagePromises);
+
+            // Validate that the visible success message is indeed visible
+            await expect(successMessageLocator).toBeVisible();
+        } catch (error) {
+            // If the success message is not found within the timeout period, check for the modal
+            console.log('Success message not found, checking for the modal');
+
+            // Wait for the dialog to appear
+            await this.page.waitForSelector('div[role="dialog"]', { timeout: 2000 });
+            const addressModalVisible = await this.page.locator('div[role="dialog"][data-state="open"]').isVisible();
+
+            if (addressModalVisible) {
+                // If the address modal is visible, interact with it
+                await this.page.getByLabel('Use Original Address').click();
+                await this.page.getByRole('button', { name: 'Continue' }).click();
+
+                // After interacting with the modal, check for the success message again
+                const messagePromises = successMessages.map(async (message) => {
+                    const messageLocator = this.page.getByText(message);
+                    await messageLocator.waitFor({ state: 'visible' });
+                    return messageLocator;
+                });
+
+                const successMessageLocator = await Promise.any(messagePromises);
+                await expect(successMessageLocator).toBeVisible();
+            } else {
+                // If the modal is not visible, log an error or handle the case as needed
+                throw new Error('Success message not found and address modal not visible');
+            }
         }
     }
-
     async verifyAddressSuggestionModal() {
         try {
             await this.page.waitForTimeout(5000);

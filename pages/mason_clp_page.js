@@ -479,5 +479,40 @@ async getRandomVisibleItem(baseLocator, nestedSelector = null) {
   return null;
 }
 
+async validateStyleFinder() {
+  await expect(this.page.getByRole('heading', { name: 'Style Finder' })).toBeVisible();
+  // await expect(this.page.locator('button').filter({ hasText: 'All Categories' })).toBeVisible();
+  // await expect(this.page.locator('button').filter({ hasText: 'All Widths' })).toBeVisible();
+  // await expect(this.page.locator('section').filter({ hasText: /^All Colors$/ }).nth(2)).toBeVisible();
+  // await expect(this.page.locator('button').filter({ hasText: 'All Sizes' })).toBeVisible();
+ // await expect(this.page.locator('#mainContent')).toContainText('All Departments');
+  //await expect(this.page.locator('#mainContent')).toContainText('All Widths');
+  await expect(this.page.locator('#mainContent')).toContainText('All Categories');
+  await expect(this.page.locator('#mainContent')).toContainText('All Colors');
+  await expect(this.page.locator('#mainContent')).toContainText('All Sizes');
+  await expect(this.page.getByRole('button', { name: 'Find Now' })).toBeVisible();
+}
+
+async selectColorInStyleFinder() {
+  await (this.page.getByText('All Colors').nth(1)).click();
+  // this.page.locator('section').filter({ hasText: /^Style FinderWomenAll CategoriesAll WidthsAll ColorsAll SizesFind Now$/ }).getByRole('img').first().click();
+  await this.page.locator('section').filter({ hasText: /^Blue$/ }).click();
+  await this.page.getByRole('button', { name: 'Find Now' }).click();
+  await this.page.waitForURL(/[\?&](filters=|facet=)/, { timeout: 15000 });
+}
+
+async clickAllCategories() {
+  await this.page.locator('button').filter({ hasText: 'All Categories' }).click();
+}
+
+async clickAllWidths() {
+  await this.page.locator('button').filter({ hasText: 'All Widths' }).click();
+}
+
+async clickAllSizes() {
+  await this.page.locator('button').filter({ hasText: 'All Sizes' }).click();
+}
+
+
 }
         

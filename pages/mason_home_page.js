@@ -348,7 +348,7 @@ await subcategoryMenu.waitFor({ state: 'visible' });
 
     async navigateToCategoryL1() {
         //const mainMenuItemList = ['Women', 'Men', 'Kids', 'Boot Shop'];
-        const mainMenuItemList = ['Electronics'];
+        const mainMenuItemList = ['Outdoor Living + Tools'];
         const l1Category = mainMenuItemList[Math.floor(Math.random() * mainMenuItemList.length)];
         // Locate the main menu item by matching the L1 category text
         const mainMenuItems = await this.page.locator('#mainMenu ul[role="menu"] > li');

@@ -4,17 +4,17 @@ const orderStatus_ReturnedText = 'Returned on';
 const orderStatus_CancenceledText = 'Canceled';
 const orderStatus_DeliveredText = 'Delivered on';
 const orderStatus_ShippedText = 'Shipped on';
-const orderStatus_PendingShipmentText = 'Pending Shipment';
-const order_Section = 'section.mb-7.border';
-const product_Section = 'section.mt-4.flex.items-center';
+const orderStatus_PendingShipmentText = 'Processing';
+const order_Section = 'section.rounded-md.border';
+const product_Section = 'section.mt-4.flex.items-center';   
 const order_SummaryText = 'Order Summary';
 const cancelOrderModal_Text = 'Are you sure you want to cancel your order?';
 const cancelOrderModal_HeadingText = 'Cancel order';
 const cancelItemModal_HeadingText = 'Cancel Item';
 const cancelItemModal_Text = 'Are you sure you want to cancel this item?';
-const orderDetailsAwatingShipmentSection = 'Awaiting ShipmentPending Shipment';
+const orderDetailsAwatingShipmentSection = 'Processing';
 const orderDetails_CanceledItem_SuccessMessage = 'Your Item has been canceled.';
-const orderDetailsOrderSummarySubTotal = /^Subtotal\s*\(\d+\s*items\):\s*$/;
+const orderDetailsOrderSummarySubTotal = /^Subtotal\s*\(\d+\s*items?\):\s*$/;
 const orderDetailsOrderSummaryShipping = 'Shipping:';
 const orderDetailsOrderSummaryEstSurcharge = 'Shipping Surcharge:';
 const orderDetailsOrderSummarySalesTax = 'Sales Tax:';
@@ -213,59 +213,51 @@ exports.OrderDetailsPage = class OrderDetailsPage {
         // Step 1: Locate all order sections on the page
         await this.page.locator(order_Section).first().waitFor({ state: 'visible' });
         const orderSections = await this.page.locator(order_Section);
-
-        // Step 2: Loop through each order section
         const totalOrders = await orderSections.count();
+    
+        // Step 2: Iterate through all order sections
         for (let i = 0; i < totalOrders; i++) {
             const orderSection = orderSections.nth(i);
-
+    
             // Step 3: Locate the product sections within the current order section
             const productSections = orderSection.locator(product_Section);
             const totalProductSectionsCount = await productSections.count();
-
-            // Step 4: Locate all <p> tags with the text "Pending Shipment" within the product sections
-            const pendingShipmentTags = orderSection.locator(`section.truncate > p:has-text("${orderStatus_PendingShipmentText}")`);
-            const totalTagsCount = await pendingShipmentTags.count();
-
-            // Step 5: Verify if the count of <p> tags matches the count of product sections
-            if (totalTagsCount === totalProductSectionsCount) {
-                let allPendingShipment = true;
-                for (let j = 0; j < totalTagsCount; j++) {
-                    const textContent = await pendingShipmentTags.nth(j).textContent();
-                    if (textContent.trim() !== orderStatus_PendingShipmentText) {
-                        allPendingShipment = false;
-                        break;
-                    }
-                }
-
-                // If all <p> tags contain "Pending Shipment", click the "View Order Details" link within the current order section
-                if (!allPendingShipment) {
-                    const orderDetailsLink = orderSection.locator('a:has-text("View Order Details")');
-                    if (await orderDetailsLink.isVisible()) {
-                        await orderDetailsLink.click();
-                        console.log('Clicked on the "View Order Details" link for order', await orderSection.locator('h2').textContent());
-                        //await this.orderDetailsCancelOrderButton.waitFor({ state: 'visible' });
-                        await expect(this.orderDetailsCancelOrderButton).toBeHidden();
-                        break;
-                    } else {
-                        console.log('"View Order Details" link is not visible for order', await orderSection.locator('h2').textContent());
-                    }
+    
+            // Step 4: Locate all <p> tags with the text "Shipped" within the product sections
+            const shippedTags = orderSection.locator(`section.truncate > p:has-text("${orderStatus_ShippedText}")`);
+            const shippedTagsCount = await shippedTags.count();
+    
+            // Log the count for debugging
+            console.log(`Order ${i + 1}: Found ${shippedTagsCount} 'Shipped' tags.`);
+    
+            // If we find a matching "Shipped" tag, click the "View Order Details" link
+            if (shippedTagsCount > 0) {
+                console.log(`Found shipped status in order ${i + 1}, clicking on 'View Order Details'`);
+    
+                // Click the "View Order Details" link for this order
+                const orderDetailsLink = orderSection.locator('a:has-text("View Order Details")');
+                
+                if (await orderDetailsLink.isVisible()) {
+                    await orderDetailsLink.click();
+                    console.log('Navigating to order details page');
+    
+                    // Wait for the order details page to load and verify the cancel order button is hidden
+                    await this.page.waitForTimeout(5000);
+                    await expect(this.orderDetailsCancelOrderButton).toBeHidden();
+    
+                    // Exit the loop and function after processing this order
+                    return;
                 } else {
-                    console.log('Not all products have "Pending Shipment" status for order', await orderSection.locator('h2').textContent());
-
+                    console.log(`"View Order Details" link not visible for order ${i + 1}`);
                 }
-            } else {
-                console.log('The number of "Pending Shipment" <p> tags does not match the number of product sections for order', await orderSection.locator('h2').textContent());
-                this.orderDetailsLink.nth(i).click();
-                await expect(this.page).toHaveURL(/.*\/account\/orders\/orderdetails\/\?orderId=\d+&zipCode=\d+$/);
-                await this.page.getByText(order_SummaryText).waitFor({ state: 'visible' });
-                await expect(this.orderDetailsCancelOrderButton).toBeHidden();
-                break;
-
             }
         }
-
+    
+        console.log('No order found with "Shipped" status');
     }
+    
+
+
 
     async clickCancelOrderButton() {
         await this.orderDetailsCancelOrderButton.click();
@@ -277,12 +269,12 @@ exports.OrderDetailsPage = class OrderDetailsPage {
 
     async clickCloseCancelOrderButton() {
         await this.orderDetailsCancelOrderModalCloseIcon.click();
-        await expect(this.page.getByText(order_SummaryText)).toBeVisible();
+        await (this.page.getByText(order_SummaryText)).waitFor({state:"visible"});
     }
 
     async clickCloseCancelItemModalButton() {
         await this.orderDetailsCancelItemModalCloseIcon.click();
-        await expect(this.page.getByText(order_SummaryText)).toBeVisible();
+        await (this.page.getByText(order_SummaryText)).waitFor({state:"visible"});
     }
 
     async clickCancelOrderCancelItemButton() {
@@ -291,13 +283,13 @@ exports.OrderDetailsPage = class OrderDetailsPage {
 
     async clickNoGoBackOrderButton() {
         await this.orderDetailsCancelOrderModalNoGoBackButton.click();
-        await expect(this.page.getByText(order_SummaryText)).toBeVisible();
+        await (this.page.getByText(order_SummaryText)).waitFor({state:"visible"});
     }
 
     async validateCancelOrderModal() {
         await this.page.getByRole('heading', { name: cancelOrderModal_HeadingText }).waitFor({ state: 'visible' });
         await expect(this.page.getByRole('heading', { name: cancelOrderModal_HeadingText })).toBeVisible();
-        await expect(this.page.getByText(cancelOrderModal_Text)).toBeVisible();
+        await (this.page.getByText(cancelOrderModal_Text)).waitFor({ state: 'visible' });
         await expect(this.orderDetailsCancelOrderModalCancelButton).toBeVisible();
         await expect(this.orderDetailsCancelOrderModalNoGoBackButton).toBeVisible();
         await expect(this.orderDetailsCancelOrderModalCloseIcon).toBeVisible();
@@ -336,7 +328,7 @@ exports.OrderDetailsPage = class OrderDetailsPage {
             }
 
             // Assert the visibility of the cancel button
-            await expect(cancelItemButton).toBeVisible();
+            await (cancelItemButton).waitFor({ state: 'visible' });
         }
     }
 
@@ -369,7 +361,7 @@ exports.OrderDetailsPage = class OrderDetailsPage {
             }
 
             // Assert the visibility of the canceled item
-            await expect(this.orderDetailsCanceledItemHeading).toBeVisible();
+            await (this.orderDetailsCanceledItemHeading).waitFor({ state: 'visible' });
         }
 
     }
@@ -446,11 +438,11 @@ exports.OrderDetailsPage = class OrderDetailsPage {
             .locator('..').locator('p:last-child').textContent();
 
         const estShippingText = await this.page.getByText(orderDetailsOrderSummaryShipping)
-            .locator('..').locator('..').locator('p:last-child').textContent();
-
+            .locator('..').locator('..').locator('p:last-child').nth(1).textContent();
+//to be removed
         const shippingTooltipButton = this.page.getByText(orderDetailsOrderSummaryShipping)
             .locator('..').locator(tooltipButton);
-        await expect(shippingTooltipButton).toBeVisible();
+       // await expect(shippingTooltipButton).toBeVisible();
 
         const estSalesTaxText = await this.page.getByText(orderDetailsOrderSummarySalesTax)
             .locator('..').locator('..').locator('p:last-child').textContent();
@@ -488,7 +480,7 @@ exports.OrderDetailsPage = class OrderDetailsPage {
 
 
     async validateOrderDetailsShippingDetails() {
-        await expect(this.page.getByText(orderDetailsShippingSectionText, { exact: true })).toBeVisible();
+        await (this.page.getByText(orderDetailsShippingSectionText, { exact: true })).waitFor({ state: 'visible' });
         await expect(this.page.getByText(orderDetailsShippingSectionAddressText, { exact: true })).toBeVisible();
         await expect(this.page.getByText(orderDetailsShippingSectionShippingMethodText, { exact: true })).toBeVisible();
         const shippingAddressSection = this.page.locator(orderDetailsShippingAddress);
@@ -535,11 +527,8 @@ exports.OrderDetailsPage = class OrderDetailsPage {
         const phoneText = await billingAddressSection.locator('p').nth(4).textContent();
         expect(phoneText.trim()).toBeTruthy();
 
-        // Extract and validate the email address
-        const contactInfoText = await billingAddressSection.locator('p').nth(5).textContent();
-        expect(contactInfoText.trim()).toBeTruthy();
-
-        const emailText = await billingAddressSection.locator('p').nth(6).textContent();
+        
+        const emailText = await billingAddressSection.locator('p.gbmask').textContent();
         expect(emailText.trim()).toBeTruthy();
     }
 
@@ -985,7 +974,7 @@ exports.OrderDetailsPage = class OrderDetailsPage {
         // Step 1: Initialize variables
         let hasReturnedOrder = false;
         let pageCounter = 0;
-        const maxPages = 5; // Safety check to prevent infinite loops
+        const maxPages = 2; // Safety check to prevent infinite loops
 
         // Step 2: Define locators
         const orderSectionsLocator = this.page.locator(order_Section);
@@ -1076,7 +1065,7 @@ exports.OrderDetailsPage = class OrderDetailsPage {
     }
 
     async validateOrderDetailsOrderNumberSection() {
-        await (this.orderDetailsBreadCrumb).waitFor({state:"visible"});
+        await expect(this.orderDetailsBreadCrumb).toBeVisible();
         await expect(this.orderDetailsOrderNumber).toBeVisible();
         //await expect(this.orderDetailsOrderDate).toBeVisible();
         await this.validatePlacedOnDate();

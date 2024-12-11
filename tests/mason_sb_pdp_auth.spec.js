@@ -5,6 +5,7 @@ import { SignInPageNew } from '../pages/mason_signin_page1';
 import { MyAccountPage } from '../pages/mason_myaccount_page';
 import { PDPPage } from '../pages/mason_pdp_page';
 import { CartDrawerPage } from '../pages/mason_cart_drawer_page';
+import { HomePage } from '../pages/mason_home_page';
 import { allure } from 'allure-playwright';
 import fs from 'fs';
 require('dotenv').config();
@@ -170,6 +171,7 @@ test.describe("Mason PDP", () => {
     const pdpPage = new PDPPage(page);
     await page.goto(pdp_data.pdp_url);
     await pdpPage.validateProductQTYSection();
+    await pdpPage.clickOnMultiplePDPSizeVariantButton();
     await pdpPage.validateProductAvailabilityMessage();
   })
 
@@ -200,7 +202,8 @@ test.describe("Mason PDP", () => {
     }
     const pdpPage = new PDPPage(page);
     await page.goto(pdp_data.pdp_url);
-    await pdpPage.clickOnPDPSizeVariantButton();
+    await page.waitForLoadState('networkidle');
+    await pdpPage.clickOnMultiplePDPSizeVariantButton();
     await pdpPage.addtoCart();
     await pdpPage.miniCartDrawer();
     await pdpPage.closeMiniCartDrawer();
@@ -210,9 +213,10 @@ test.describe("Mason PDP", () => {
   //Navigation to PDP from PLP, product image link, or configured link-SB-PDP005
   test("Navigation to PDP from PLP - Verify that Clicking on product image, name, or link redirected to the PDP", async ({ page }, testInfo) => {
     //test.slow();
-    const homePage = new HomePageNew(page);
-    await homePage.displayCategory();
-    await homePage.selectSubCategoryFromMegaMenu(expectedCategories);
+    const homePage = new HomePage(page);
+   // await homePage.displayCategory();
+    await homePage.categoryL1ToBeVisibleOnDepartmentHover();
+    await homePage.selectRandomSubCategory();
     const cartDrawerPage = new CartDrawerPage(page);
     await cartDrawerPage.navigateToPDPFromPLP();
     const pdpPage = new PDPPage(page);
