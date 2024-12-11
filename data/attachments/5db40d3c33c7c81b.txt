@@ -1,0 +1,2 @@
+Initial Selected Product Color: Teal
+New Selected Product Color: Black

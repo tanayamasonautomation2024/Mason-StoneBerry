@@ -1,0 +1,2 @@
+Selected Link: JSHandle@<a title="Royal Gourmet" class="hover:underline" href="/brands/royal-gourmet"> Royal Gourmet</a>
+Selected Brand: Royal Gourmet

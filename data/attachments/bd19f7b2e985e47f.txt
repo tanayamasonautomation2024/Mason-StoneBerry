@@ -1,0 +1,15 @@
+Order Date Count :10
+Number of "Order #" elements: 10
+Order #99805207
+Order #99804875
+Order #99804719
+Order #99804462
+Order #99804461
+Order #99804285
+Order #99804139
+Order #96268199
+Order #96051691
+Order #95393414
+Order Date and Price:December 10, 2024 | $41.26
+Order Date and Price:December 02, 2024 | $868.88
+Order Date and Price:November 29, 2024 | $62.72

@@ -1,0 +1,1 @@
+Payment failed. Error page loaded instead of thank you page.

@@ -1,0 +1,26 @@
+An error occurred in test.beforeEach: page.waitForLoadState: Test timeout of 90000ms exceeded.
+    at /home/runner/work/Mason-StoneBerry/Mason-StoneBerry/tests/mason_sb_homepage.spec.js:29:18 {
+  [Symbol(step)]: {
+    stepId: 'pw:api@8',
+    location: {
+      file: '/home/runner/work/Mason-StoneBerry/Mason-StoneBerry/tests/mason_sb_homepage.spec.js',
+      line: 29,
+      column: 18,
+      function: undefined
+    },
+    category: 'pw:api',
+    title: 'page.waitForLoadState',
+    apiName: 'page.waitForLoadState',
+    params: { info: [Object] },
+    boxedStack: undefined,
+    steps: [],
+    complete: [Function: complete],
+    endWallTime: 1733923302542,
+    error: {
+      message: 'Error: page.waitForLoadState: Test timeout of 90000ms exceeded.',
+      stack: 'Error: page.waitForLoadState: Test timeout of 90000ms exceeded.\n' +
+        '    at /home/runner/work/Mason-StoneBerry/Mason-StoneBerry/tests/mason_sb_homepage.spec.js:29:18',
+      cause: undefined
+    }
+  }
+}

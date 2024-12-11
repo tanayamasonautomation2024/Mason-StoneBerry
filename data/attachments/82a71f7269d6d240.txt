@@ -1,0 +1,54 @@
+Link text is correct: Outdoor + Tools
+Is image visible: true
+Alt text is correct: Image: Outdoor + Tools
+Link text is correct: Bed + Bath
+Is image visible: true
+Alt text is correct: Image: Bed + Bath
+Link text is correct: Kitchen + Dining
+Is image visible: true
+Alt text is correct: Image: Kitchen + Dining
+Link text is correct: AC + Fans
+Is image visible: true
+Alt text is correct: Image: AC + Fans
+Link text is correct: Furniture + Beds
+Is image visible: true
+Alt text is correct: Image: Furniture + Beds
+Link text is correct: Décor
+Is image visible: true
+Alt text is correct: Image: Décor
+Link text is correct: Housekeeping + Org
+Is image visible: true
+Alt text is correct: Image: Housekeeping + Org
+Link text is correct: Electronics
+Is image visible: true
+Alt text is correct: Image: Electronics
+Link text is correct: Sporting Goods
+Is image visible: true
+Alt text is correct: Image: Sporting Goods
+Link text is correct: Toys + Outdoor Play
+Is image visible: true
+Alt text is correct: Image: Toys + Outdoor Play
+Link text is correct: Jewelry + Watches
+Is image visible: true
+Alt text is correct: Image: Jewelry + Watches
+Link text is correct: Health + Beauty
+Is image visible: true
+Alt text is correct: Image: Health + Beauty
+Link text is correct: Women's
+Is image visible: true
+Alt text is correct: Image: Women's
+Link text is correct: Men's
+Is image visible: true
+Alt text is correct: Image: Men's
+Link text is correct: Kids'
+Is image visible: true
+Alt text is correct: Image: Kids'
+Link text is correct: Pets
+Is image visible: true
+Alt text is correct: Image: Pets
+Link text is correct: As Seen On TV
+Is image visible: true
+Alt text is correct: Image: As Seen On TV
+Link text is correct: Top Deals
+Is image visible: true
+Alt text is correct: Image: Top Deals

@@ -1,0 +1,4 @@
+Initial Image URL: https://images.stoneberry.com/v3/assets/blt6fecf8e2048edaa1/bltfbae4c03252abae4/674192b96a41cffa6d89fe34/1300045-3-A0.jpg?width=750&quality=75&dpr=1.5
+Clicked the right arrow button
+Clicked the left arrow button
+New Image URL: https://images.stoneberry.com/v3/assets/blt6fecf8e2048edaa1/bltfbae4c03252abae4/674192b96a41cffa6d89fe34/1300045-3-A0.jpg?width=750&quality=75&dpr=1.5

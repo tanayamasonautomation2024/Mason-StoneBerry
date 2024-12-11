@@ -1,0 +1,7 @@
+Number of protection plans available: 3
+Protection Plan Title: 1 Year Protection Plan
+Price: $19.99
+Protection Plan Title: 2 Year Protection Plan
+Price: $100.00
+Protection Plan Title: 3 Year
+Price: $129.99
