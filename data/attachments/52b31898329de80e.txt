@@ -1,5 +1,0 @@
-Selected Brand: No aria-label
-URL: /brands/stoneberry-home
-Image Alt: Stoneberry Home
-Image URL: https://images.stoneberry.com/v3/assets/blt6fecf8e2048edaa1/bltf2e7cfe28f36d653/66b3abeb1370b64ea79d2ee1/TopBrand_StoneberryHome.jpg
-Navigation successful: https://www-stg2.stoneberry.com/brands/stoneberry-home

@@ -1,0 +1,2 @@
+Selected Link: JSHandle@<a title="Zego" href="/brands/zego" class="hover:underline"> Zego</a>
+Selected Brand: Zego

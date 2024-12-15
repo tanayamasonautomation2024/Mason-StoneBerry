@@ -1,2 +1,0 @@
-Error capturing screenshot: page.screenshot: Test ended.
-    at /home/runner/work/Mason-StoneBerry/Mason-StoneBerry/tests/mason_sb_loggedIn_homepage_auth.spec.js:187:18

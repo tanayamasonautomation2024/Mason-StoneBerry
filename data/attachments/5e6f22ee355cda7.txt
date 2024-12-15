@@ -1,7 +1,0 @@
-Clicked button with index: 1
-Clicked enabled button with index: 1 in section: 0
-Add to Cart button is enabled.
-Address verification modal did not appear or is not open.
-Clicked "Continue to Review" button.
-Place Order button is visible and ready.
-Order placed successfully, redirected to the thank-you page.

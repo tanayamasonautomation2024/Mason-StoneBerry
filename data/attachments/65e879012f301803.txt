@@ -1,6 +1,0 @@
-Number of protection plans found: 3
-Plan Title: 1 Year Protection Plan
-Plan Price: $19.99
-Monthly Cost Info: Only $5.99 more per month*
-Item Price: 129.99
-Expected Subtotal: 149.98
