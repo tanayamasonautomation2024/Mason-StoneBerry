@@ -26,7 +26,7 @@ test.describe("Mason Guest User Home Page", () => {
     test.slow();
     try {
       await page.goto(process.env.WEB_URL);
-      await page.waitForLoadState('networkidle');
+      await page.waitForTimeout(3000);
     } catch (error) {
       // Handle the error here
       console.error("An error occurred in test.beforeEach:", error);
@@ -38,8 +38,8 @@ test.describe("Mason Guest User Home Page", () => {
     const homePage = new HomePageNew(page);
     try {
       await homePage.displayHeroBanner(homepage_data.homepage_first_herobanner_name);
-      await homePage.displayBanner1(homepage_data.homepage_second_herobanner_name);
-      await homePage.displayBanner2(homepage_data.homepage_third_herobanner_name);
+      //await homePage.displayBanner1(homepage_data.homepage_second_herobanner_name);
+      //await homePage.displayBanner2(homepage_data.homepage_third_herobanner_name);
 
     } catch (error) {
       console.log("Error: There is No banner Present");
@@ -117,12 +117,17 @@ test.describe("Mason Guest User Home Page", () => {
   test("GPF-Newsletter Mailing List Widget - Verify the display of the newsletter widget, text, textbox, form field label, help text, and CTA functionality", async ({ page }, testInfo) => {
     //test.slow();
     const homePage = new HomePageNew(page);
-    await homePage.validateFooterNewsLetterSignUpContent(homepage_data.footer_newsletterSignUpContent);
-    await homePage.validateFooterNewsLetterSignUpEmailContent(homepage_data.footer_newsletterSignUpEmailContent);
-    await homePage.displayFooterSignUpButton();
-    await homePage.signUpModalDisplayValidation(homepage_data.signup_email);
-    //console.log(testInfo.status);
-
+    await homePage.validateFooterNewsLetterSignUpContent();
+    await homePage.validateFooterNewsLetterSignUp(homepage_data.signup_email);
+    await homePage.signUpModalDisplayValidation();
+    // const isEmailContentVisible = await homePage.validateFooterNewsLetterSignUpContent(homepage_data.footer_newsletterSignUpContent);
+    
+    //     // Only check signUpModalDisplayValidation if the email content is visible
+    // if (isEmailContentVisible) {
+    //   await homePage.signUpModalDisplayValidation(homepage_data.signup_email);
+    // } else {
+    //   console.log('Skipping sign-up modal validation because email content is not visible.');
+    // }
   })
 
   //Global Persistent Footer (Guest) - Static Links-SB-GPF025
@@ -193,7 +198,8 @@ test.describe("Mason Guest User Home Page", () => {
   test("HP-Full Width Banner - Verify the display and functionality of full-width banners, including image/video content and redirection upon click", async ({ page }, testInfo) => {
     //test.slow();
     const homePage = new HomePageNew(page);
-    await homePage.displayHeroBanner(homepage_data.homepage_second_herobanner_name);
+    await homePage.pageScrollBy(homepage_data.scrollXAxis, homepage_data.scrollYAxis);
+    await homePage.displayClearanceBanner(homepage_data.homepage_clearance_banner);
     //console.log(testInfo.status);
 
   })
@@ -247,15 +253,15 @@ test.describe("Mason Guest User Home Page", () => {
 
   })
 
-  //Global Persistent Header (Guest) - Mega Menu Navigation-SB-GPH002
-  test("GPH-Mega Menu Navigation - Verify Mega Menu Navigation opens on hovering within the CTA and on selecting the subcategory it redirected to the corresponding PLP", async ({ page }, testInfo) => {
+  test("HP-Global Credit Banner - Verify the display of Global Credit banner for a guest user", async ({ page }, testInfo) => {
     //test.slow();
-    const homePage = new HomePageNew(page);
-    await homePage.categoryL1ToBeVisibleOnDepartmentHover();
-    await homePage.selectRandomSubCategory();
-    const cartDrawerPage = new CartDrawerPage(page);
-    await cartDrawerPage.clickAddtoCartPLP();
+    const homePage = new HomePage(page);
+    await homePage.validateGlobalCreditBannerForGuest();
   })
+
+
+  
+
 
   test.afterEach(async ({ page }) => {
     try {

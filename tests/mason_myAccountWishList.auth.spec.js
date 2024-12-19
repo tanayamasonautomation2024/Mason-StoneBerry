@@ -9,7 +9,7 @@ import { allure } from 'allure-playwright';
 import { sign } from 'crypto';
 import fs from 'fs';
 require('dotenv').config();
-const creditUserFile = './credituser.json';
+const creditUserFile = './zbWishlistUser.json';
 const nonCreditUserFile = './noncredituser.json';
 const newUserFile = './newuser.json';
 const paymentUserFile = './paymentuser.json';

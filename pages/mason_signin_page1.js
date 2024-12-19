@@ -100,7 +100,7 @@ exports.SignInPageNew = class SignInPageNew {
     }
 
     async validateSignOutMessage(signOutMessage) {
-        await expect(this.page.getByText(signOutMessage)).toBeVisible();
+        await (this.page.getByText(signOutMessage)).waitFor({state:'visible'});
     }
 
     async pageTextValidation(enterPageText) {
@@ -125,7 +125,7 @@ exports.SignInPageNew = class SignInPageNew {
     }
 
     async invalidUserLoginValidation(invalidLoginErrorMessage) {
-        await expect(this.page.getByText(invalidLoginErrorMessage)).toBeVisible();
+        await (this.page.getByText(invalidLoginErrorMessage)).waitFor({state:'visible'});
     }
 
     async validateLoginError() {

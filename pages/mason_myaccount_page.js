@@ -763,8 +763,8 @@ exports.MyAccountPage = class MyAccountPage {
     }
 
     async validateAccountStatusUpdateText() {
-        const loggedInUserName = await this.page.locator('p.block.w-full.translate-y-1.truncate.text-xs>span').textContent();
-        await expect(this.page.getByRole('button', { name: new RegExp(`My Account Hi ${loggedInUserName}!`, 'i') })).toBeVisible();
+        const loggedInUserName = await this.page.locator('p.header-signed-in>span').textContent();
+        await expect(this.page.getByRole('button', { name: new RegExp(`My Account Hi, ${loggedInUserName}!`) })).toBeVisible();
 
     }
 

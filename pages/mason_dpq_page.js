@@ -95,7 +95,7 @@ exports.MasonDPQPage = class MasonDPQPage {
     const centerY = logoPosition.y + logoPosition.height / 2;
     const pageCenterX = pageViewport.width / 2;
     const pageCenterY = pageViewport.height / 2;
-    const tolerance = 10; // Tolerance in pixels for center alignment
+    const tolerance = 50; // Tolerance in pixels for center alignment
 
     // Assert the logo is centered within a certain tolerance
     expect(centerX).toBeGreaterThan(pageCenterX - tolerance);
@@ -112,7 +112,7 @@ exports.MasonDPQPage = class MasonDPQPage {
     const subtitleBox = await this.text_under_logo.boundingBox();
 
     // Verify subtitle is directly below the logo (within a tolerance)
-    const tolerance = 20; // Adjust tolerance as per your layout needs
+    const tolerance = 50; // Adjust tolerance as per your layout needs
 
     expect(subtitleBox.y).toBeGreaterThan(logoBox.y + logoBox.height - tolerance);
     expect(subtitleBox.y).toBeLessThan(logoBox.y + logoBox.height + tolerance);

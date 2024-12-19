@@ -501,4 +501,34 @@ await subcategoryMenu.waitFor({ state: 'visible' });
             console.error(`L2 or L3 subcategory not visible within the timeout for L1 category at index ${index}.`);
         }
     }
+
+    async validateGlobalCreditBannerForGuest(){
+        await (this.page.getByText('Get Pre-Qualified for Stoneberry Credit | Learn more')).waitFor({state:'visible'});
+    }
+
+    async validateGlobalCreditBannerForCreditUser() {
+        // Locate the first <a> element with the href="/account/mycredit" that contains the dynamic credit amount
+        const creditAmountLocator = this.page.locator('a[href="/account/mycredit"]:has-text("$") span');
+        
+        // Wait for the credit amount to be visible
+        await creditAmountLocator.waitFor({ state: 'visible' });
+    
+        // Get the text content of the element (this will be the dynamic credit amount like $1000.00 or $300.00)
+        const creditAmountText = await creditAmountLocator.textContent();
+        
+        // Define a regular expression to match the dynamic amount
+        const creditAmountRegex = /\$\d+(?:\.\d{2})?/;  // Matches $1000.00 or $300, etc.
+        
+        // Check if the credit amount matches the expected pattern (a number with or without decimals)
+        if (creditAmountRegex.test(creditAmountText)) {
+            console.log(`Valid credit amount: ${creditAmountText}`);
+        } else {
+            throw new Error(`Invalid credit amount: ${creditAmountText}`);
+        }
+    
+        // Optionally, verify the presence of "Available Stoneberry Credit**" text
+        await expect(this.page.locator('a[href="/account/mycredit"]:has-text("Available Stoneberry Credit**")')).toContainText('Available Stoneberry Credit**');
+    }
+    
+    
 }

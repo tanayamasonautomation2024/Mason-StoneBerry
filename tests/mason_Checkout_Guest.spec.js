@@ -29,7 +29,7 @@ test.describe("Mason Checkout - Guest Users - Scenarios", () => {
     try {
       await page.goto(process.env.WEB_URL);
       await page.goto(checkout_data.pdp_url_add_to_cart);
-      //await page.waitForLoadState('networkidle');
+      await page.waitForTimeout(3000);
     } catch (error) {
       // Handle the error here
       console.error("An error occurred in test.beforeEach:", error);
@@ -44,7 +44,7 @@ test.describe("Mason Checkout - Guest Users - Scenarios", () => {
     //await guestCheckoutPage.selectAnOptionFromSearchSuggestion('Yellow');
     const pdpPage = new PDPPage(page);
     await pdpPage.clickOnPDPColorVariantButton();
-    await pdpPage.clickOnPDPSizeVariantButton();
+    await pdpPage.clickOnMultiplePDPSizeVariantButton();
     await guestCheckoutPage.clickAddToCart();
     await pdpPage.miniCartDrawer();
     await guestCheckoutPage.clickCheckoutOnMyCart();
@@ -60,7 +60,7 @@ test.describe("Mason Checkout - Guest Users - Scenarios", () => {
     const guestCheckoutPage = new GuestCheckOutPage(page);
     const pdpPage = new PDPPage(page);
     await pdpPage.clickOnPDPColorVariantButton();
-    await pdpPage.clickOnPDPSizeVariantButton();
+    await pdpPage.clickOnMultiplePDPSizeVariantButton();
     await guestCheckoutPage.clickAddToCart();
     await pdpPage.miniCartDrawer();
     await guestCheckoutPage.clickCloseCart();
@@ -73,7 +73,7 @@ test.describe("Mason Checkout - Guest Users - Scenarios", () => {
     const guestCheckoutPage = new GuestCheckOutPage(page);
     const pdpPage = new PDPPage(page);
     await pdpPage.clickOnPDPColorVariantButton();
-    await pdpPage.clickOnPDPSizeVariantButton();
+    await pdpPage.clickOnMultiplePDPSizeVariantButton();
     await guestCheckoutPage.clickAddToCart();
     await pdpPage.miniCartDrawer();
     await guestCheckoutPage.clickCheckoutOnMyCart();
@@ -89,7 +89,7 @@ test.describe("Mason Checkout - Guest Users - Scenarios", () => {
     const guestCheckoutPage = new GuestCheckOutPage(page);
     const pdpPage = new PDPPage(page);
     await pdpPage.clickOnPDPColorVariantButton();
-    await pdpPage.clickOnPDPSizeVariantButton();
+    await pdpPage.clickOnMultiplePDPSizeVariantButton();
     await guestCheckoutPage.clickAddToCart();
     await pdpPage.miniCartDrawer();
     await guestCheckoutPage.clickCheckoutOnMyCart();
@@ -106,7 +106,7 @@ test.describe("Mason Checkout - Guest Users - Scenarios", () => {
     const guestCheckoutPage = new GuestCheckOutPage(page);
     const pdpPage = new PDPPage(page);
     await pdpPage.clickOnPDPColorVariantButton();
-    await pdpPage.clickOnPDPSizeVariantButton();
+    await pdpPage.clickOnMultiplePDPSizeVariantButton();
     await guestCheckoutPage.clickAddToCart();
     await pdpPage.miniCartDrawer();
     await guestCheckoutPage.clickCheckoutOnMyCart();
@@ -127,7 +127,7 @@ test.describe("Mason Checkout - Guest Users - Scenarios", () => {
     const guestCheckoutPage = new GuestCheckOutPage(page);
     const pdpPage = new PDPPage(page);
     await pdpPage.clickOnPDPColorVariantButton();
-    await pdpPage.clickOnPDPSizeVariantButton();
+    await pdpPage.clickOnMultiplePDPSizeVariantButton();
     await guestCheckoutPage.clickAddToCart();
     await pdpPage.miniCartDrawer();
     await guestCheckoutPage.clickCheckoutOnMyCart();
@@ -162,7 +162,7 @@ test.describe("Mason Checkout - Guest Users - Scenarios", () => {
     const guestCheckoutPage = new GuestCheckOutPage(page);
     const pdpPage = new PDPPage(page);
     await pdpPage.clickOnPDPColorVariantButton();
-    await pdpPage.clickOnPDPSizeVariantButton();
+    await pdpPage.clickOnMultiplePDPSizeVariantButton();
     await guestCheckoutPage.clickAddToCart();
     await pdpPage.miniCartDrawer();
     await guestCheckoutPage.clickCheckoutOnMyCart();
@@ -182,7 +182,7 @@ test.describe("Mason Checkout - Guest Users - Scenarios", () => {
     const guestCheckoutPage = new GuestCheckOutPage(page);
     const pdpPage = new PDPPage(page);
     await pdpPage.clickOnPDPColorVariantButton();
-    await pdpPage.clickOnPDPSizeVariantButton();
+    await pdpPage.clickOnMultiplePDPSizeVariantButton();
     await guestCheckoutPage.clickAddToCart();
     await pdpPage.miniCartDrawer();
     await guestCheckoutPage.clickCheckoutOnMyCart();
@@ -445,8 +445,49 @@ test.describe("Mason Checkout - Guest Users - Scenarios", () => {
 
       await guestCheckoutPage.clickOnPlaceOrderButton();
       const orderConfPage = new OrderConfirmationPage(page);
-      await orderConfPage.validateOrderConfPendingCreditApproval();
-      await orderConfPage.validatePendingOrderNumber();
+      //await orderConfPage.validateOrderConfThankYouText();
+      await orderConfPage.validateOrderConfOrderDetails();
+      await orderConfPage.validateOrderConfirmationOrderSummary();
+      await orderConfPage.validateOrderConfirmationShippingDetails();
+      await orderConfPage.validateOrderConfirmationBillingAddress();
+     // await orderConfPage.validateOrderConfirmationPayment();
+      await orderConfPage.validateProductSection();
+    });
+
+    test("Guest user placing an order with a ZB credit and promo code", async ({ page }) => {
+      const firstname = String.fromCharCode(65 + Math.floor(Math.random() * 26)) + [...Array(9)].map(() => String.fromCharCode(97 + Math.floor(Math.random() * 26))).join('');
+      const lastname = String.fromCharCode(65 + Math.floor(Math.random() * 26)) + [...Array(9)].map(() => String.fromCharCode(97 + Math.floor(Math.random() * 26))).join('');
+      const email = `${firstname.toLowerCase()}.${lastname.toLowerCase()}@automation.com`;
+      const password = [...Array(6)].map(() => String.fromCharCode(Math.random() * 26 + 97 | 0)).join('') + String.fromCharCode(Math.random() * 26 + 65 | 0) + (Math.random() * 10 | 0);
+      const guestCheckoutPage = new GuestCheckOutPage(page);
+      const pdpPage = new PDPPage(page);
+      await pdpPage.clickOnPDPColorVariantButton();
+      await pdpPage.clickOnMultiplePDPSizeVariantButton();
+      await guestCheckoutPage.clickAddToCart();
+      await pdpPage.miniCartDrawer();
+      await guestCheckoutPage.clickCheckoutOnMyCart();
+      await guestCheckoutPage.validateSecureCheckout();
+      await guestCheckoutPage.continueCheckoutAsGuest();
+      await guestCheckoutPage.validateShippingSection();
+      await guestCheckoutPage.validateNewAddressModal();
+      await guestCheckoutPage.addShippingAddress();
+      await guestCheckoutPage.validatePromoCodeSection();
+      await guestCheckoutPage.validateValidPromoCode(cart_data.promocode);
+      await guestCheckoutPage.clickOnContinueToPayment();
+      await guestCheckoutPage.validateAddressVerification();
+      await guestCheckoutPage.validatePaymentMethods();
+      await guestCheckoutPage.validateMyCreditIsSelectedbyDefault();
+      await guestCheckoutPage.fillDOB();
+      await guestCheckoutPage.fillSSN();
+      await guestCheckoutPage.clickIAgreeToTermsForZBCredit();
+      await guestCheckoutPage.createAccountForZBCredit(email,password);
+      await guestCheckoutPage.clickContinueToReview();
+      await guestCheckoutPage.validatePreQualificationResultsSection();
+
+      await guestCheckoutPage.clickOnPlaceOrderButton();
+      const orderConfPage = new OrderConfirmationPage(page);
+      //await orderConfPage.validateOrderConfThankYouText();
+      await orderConfPage.validateOrderConfOrderDetails();
       await orderConfPage.validateOrderConfirmationOrderSummary();
       await orderConfPage.validateOrderConfirmationShippingDetails();
       await orderConfPage.validateOrderConfirmationBillingAddress();

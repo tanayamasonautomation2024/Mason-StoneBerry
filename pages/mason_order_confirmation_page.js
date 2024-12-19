@@ -179,9 +179,10 @@ const orderConfCreateAccountText ='Create an account to save time checking out f
             await expect(salesTaxTooltipButton).toBeVisible();
     
             // Match each value against the currency format regex
-            expect(subTotalText.trim()).toMatch(/^-?\$\d+(\.\d{2})?$/);
-            expect(estSalesTaxText.trim()).toMatch(/^-?\$\d+(\.\d{2})?$/);
-            expect(orderTotalText.trim()).toMatch(/^-?\$\d+(\.\d{2})?$/);
+            expect(subTotalText.trim()).toMatch(/^-?\$\d{1,3}(?:,\d{3})*(\.\d{2})?$/);
+            expect(estSalesTaxText.trim()).toMatch(/^-?\$\d{1,3}(?:,\d{3})*(\.\d{2})?$/);
+            expect(orderTotalText.trim()).toMatch(/^-?\$\d{1,3}(?:,\d{3})*(\.\d{2})?$/);
+
     
             if (estShippingText) expect(estShippingText.trim()).toMatch(/^FREE$|^-?\$\d+(\.\d{2})?$/);
             if (estSurchargeText) expect(estSurchargeText.trim()).toMatch(/^-?\$\d+(\.\d{2})?$/);

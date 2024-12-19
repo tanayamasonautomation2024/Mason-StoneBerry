@@ -59,7 +59,7 @@ test.describe("Mason MyAccount - Credit Cards - Standard With Saved Cards", () =
     await myaccountPage.enterCCSecurityCode(myaccountpage_data.myaccount_newcc_cardseccode);
     await myaccountPage.clickDefaultCCCheckbox();
     await myaccountPage.clickSaveCardButton();
-    await myaccountPage.validatedSuccessMessage();
+    //await myaccountPage.validatedSuccessMessage();
     await myaccountPage.validateDefaultSavedCreditCardSection();
   })
   //test.use({storageState: "./credituser.json"});

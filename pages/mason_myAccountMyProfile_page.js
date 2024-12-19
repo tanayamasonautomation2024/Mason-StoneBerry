@@ -80,7 +80,7 @@ exports.MyAccountMyProfilePage = class MyAccountMyProfilePage{
     }
 
     async validateIncorrectPasswordMessage(){
-        await expect(this.page.getByText(accountpage_data.incorrect_password_message)).toBeVisible();
+        await (this.page.getByText(accountpage_data.incorrect_password_message)).waitFor({state:'visible'});
     }
 
     async enterFirstName(enterFirstName){
