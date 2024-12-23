@@ -75,16 +75,16 @@ exports.OrderConfDownPayment = class OrderConfDownPayment {
 
     async validateOrderConfDownPaymentDrawer() {
         await this.downPaymentDrawerHeaderText.waitFor({ state: 'visible' });
-        await expect(this.downPaymentDrawerSBImage.first()).toBeVisible();
-        await expect(this.downPaymentDrawerCloseButton).toBeVisible();
-        await expect(this.downPaymentDrawerHeaderText).toBeVisible();
-        await expect(this.downPaymentDrawerHeaderText2).toBeVisible();
-        await expect(this.downPaymentDrawerMinDueLabel).toBeVisible();
-        await expect(this.downPaymentDrawerOrderTotalLabel).toBeVisible();
-        await expect(this.downPaymentDrawerOtherAmountTextBox).toBeVisible();
-        await expect(this.downPaymentDrawerOtherAmountRadioButton).toBeVisible();
-        await expect(this.downPaymentDrawerOrderTotalRadioButton).toBeVisible();
-        await expect(this.downPaymentDrawerMinDueRadioButton).toBeVisible();
+        await (this.downPaymentDrawerSBImage.first()).waitFor({ state: 'visible' });
+        await (this.downPaymentDrawerCloseButton).waitFor({ state: 'visible' });
+        await (this.downPaymentDrawerHeaderText).waitFor({ state: 'visible' });
+        await (this.downPaymentDrawerHeaderText2).waitFor({ state: 'visible' });
+        await (this.downPaymentDrawerMinDueLabel).waitFor({ state: 'visible' });
+        await (this.downPaymentDrawerOrderTotalLabel).waitFor({ state: 'visible' });
+        await (this.downPaymentDrawerOtherAmountTextBox).waitFor({ state: 'visible' });
+        await (this.downPaymentDrawerOtherAmountRadioButton).waitFor({ state: 'visible' });
+        await (this.downPaymentDrawerOrderTotalRadioButton).waitFor({ state: 'visible' });
+        await (this.downPaymentDrawerMinDueRadioButton).waitFor({ state: 'visible' });
         await expect(this.downPaymentDrawerPaymentMethodText).toBeVisible();
         await expect(this.downPaymentDrawerNewCC).toBeVisible();
         await expect(this.downPaymentDrawerSavedCC).toBeVisible();
@@ -100,11 +100,11 @@ exports.OrderConfDownPayment = class OrderConfDownPayment {
         await expect(this.downPaymentSectionText2.first()).toBeVisible();
         await expect(this.downPaymentSectionText3.nth(1)).toBeVisible();
         await expect(this.downPaymentMakeADownPaymentButton).toBeVisible();
-        await expect(this.downPaymentMayBeLaterButton.nth(1)).toBeVisible();
+        await expect(this.downPaymentMayBeLaterButton).toBeVisible();
     }
 
     async clickOnMaybeLaterButton() {
-        await this.downPaymentMayBeLaterButton.nth(1).click();
+        await this.downPaymentMayBeLaterButton.click();
         await this.validateOrderConfDownPaymentSection();
     }
 
@@ -177,7 +177,7 @@ exports.OrderConfDownPayment = class OrderConfDownPayment {
         await expect(downPaymentAmount).toHaveText(/^\$\d{1,3}(,\d{3})*(\.\d{2})?$/); // Pattern for dollar amounts (e.g., $100.48)
 
         // Validate Payment Method
-        const paymentMethodLabel = mainSection.locator('p:has-text("Payment Method")');
+        const paymentMethodLabel = mainSection.locator('h2:has-text("Payment Method")');
         await expect(paymentMethodLabel).toBeVisible();
 
         const creditCardSection = paymentMethodLabel.locator('xpath=following-sibling::section[1]');
@@ -234,7 +234,7 @@ exports.OrderConfDownPayment = class OrderConfDownPayment {
         // Locate the main section
         const mainSection = await this.page.locator('section.mx-4.flex.gap-x-0.bg-\\[\\#89CDDA33\\].md\\:gap-x-5');
         // Validate SVG Image
-        const svgImage = mainSection.locator('svg');
+        const svgImage = mainSection.locator('img');
         await expect(svgImage).toBeVisible();
         // Validate p tags
         const pTags = mainSection.locator('p');
@@ -254,11 +254,11 @@ exports.OrderConfDownPayment = class OrderConfDownPayment {
         await expect(thirdP).toBeVisible();
         await expect(thirdP).toHaveText(' Order Has Been Approved!');
         // Locate the order confirmation <p> tag using has-text selector
-        const orderConfirmation = await this.page.locator('p.text-forestGreen:has-text("Order Confirmation")');
+        const orderConfirmation = await this.page.locator('h1.text-forestGreen:has-text("Order Confirmation")');
         await expect(orderConfirmation).toBeVisible();
         await expect(orderConfirmation).toBeTruthy();
 
-        console.log('All SVG and p tag text validations passed successfully.');
+        console.log('All img and p tag text validations passed successfully.');
     }
 
     async downPaymentDisplay() {

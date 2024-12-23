@@ -188,6 +188,8 @@ exports.MyAccountPage = class MyAccountPage {
     }
     async clickMyAccountOrderLink() {
         await this.myaccount_orders_link.click();
+        await this.page.waitForURL('**/account/orders');
+        await expect(this.page).toHaveURL(/.*\/account\/orders/); 
     }
     async clickMyAccountAddressLink() {
         await this.myaccount_addresses_link.click();

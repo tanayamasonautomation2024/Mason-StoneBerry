@@ -196,8 +196,7 @@ test.describe("Mason Cart Drawer", () => {
     //   await pdpPage.miniCartDrawer();
     // }
     await page.goto(pdp_data.pdp_url_limitedStock);
-    await pdpPage.clickOnPDPColorVariantButton();
-    await pdpPage.clickOnPDPSizeVariantButton();
+    await pdpPage.selectSize('M', '1')
     await pdpPage.addtoCart();
     await cartDrawerPage.miniCartQtyUpdateByTypeIn();
     await pdpPage.closeMiniCartDrawer();

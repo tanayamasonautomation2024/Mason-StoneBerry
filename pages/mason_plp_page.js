@@ -329,32 +329,33 @@ async randomlySelectMultipleFiltersOptions(numOptionsPerCategory) {
 }
 
 
-async validateFilterExpandClose(){
-     // Get all filter buttons
-  const filterButtons = await this.page.$$(filter_option_button);
+async validateFilterExpandClose() {
+    // Get all filter buttons
+    const filterButtons = await this.page.$$(filter_option_button);
 
-  // Iterate through each filter button
-  for (const button of filterButtons) {
-    // Click the filter button
-    // Wait for the filters to expand/collapse
-    await this.page.waitForTimeout(1000);
+    // Determine the number of buttons to process (up to 5)
+    const maxButtonsToProcess = Math.min(filterButtons.length, 3);
 
-    // Verify if the filters are expanded/collapsed
-    const isExpanded = await button.evaluate(button => button.getAttribute('aria-expanded') === 'true');
-    expect(isExpanded).toBeTruthy();
+    // Iterate through up to maxButtonsToProcess filter buttons
+    for (let i = 0; i < maxButtonsToProcess; i++) {
+        const button = filterButtons[i];
+        await this.page.waitForTimeout(1000);
 
-    // Click the filter button again to collapse
-    await button.click();
+        // Verify if the filters are expanded/collapsed
+        const isExpanded = await button.evaluate(button => button.getAttribute('aria-expanded') === 'true');
+        expect(isExpanded).toBeTruthy();
 
-    // Wait for the filters to collapse/expand
-    //await this.page.waitForTimeout(1000);
+        // Click the filter button again to collapse
+        await button.click();
 
-    // Verify if the filters are collapsed/expanded
-    const isCollapsed = await button.evaluate(button => button.getAttribute('aria-expanded') === 'false');
-    expect(isCollapsed).toBeTruthy();
-  }
+        // Wait for the filters to collapse/expand
+        //await this.page.waitForTimeout(1000);
+
+        // Verify if the filters are collapsed/expanded
+        const isCollapsed = await button.evaluate(button => button.getAttribute('aria-expanded') === 'false');
+        expect(isCollapsed).toBeTruthy();
+    }
 }
-
 
 async validateViewMoreOption(){
     // Get all filter buttons

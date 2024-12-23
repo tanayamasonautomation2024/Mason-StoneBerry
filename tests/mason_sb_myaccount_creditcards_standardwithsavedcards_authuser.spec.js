@@ -7,7 +7,7 @@ import { allure } from 'allure-playwright';
 import fs from 'fs';
 require('dotenv').config();
 
-const creditUserFile = './credituser.json';
+const creditUserFile = './creditUser2.json';
 const nonCreditUserFile = './noncredituser.json';
 
 const homepage_data = JSON.parse(JSON.stringify(require('../test_data/mason_sb_home_page_data.json')));

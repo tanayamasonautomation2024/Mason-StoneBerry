@@ -5,6 +5,7 @@ import { SignInPageNew } from '../pages/mason_signin_page1';
 import { MyAccountPage } from '../pages/mason_myaccount_page';
 import { PDPPage } from '../pages/mason_pdp_page';
 import { CartDrawerPage } from '../pages/mason_cart_drawer_page';
+import { MasonPLPPage } from '../pages/mason_plp_page';
 import { HomePage } from '../pages/mason_home_page';
 import { allure } from 'allure-playwright';
 import fs from 'fs';
@@ -220,6 +221,17 @@ test.describe("Mason PDP", () => {
     const cartDrawerPage = new CartDrawerPage(page);
     await cartDrawerPage.navigateToPDPFromPLP();
     const pdpPage = new PDPPage(page);
+    await pdpPage.validateProductQTYSection();
+   
+  })
+
+  //PDP - Ways to Wear It Section - Test Cases ID-SB-PDP067
+  test("PDP - Similar Items Section - Verify Similar Items options", async ({ page }, testInfo) => {
+    if (!loginSuccessful) {
+      test.skip('Skipping test due to failed login');
+    }
+    const pdpPage = new PDPPage(page);
+    await page.goto(pdp_data.pdp_url_waystowearit);
     await pdpPage.validateSimilarItem();
   })
 

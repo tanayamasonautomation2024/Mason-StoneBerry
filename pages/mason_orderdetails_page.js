@@ -66,6 +66,34 @@ exports.OrderDetailsPage = class OrderDetailsPage {
         this.orderDetailsOrderDate = page.locator(`h2:has-text(/${dateRegex.source}/)`);
         //this.orderLeftNav = page.locator('a.sideBarZBcolor h2');
         this.orderLeftNav = page.getByRole('link', { name: 'Order #' })
+        
+
+        this.downPaymentHeaderText = page.getByText('Pending Down Payment', { exact: true });
+        this.downPaymentSectionText1 = page.getByText('Keep your order moving!');
+        this.downPaymentSectionText2 = page.getByText('We can approve your order right now');
+        this.downPaymentSectionText3 = page.getByText('if you make a down payment of:');
+        this.downPaymentMakeADownPaymentButton = page.getByRole('button', { name: 'Make a Down Payment' });
+        this.downPaymentLearnMoreButton = page.getByRole('button', { name: 'Learn More' });
+        this.downPaymentDrawerHeaderText = page.getByRole('heading', { name: 'Make a Down Payment' });
+        this.downPaymentDrawerHeaderText2 = page.getByRole('heading', { name: 'Down Payment Amount' });
+        this.downPaymentDrawerMinDueLabel = page.getByText('Minimum Due:');
+        this.downPaymentDrawerOrderTotalLabel = page.getByText('Order Total:');
+        this.downPaymentDrawerOtherAmountTextBox = page.getByText('Other Amount');
+        this.downPaymentDrawerOtherAmountRadioButton = page.locator('#otheramountRadio');
+        this.downPaymentDrawerOrderTotalRadioButton = page.locator('#orderTotalRadio');
+        this.downPaymentDrawerMinDueRadioButton = page.locator('#minimumDueRadio');
+        this.downPaymentDrawerPaymentMethodText = page.getByRole('dialog').getByText('Payment Method');
+        this.downPaymentDrawerNewCC = page.getByLabel('New Credit/Debit Card');
+        this.downPaymentDrawerSavedCC = page.getByText('Saved Credit/Debit Card');
+        this.downPaymentDrawerReviewDownPaymentButton = page.getByRole('button', { name: 'Review Down Payment' });
+        this.downPaymentDrawerCancelButton = page.getByRole('button', { name: 'Cancel' });
+        this.downPaymentDrawerCloseButton = page.locator('button.pl-8.pr-1');
+        this.downPaymentDrawerSBImage = page.locator('section.flex.pl-12.pt-5 svg g');
+        this.downPaymentMayBeLaterText = page.getByRole('heading', { name: 'Maybe Later' });
+        this.downPaymentMayBeLaterButton = page.getByRole('button', { name: 'Maybe Later' });
+        this.reviewDownPaymentDrawerHeaderText1 = page.getByRole('heading', { name: 'Review Down Payment' });
+        this.reviewDownPaymentDrawerSubmitDownPaymentButton = page.getByRole('button', { name: 'Submit Down Payment' });
+        this.reviewDownPaymentDrawerEditDownPaymentButton = page.getByRole('button', { name: 'Edit Down Payment' });
 
     }
 
@@ -121,6 +149,12 @@ exports.OrderDetailsPage = class OrderDetailsPage {
     //         }
     //     }
     // }
+
+    async clickOnMakeADownPaymentButton() {
+        await (this.downPaymentMakeADownPaymentButton.first()).waitFor({state:'visible'});
+        await (this.downPaymentMakeADownPaymentButton.first()).click();
+
+    }
 
     async validateCancelOrderInOrderDetails() {
         // Step 1: Initialize variables
@@ -1091,6 +1125,105 @@ exports.OrderDetailsPage = class OrderDetailsPage {
 
         // Assert that the date format is valid
         expect(isValidDate).toBe(true);
+    }
+
+    async validateOrderConfDownPaymentDrawer() {
+        await this.downPaymentDrawerHeaderText.waitFor({ state: 'visible' });
+        await (this.downPaymentDrawerSBImage.first()).waitFor({ state: 'visible' });
+        await (this.downPaymentDrawerCloseButton).waitFor({ state: 'visible' });
+        await (this.downPaymentDrawerHeaderText).waitFor({ state: 'visible' });
+        await (this.downPaymentDrawerHeaderText2).waitFor({ state: 'visible' });
+        await (this.downPaymentDrawerMinDueLabel).waitFor({ state: 'visible' });
+        await (this.downPaymentDrawerOrderTotalLabel).waitFor({ state: 'visible' });
+        await (this.downPaymentDrawerOtherAmountTextBox).waitFor({ state: 'visible' });
+        await (this.downPaymentDrawerOtherAmountRadioButton).waitFor({ state: 'visible' });
+        await (this.downPaymentDrawerOrderTotalRadioButton).waitFor({ state: 'visible' });
+        await (this.downPaymentDrawerMinDueRadioButton).waitFor({ state: 'visible' });
+        await expect(this.downPaymentDrawerPaymentMethodText).toBeVisible();
+        await expect(this.downPaymentDrawerNewCC).toBeVisible();
+        await expect(this.downPaymentDrawerSavedCC).toBeVisible();
+        await expect(this.downPaymentDrawerReviewDownPaymentButton).toBeVisible();
+        await expect(this.downPaymentDrawerCancelButton).toBeVisible();
+        await this.validateMakeAPaymentDrawerCCAndBillingAddressSection();
+    }
+
+    async clickOnDownPaymentDrawerCloseButton() {
+        await this.downPaymentDrawerCloseButton.click();
+        await ((this.downPaymentMakeADownPaymentButton).first()).waitFor({state:'visible'});
+    }
+
+    async clickOnDownPaymentDrawerCancelButton() {
+        await this.downPaymentDrawerCancelButton.click();
+        await ((this.downPaymentMakeADownPaymentButton).first()).waitFor({state:'visible'});
+
+    }
+
+    async clickOnEditReviewPaymentButton() {
+        await this.reviewDownPaymentDrawerEditDownPaymentButton.click();
+        await this.validateOrderConfDownPaymentDrawer();
+    }
+
+    async validateMakeAPaymentDrawerCCAndBillingAddressSection() {
+        // Validate the Combo Button Display
+        const comboButton = this.page.locator('button[role="combobox"]');
+        await expect(comboButton).toBeVisible();
+        await expect(comboButton).toHaveAttribute('aria-expanded', 'false');
+
+        // Validate the Credit Card Display with Image and Details
+        const creditCardSection = this.page.locator('section.flex.items-center.gap-x-5.pt-5');
+        await expect(creditCardSection).toBeVisible();
+
+        const creditCardLogo = creditCardSection.locator('svg');
+        await expect(creditCardLogo).toBeVisible();
+
+        const creditCardNumber = creditCardSection.locator('p.text-base.font-semibold.leading-6.text-black');
+        await expect(creditCardNumber).toBeVisible();
+        await expect(creditCardNumber).toHaveText(/^\*{4}\d{4}$/); // Pattern for masked card number (e.g., ****7777)
+
+        const expirationDate = creditCardSection.locator('p:has-text("Expires")');
+        await expect(expirationDate).toBeVisible();
+        await expect(expirationDate).toHaveText(/Expires\s+\d{2}\/\d{2}/); // Pattern for expiration date (e.g., Expires 12/29)
+
+        // Validate the Edit Card Button
+        const editCardButton = this.page.locator('button:has-text("Edit Card")');
+        await expect(editCardButton).toBeVisible();
+        await expect(editCardButton).toBeEnabled();
+
+        // Validate the Billing Address
+        const billingAddressSection = this.page.locator('section.ml-6.pt-9');
+        await expect(billingAddressSection).toBeVisible();
+
+        // Billing Name
+        const billingName = billingAddressSection.locator('p').nth(0);
+        await expect(billingName).toBeVisible();
+        await expect(billingName).toBeTruthy();
+
+        // Billing Street Address
+        const billingStreet = billingAddressSection.locator('p').nth(1);
+        await expect(billingStreet).toBeVisible();
+        await expect(billingStreet).toBeTruthy();
+
+        // Billing City, State, and ZIP
+        const billingCityStateZip = billingAddressSection.locator('p').nth(2);
+        await expect(billingCityStateZip).toBeVisible();
+        await expect(billingCityStateZip).toBeTruthy();
+
+        // Billing Phone Number
+        const billingPhoneNumber = billingAddressSection.locator('p').nth(3);
+        await expect(billingPhoneNumber).toBeVisible();
+        await expect(billingPhoneNumber).toHaveText(/^\(\d{3}\)\s\d{3}-\d{4}$/); // Pattern for phone number (e.g., (827) 438-4784)
+
+        console.log('All elements are validated successfully.');
+    }
+
+    async clickOnSubmitReviewPaymentButton() {
+        await this.reviewDownPaymentDrawerSubmitDownPaymentButton.click();
+        
+        // Locate the paragraph element with the specific text content
+        const approvalMessage = await this.page.locator('p.text-forestGreen >> text=Congratulations! Your Stoneberry Credit Order has been approved.');
+
+        // Assert that the message is visible
+        await (approvalMessage).waitFor({state:'visible'});
     }
 
 }
