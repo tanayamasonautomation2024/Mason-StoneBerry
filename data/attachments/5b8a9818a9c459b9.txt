@@ -1,0 +1,164 @@
+Error validating brands under alphabet 'O': ExpectError: expect(received).toEqual(expected) // deep equality
+
+- Expected  - 1
++ Received  + 1
+
+@@ -9,15 +9,15 @@
+    "Omron",
+    "OPI",
+    "Optimus",
+    "Oreck",
+    "Organize It All",
++   "The Original Salt Company",
+    "Ors",
+    "Oscar De La Renta",
+    "Oster",
+    "Other",
+    "Ouidad",
+    "Outdoor Decor",
+    "Outset",
+    "OXO",
+-   "The Original Salt Company",
+  ]
+    at MasonBIPPage.validateBrandsUnderRandomAlphabet (/home/runner/work/Mason-StoneBerry/Mason-StoneBerry/pages/mason_bip_page.js:165:50)
+    at /home/runner/work/Mason-StoneBerry/Mason-StoneBerry/tests/mason_bip.auth.spec.js:71:5 {
+  matcherResult: {
+    actual: [
+      'Odyssey Toys',
+      'OK Lighting',
+      "Oklahoma Joe's",
+      'Okuma',
+      'Olay',
+      'Old Bahama Bay',
+      'Old Friend',
+      'Omron',
+      'OPI',
+      'Optimus',
+      'Oreck',
+      'Organize It All',
+      'The Original Salt Company',
+      'Ors',
+      'Oscar De La Renta',
+      'Oster',
+      'Other',
+      'Ouidad',
+      'Outdoor Decor',
+      'Outset',
+      'OXO'
+    ],
+    expected: [
+      'Odyssey Toys',
+      'OK Lighting',
+      "Oklahoma Joe's",
+      'Okuma',
+      'Olay',
+      'Old Bahama Bay',
+      'Old Friend',
+      'Omron',
+      'OPI',
+      'Optimus',
+      'Oreck',
+      'Organize It All',
+      'Ors',
+      'Oscar De La Renta',
+      'Oster',
+      'Other',
+      'Ouidad',
+      'Outdoor Decor',
+      'Outset',
+      'OXO',
+      'The Original Salt Company'
+    ],
+    message: '\x1B[2mexpect(\x1B[22m\x1B[31mreceived\x1B[39m\x1B[2m).\x1B[22mtoEqual\x1B[2m(\x1B[22m\x1B[32mexpected\x1B[39m\x1B[2m) // deep equality\x1B[22m\n' +
+      '\n' +
+      '\x1B[32m- Expected  - 1\x1B[39m\n' +
+      '\x1B[31m+ Received  + 1\x1B[39m\n' +
+      '\n' +
+      '\x1B[33m@@ -9,15 +9,15 @@\x1B[39m\n' +
+      '\x1B[2m    "Omron",\x1B[22m\n' +
+      '\x1B[2m    "OPI",\x1B[22m\n' +
+      '\x1B[2m    "Optimus",\x1B[22m\n' +
+      '\x1B[2m    "Oreck",\x1B[22m\n' +
+      '\x1B[2m    "Organize It All",\x1B[22m\n' +
+      '\x1B[31m+   "The Original Salt Company",\x1B[39m\n' +
+      '\x1B[2m    "Ors",\x1B[22m\n' +
+      '\x1B[2m    "Oscar De La Renta",\x1B[22m\n' +
+      '\x1B[2m    "Oster",\x1B[22m\n' +
+      '\x1B[2m    "Other",\x1B[22m\n' +
+      '\x1B[2m    "Ouidad",\x1B[22m\n' +
+      '\x1B[2m    "Outdoor Decor",\x1B[22m\n' +
+      '\x1B[2m    "Outset",\x1B[22m\n' +
+      '\x1B[2m    "OXO",\x1B[22m\n' +
+      '\x1B[32m-   "The Original Salt Company",\x1B[39m\n' +
+      '\x1B[2m  ]\x1B[22m',
+    name: 'toEqual',
+    pass: false
+  },
+  [Symbol(step)]: {
+    stepId: 'expect@80',
+    category: 'expect',
+    title: 'expect.toEqual',
+    params: { expected: [Array] },
+    infectParentStepsWithError: undefined,
+    boxedStack: undefined,
+    location: {
+      file: '/home/runner/work/Mason-StoneBerry/Mason-StoneBerry/pages/mason_bip_page.js',
+      line: 165,
+      column: 50,
+      function: 'MasonBIPPage.validateBrandsUnderRandomAlphabet'
+    },
+    steps: [],
+    complete: [Function: complete],
+    endWallTime: 1734960891271,
+    error: {
+      message: 'Error: \x1B[2mexpect(\x1B[22m\x1B[31mreceived\x1B[39m\x1B[2m).\x1B[22mtoEqual\x1B[2m(\x1B[22m\x1B[32mexpected\x1B[39m\x1B[2m) // deep equality\x1B[22m\n' +
+        '\n' +
+        '\x1B[32m- Expected  - 1\x1B[39m\n' +
+        '\x1B[31m+ Received  + 1\x1B[39m\n' +
+        '\n' +
+        '\x1B[33m@@ -9,15 +9,15 @@\x1B[39m\n' +
+        '\x1B[2m    "Omron",\x1B[22m\n' +
+        '\x1B[2m    "OPI",\x1B[22m\n' +
+        '\x1B[2m    "Optimus",\x1B[22m\n' +
+        '\x1B[2m    "Oreck",\x1B[22m\n' +
+        '\x1B[2m    "Organize It All",\x1B[22m\n' +
+        '\x1B[31m+   "The Original Salt Company",\x1B[39m\n' +
+        '\x1B[2m    "Ors",\x1B[22m\n' +
+        '\x1B[2m    "Oscar De La Renta",\x1B[22m\n' +
+        '\x1B[2m    "Oster",\x1B[22m\n' +
+        '\x1B[2m    "Other",\x1B[22m\n' +
+        '\x1B[2m    "Ouidad",\x1B[22m\n' +
+        '\x1B[2m    "Outdoor Decor",\x1B[22m\n' +
+        '\x1B[2m    "Outset",\x1B[22m\n' +
+        '\x1B[2m    "OXO",\x1B[22m\n' +
+        '\x1B[32m-   "The Original Salt Company",\x1B[39m\n' +
+        '\x1B[2m  ]\x1B[22m',
+      stack: 'Error: \x1B[2mexpect(\x1B[22m\x1B[31mreceived\x1B[39m\x1B[2m).\x1B[22mtoEqual\x1B[2m(\x1B[22m\x1B[32mexpected\x1B[39m\x1B[2m) // deep equality\x1B[22m\n' +
+        '\n' +
+        '\x1B[32m- Expected  - 1\x1B[39m\n' +
+        '\x1B[31m+ Received  + 1\x1B[39m\n' +
+        '\n' +
+        '\x1B[33m@@ -9,15 +9,15 @@\x1B[39m\n' +
+        '\x1B[2m    "Omron",\x1B[22m\n' +
+        '\x1B[2m    "OPI",\x1B[22m\n' +
+        '\x1B[2m    "Optimus",\x1B[22m\n' +
+        '\x1B[2m    "Oreck",\x1B[22m\n' +
+        '\x1B[2m    "Organize It All",\x1B[22m\n' +
+        '\x1B[31m+   "The Original Salt Company",\x1B[39m\n' +
+        '\x1B[2m    "Ors",\x1B[22m\n' +
+        '\x1B[2m    "Oscar De La Renta",\x1B[22m\n' +
+        '\x1B[2m    "Oster",\x1B[22m\n' +
+        '\x1B[2m    "Other",\x1B[22m\n' +
+        '\x1B[2m    "Ouidad",\x1B[22m\n' +
+        '\x1B[2m    "Outdoor Decor",\x1B[22m\n' +
+        '\x1B[2m    "Outset",\x1B[22m\n' +
+        '\x1B[2m    "OXO",\x1B[22m\n' +
+        '\x1B[32m-   "The Original Salt Company",\x1B[39m\n' +
+        '\x1B[2m  ]\x1B[22m\n' +
+        '    at MasonBIPPage.validateBrandsUnderRandomAlphabet (/home/runner/work/Mason-StoneBerry/Mason-StoneBerry/pages/mason_bip_page.js:165:50)\n' +
+        '    at /home/runner/work/Mason-StoneBerry/Mason-StoneBerry/tests/mason_bip.auth.spec.js:71:5',
+      cause: undefined,
+      matcherResult: [Object]
+    }
+  }
+}
