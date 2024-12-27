@@ -1,0 +1,5 @@
+Selected Brand: No aria-label
+URL: /brands/frigidaire
+Image Alt: Frigidaire
+Image URL: https://images.stoneberry.com/v3/assets/blt6fecf8e2048edaa1/bltfb7e29da1f4d546d/66b3abebc5b50d62d9c27079/TopBrand_Frigidaire.jpg
+Navigation successful: https://www-stg2.stoneberry.com/brands/frigidaire

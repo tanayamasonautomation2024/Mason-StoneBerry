@@ -1,5 +1,0 @@
-Selected Brand: No aria-label
-URL: /categories/as-seen-on-tv
-Image Alt: As Seen On TV
-Image URL: https://images.stoneberry.com/v3/assets/blt6fecf8e2048edaa1/bltf81a24e90a3a83ca/66b3abeb1370b68c1a9d2edd/TopBrand_ASOTV.jpg
-Navigation successful: https://www-stg2.stoneberry.com/categories/as-seen-on-tv
