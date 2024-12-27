@@ -73,7 +73,7 @@ test.describe("Mason - Credit Users - Down Payment - Scenarios", () => {
   });
 
   test.describe("Verify the DownPayment section - Learn More and Maybe Later in Order Confirmation Page", () => {
-    test.use({ storageState: './creditUser4.json' });
+    test.use({ storageState: './creditUser2.json' });
     test('Verify the DownPayment section - Learn More and Maybe Later in Order Confirmation Page', async ({ page }) => {
       const guestCheckoutPage = new GuestCheckOutPage(page);
       const signinPage = new SignInPage(page);
@@ -136,7 +136,7 @@ test.describe("Mason - Credit Users - Down Payment - Scenarios", () => {
   });
 
   test.describe("Verify the Edit/Submit Down Payment section in Down Payment Drawer", () => {
-    test.use({ storageState: './creditUser7.json' });
+    test.use({ storageState: './creditUser6.json' });
     test('Verify the Edit/Submit Down Payment section in Down Payment Drawer', async ({ page }) => {
       const guestCheckoutPage = new GuestCheckOutPage(page);
       const signinPage = new SignInPage(page);

@@ -1220,4 +1220,11 @@ exports.PDPPage = class PDPPage {
         await expect(this.miniCartPersonalizationText).toBeVisible();
     }
 
+    async validatePersonalizeNotMandatory(){
+        await (this.page.getByText('Yes, I want to personalize')).waitFor({ state: 'visible' });
+        await (this.page.getByRole('button', { name: 'Personalize' }).nth(1)).waitFor({ state: 'visible' });
+        await this.page.getByLabel('Yes, I want to personalize').click();
+        await (this.page.getByRole('button', { name: 'Add to Cart' }).nth(1)).waitFor({ state: 'visible' });
+    }
+
 }

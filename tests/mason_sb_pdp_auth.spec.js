@@ -211,6 +211,20 @@ test.describe("Mason PDP", () => {
     await pdpPage.minCartItemCount();
   })
 
+  test("PDP - Add To Cart - Verify the adding to cart of personalize eligible but not mandatory items", async ({ page }, testInfo) => {
+    if (!loginSuccessful) {
+      test.skip('Skipping test due to failed login');
+    }
+    const pdpPage = new PDPPage(page);
+    await page.goto(pdp_data.personalize_not_mandatory);
+    await page.waitForLoadState('networkidle');
+    await pdpPage.validatePersonalizeNotMandatory();
+    await pdpPage.addtoCart();
+    await pdpPage.miniCartDrawer();
+    await pdpPage.closeMiniCartDrawer();
+    await pdpPage.minCartItemCount();
+  })
+
   //Navigation to PDP from PLP, product image link, or configured link-SB-PDP005
   test("Navigation to PDP from PLP - Verify that Clicking on product image, name, or link redirected to the PDP", async ({ page }, testInfo) => {
     //test.slow();

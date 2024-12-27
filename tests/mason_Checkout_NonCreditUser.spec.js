@@ -9,6 +9,7 @@ import { MyAccountPage } from '../pages/mason_myaccount_page';
 import { GuestCheckOutPage } from '../pages/mason_guestCheckout_page';
 import { CreateAccountPage } from '../pages/mason_createAccount_page';
 import { OrderConfirmationPage } from '../pages/mason_order_confirmation_page';
+import { CartDrawerPage } from '../pages/mason_cart_drawer_page';
 import { allure } from 'allure-playwright';
 import { sign } from 'crypto';
 require('dotenv').config();
@@ -318,6 +319,7 @@ test.describe("Mason Checkout - Non Credit Users - Scenarios", () => {
       await orderConfPage.validateProductSection();
 
     })
+  });
 
     test.describe("Checkout Scenario for the Non Credit user - saved CC and promo code", () => {
       test.use({ storageState: './savedCardUser.json' });
@@ -350,9 +352,64 @@ test.describe("Mason Checkout - Non Credit Users - Scenarios", () => {
   
     });
 
-  });
 
+    test("Non Credit user placing an order with protection plan", async ({ page }) => {
+      const guestCheckoutPage = new GuestCheckOutPage(page);
+        const signinPage = new SignInPage(page);
+        const homePage = new HomePage(page);
+        const pdpPage = new PDPPage(page);
+        const cartDrawerPage = new CartDrawerPage(page);
+        const signinPageNew = new SignInPageNew(page);
+        await homePage.clickOnHomePageSignIn();
+        
+        const createAccountPage = new CreateAccountPage(page);
+        const firstname = String.fromCharCode(65 + Math.floor(Math.random() * 26)) + [...Array(9)].map(() => String.fromCharCode(97 + Math.floor(Math.random() * 26))).join('');
+        const lastname = String.fromCharCode(65 + Math.floor(Math.random() * 26)) + [...Array(9)].map(() => String.fromCharCode(97 + Math.floor(Math.random() * 26))).join('');
+        const email = `${firstname.toLowerCase()}.${lastname.toLowerCase()}@automation.com`;
+        const password = [...Array(6)].map(() => String.fromCharCode(Math.random() * 26 + 97 | 0)).join('') + String.fromCharCode(Math.random() * 26 + 65 | 0) + (Math.random() * 10 | 0);
+        await signinPage.clickCreateAnAccount();
+        await createAccountPage.clickOnCreateAccount();
+        await createAccountPage.enterNameDetailsOnCreateAccountPage(firstname, lastname);
+        await createAccountPage.enterEmailOnAccountPage(email);
+        await createAccountPage.enterPasswordOnCreateAccountPage(password);
+        await createAccountPage.clickOnCreateAccount();
+        await createAccountPage.accountCreationSuccessMessage();
+        await guestCheckoutPage.clickAddToCart();
+        await pdpPage.miniCartDrawer();
+        await cartDrawerPage.validateProtectionPlanCartDrawer();
+        await guestCheckoutPage.clickCheckoutOnMyCart();
+        await page.waitForLoadState('networkidle');
+        await guestCheckoutPage.validateShippingSection();
+        await guestCheckoutPage.validateProgressBar();
+        await guestCheckoutPage.validateNewAddressModal();
+        await guestCheckoutPage.addShippingAddress();
+       // await guestCheckoutPage.clickSaveAddress();
+        await guestCheckoutPage.validateItemsInCartSection();
+        await guestCheckoutPage.validateGiftMessage();
   
+        await guestCheckoutPage.clickOnContinueToPayment();
+        await page.waitForLoadState('networkidle');
+        await guestCheckoutPage.validateAddressVerification();
+        await page.waitForLoadState('networkidle');
+        await guestCheckoutPage.validatePaymentSection();
+        await guestCheckoutPage.validateMyCreditIsSelectedbyDefault();
+        await guestCheckoutPage.clickCreditCard();
+        await guestCheckoutPage.addCardDetails();
+        await guestCheckoutPage.clickContinueToReview();
+        await page.waitForLoadState('networkidle');
+        await guestCheckoutPage.validateReviewProgressBar();
+        await guestCheckoutPage.clickOnPlaceOrderButton();
+        const orderConfPage = new OrderConfirmationPage(page);
+        await orderConfPage.validateOrderConfOrderDetails();
+        await orderConfPage.validateOrderConfirmationOrderSummary();
+        await orderConfPage.validateOrderConfirmationShippingDetails();
+        await orderConfPage.validateOrderConfirmationBillingAddress();
+        await orderConfPage.validateOrderConfirmationPayment();
+        await orderConfPage.validateProductSection();
+        
+    });
+ 
+
 
   test.afterEach(async ({ page }) => {
     try {

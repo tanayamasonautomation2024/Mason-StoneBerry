@@ -148,6 +148,14 @@ exports.NewUserMyAccountPage = class NewUserMyAccountPage{
 
     }
 
+    async navigatetoMyZBCreditNonCreditUser(){
+        await this.page.waitForURL(/.*\/account\/creditaccountverification\?destination=credit/, {
+            timeout: 90000  // Timeout set to 90 seconds
+          });
+        await this.newuser_myaccount_paymentpage_pageheader.waitFor({ state: 'visible' });
+
+    }
+
     async clickOnTooltip(){
         await this.page.locator("//button[@aria-label='tooltip']").click();
         const tooltipLocator = this.page.locator('button[data-state="instant-open"][aria-label="tooltip"]');
