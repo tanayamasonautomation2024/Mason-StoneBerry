@@ -1,2 +1,0 @@
-Selected Link: JSHandle@<a title="Ors" href="/brands/ors" class="hover:underline"> Ors</a>
-Selected Brand: Ors
