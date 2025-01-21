@@ -4,8 +4,8 @@ const pdp_colorvariant_button_locator = 'section.flex.flex-wrap.items-center.gap
 const pdp_sizevariant_button_locator = 'section.flex.flex-wrap.items-center.gap-2\\.5.pt-4 button';
 //const pdp_product_big_image = 'img[data-nimg="1"]';
 const pdp_product_big_image = '.group > img:nth-of-type(2)';
-const carousel_rightArrowButtonLocator = 'button.absolute.right-4';
-const carousel_leftArrowButtonLocator = 'button.absolute.left-4';
+const carousel_rightArrowButtonLocator = 'button.absolute.right-2\\.5';
+const carousel_leftArrowButtonLocator = 'button.absolute.left-2\\.5';
 const pdp_thumbnail_img = 'div.min-w-0[aria-roledescription="slide"]';
 const thumbnailimg_rightArrowButtonLocator = 'button.absolute.right-0';
 const thumbnailimg_leftArrowButtonLocator = 'button.absolute.left-0';

@@ -345,7 +345,7 @@ exports.HomePageNew = class HomePageNew {
     }
 
     async validateCopyRightSection(copyrightText, contactNumber, contactUsLinkName) {
-        await expect(this.page.getByText(copyrightText)).toBeVisible();
+        await (this.page.getByText(copyrightText)).waitFor({state:'visible'});
         await expect(this.page.getByRole('link', { name: contactNumber })).toBeVisible();
         await expect(this.page.getByRole('link', { name: contactUsLinkName }).nth(1)).toBeVisible();
     }
@@ -631,19 +631,20 @@ exports.HomePageNew = class HomePageNew {
         // Once the section is visible, proceed with further validation
         await seasonalSavingsLocator.scrollIntoViewIfNeeded();
 
-        const swiperElement = this.page.locator('div.swiper.swiper-initialized.swiper-horizontal.swiper-pointer-events.swiper-free-mode.mySwiper.multiSlide.homePageSwiper.swiper-backface-hidden');
+        const swiperElement = this.page.locator('div.swiper.swiper-initialized.swiper-horizontal.swiper-pointer-events.swiper-free-mode.mySwiper.multiSlide.homePageSwiper');
+        //const swiperElement = seasonalSavingsLocator.locator('div.swiper-button-next');
         await swiperElement.waitFor({ state: 'attached' });
         await swiperElement.waitFor({ state: 'visible' });
         
         // Validate the product items, image, name, and price as before
-        const productItems = this.page.locator('div.swiper.swiper-initialized.swiper-horizontal.swiper-pointer-events.swiper-free-mode.mySwiper.multiSlide.homePageSwiper.swiper-backface-hidden');
+        const productItems = this.page.locator('div.swiper.swiper-initialized.swiper-horizontal.swiper-pointer-events.swiper-free-mode.mySwiper.multiSlide.homePageSwiper');
         const productCount = await productItems.locator('a > img').count();
         console.log(`Number of products: ${productCount}`);
         
         for (let i = 0; i < productCount; i++) {
-            // const product = productItems.nth(i);
+           // const product = productItems.nth(i);
             
-            // await product.scrollIntoViewIfNeeded();
+           // await product.scrollIntoViewIfNeeded();
             
             // Validate product image
             const productImage = productItems.locator('a > img').nth(i);
@@ -660,7 +661,7 @@ exports.HomePageNew = class HomePageNew {
             expect(nameText).not.toBe('');
             
             // Validate price
-            const price = productItems.locator('div.my-3.min-h-\\[32px\\] > section > strong').nth(i);
+            const price = productItems.locator('div.min-h-\\[26px\\] > p > span').nth(i);
             await expect(price).toBeVisible();
             const priceText = await price.textContent();
             expect(priceText).not.toBeNull();

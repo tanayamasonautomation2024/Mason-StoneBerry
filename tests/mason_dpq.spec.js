@@ -168,6 +168,7 @@ test.describe("Mason DPQ Scenarios", () => {
     await page.waitForLoadState('networkidle');
 
     //await dpqPage.validateLogoImage();
+    await createAccountPage.enterNameDetailsOnCreateAccountPage('Clark', 'Kent');
     await dpqPage.validateElectronicCommunication();
     await dpqPage.addAddress();
     await dpqPage.fillDOB();

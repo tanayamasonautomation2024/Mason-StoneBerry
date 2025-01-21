@@ -193,7 +193,7 @@ test.describe("Mason Checkout - Non Credit Users - Scenarios", () => {
   });
 
   test.describe("Verify Checkout Scenario for the loggedIn Non-Credit User - add new address and new CC - and Promo Code", () => {
-    test.use({ storageState: './newuser.json' });
+    test.use({ storageState: './newZBUser.json' });
     test('Verify Checkout Scenario for the loggedIn Non-Credit User - add new address and new CC - and Promo Code', async ({ page }) => {
       const guestCheckoutPage = new GuestCheckOutPage(page);
       const signinPage = new SignInPage(page);

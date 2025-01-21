@@ -108,19 +108,32 @@ exports.CreateAccountPage = class CreateAccountPage{
         await this.create_account_password_hide_link.click();
     }
 
-    async validatePasswordIsHidden(){
-        const passwordTextbox=this.create_account_password_textbox;
-        const hidden_password = await passwordTextbox.getAttribute('type') === 'password';
+    async validatePasswordIsHidden() {
+        const passwordTextbox = this.page.locator('input#password');
+        
+        // Await the result of getAttribute to get the type value as a string
+        const typeAttribute = await passwordTextbox.getAttribute('type');
+        
+        // Trim any extra whitespace and compare to 'password'
+        const hidden_password = typeAttribute.trim() === 'password';
+        
+        // Assert that the password is hidden (type should be 'password')
         expect(hidden_password).toBe(true);
     }
+    
 
-    async validatePasswordIsShown(){
-        const passwordTextbox=this.create_account_password_textbox;
-        const shown_password = await passwordTextbox.getAttribute('type') === 'text';
-        // console.log(shown_password);
-        // console.log(passwordTextbox.getAttribute('type'));
-        expect(shown_password).toBe(true);
+    async validatePasswordIsShown() {
+        const passwordTextbox = this.page.locator('input#password');
+        await passwordTextbox.waitFor({ state: 'visible' });
+        // Await the result of getAttribute() and compare
+        const typeAttribute = await passwordTextbox.getAttribute('type');
+        console.log('Password type:', typeAttribute);
+        const shown_password = typeAttribute.trim() === 'text'; // Check if the type is 'text'
+        
+        console.log(typeAttribute);  // Log the value of the type attribute for debugging
+        expect(typeAttribute === 'text').toBe(true);  // Assert that the password is shown as text
     }
+    
 
     async validateThePasswordCriteria(){
         await expect(this.password_criteria_text).toBeVisible();

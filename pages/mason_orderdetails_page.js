@@ -19,7 +19,7 @@ const orderDetailsOrderSummaryShipping = 'Shipping:';
 const orderDetailsOrderSummaryEstSurcharge = 'Shipping Surcharge:';
 const orderDetailsOrderSummarySalesTax = 'Sales Tax:';
 const orderDetailsOrderSummaryOrderTotal = 'Order Total:';
-const tooltipButton = 'button[aria-label="tooltip"]';
+const tooltipButton = 'button[aria-label="Help information"]';
 const orderDetailsShippingSectionText = 'Shipping';
 const orderDetailsShippingSectionAddressText = 'Shipping Address';
 const orderDetailsShippingSectionShippingMethodText = 'Shipping Method';

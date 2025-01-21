@@ -144,7 +144,7 @@ exports.HomePage = class HomePage {
     }
     
 
-async selectRandomSubCategory() {
+async selectRandomSubCategoryOld() {
     
 
     const mainMenuItemList = ['Outdoor Living + Tools', 'Health + Beauty'];
@@ -196,6 +196,67 @@ await subcategoryMenu.waitFor({ state: 'visible' });
     // Check if the last breadcrumb text matches the flexible regex pattern
     expect(lastBreadcrumbText.trim()).toMatch(regexPattern);
 }
+
+async selectRandomSubCategory() {
+    const mainMenuItemList = ['Outdoor Living + Tools', 'Health + Beauty'];
+    const l1Category = mainMenuItemList[Math.floor(Math.random() * mainMenuItemList.length)];
+    // Locate the main menu item by matching the L1 category text
+    const mainMenuItems = await this.page.locator('#mainMenu ul[role="menu"] > li');
+    const matchingMenuItem = mainMenuItems.locator('a.cursor-pointer', { hasText: l1Category, exact: true });
+
+    // Wait for the L1 category link to be visible and click it
+    await matchingMenuItem.waitFor({ state: 'visible' });
+    await matchingMenuItem.hover();
+
+    const subcategoryMenu = matchingMenuItem.locator('+ div.custom-scrollbar');
+
+    // Wait for the submenu div to be visible
+    await subcategoryMenu.waitFor({ state: 'visible' });
+
+    // Get the list of subcategories
+    const subcategoriesLocator = subcategoryMenu.locator('ul > li a.cursor-pointer');
+    const subcategoriesCount = await subcategoriesLocator.count();
+
+    // Select a random subcategory index, one less than 10 if count > 10
+    let randomSubcategoryIndex;
+    if (subcategoriesCount > 10) {
+        randomSubcategoryIndex = Math.floor(Math.random() * 10);   // Limit to first 10 items
+    } else {
+        randomSubcategoryIndex = Math.floor(Math.random() * subcategoriesCount);
+    }
+
+    // Get the random subcategory
+    const randomSubcategory = subcategoriesLocator.nth(randomSubcategoryIndex);
+    const subCatName = await randomSubcategory.textContent();
+    console.log(subCatName);
+
+    // Click on the random subcategory
+    await randomSubcategory.click();
+
+    // Locate the breadcrumb's last 'li' element
+    await this.page.locator('nav[aria-label="Breadcrumb"] ol > li').last().waitFor({ state: 'visible' });
+    await this.page.locator('section.plpGrid').first().waitFor({ state: 'visible' });
+
+    const lastBreadcrumbItem = await this.page.locator('nav[aria-label="Breadcrumb"] ol > li').last();
+    // Get the text content of the last 'li' element
+    const lastBreadcrumbText = await lastBreadcrumbItem.textContent();
+
+    // Extract the last two words of the sub-category name
+    const lastTwoWords = subCatName.split(' ').slice(-2).join(' ');
+
+    // Escape special regex characters in the extracted words
+    const escapedPattern = lastTwoWords.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+    // Create a flexible regex pattern to:
+    // 1. Match any starting word(s) (e.g., "All").
+    // 2. Match the escaped last two words.
+    // 3. Ignore case and apostrophes.
+    const regexPattern = new RegExp(`(?:.*\\b)?${escapedPattern.replace(/\\'/g, "")}`, 'i');
+
+    // Check if the last breadcrumb text matches the flexible regex pattern
+    expect(lastBreadcrumbText.trim()).toMatch(regexPattern);
+}
+
 
 
 
@@ -348,7 +409,7 @@ await subcategoryMenu.waitFor({ state: 'visible' });
 
     async navigateToCategoryL1() {
         //const mainMenuItemList = ['Women', 'Men', 'Kids', 'Boot Shop'];
-        const mainMenuItemList = ['Outdoor Living + Tools'];
+        const mainMenuItemList = ['Kitchen + Dining'];
         const l1Category = mainMenuItemList[Math.floor(Math.random() * mainMenuItemList.length)];
         // Locate the main menu item by matching the L1 category text
         const mainMenuItems = await this.page.locator('#mainMenu ul[role="menu"] > li');

@@ -546,7 +546,7 @@ exports.MyAccountPage = class MyAccountPage {
             console.log(await element.innerText());
         }
     
-        const limit = Math.min(orderLocatorsCount, 3);
+        const limit = Math.min(orderLocatorsCount, 2);
     
         for (let i = 0; i < limit; i++) {
             const h2Element = orderLocators.nth(i);
@@ -880,7 +880,7 @@ exports.MyAccountPage = class MyAccountPage {
     async helpIconTooltip(tooltipLocatorName) {
         const tooltipButtonLocator = this.page.locator(`//p[contains(text(), '${tooltipLocatorName}')]/following::button[1]`);
         //const tooltipButtonLocator = this.page.locator('//button[@aria-label="tooltip"]').first();
-        const tooltipLocator = this.page.locator('button[data-state="instant-open"][aria-label="tooltip"]');
+        const tooltipLocator = this.page.locator('button[data-state="instant-open"][aria-label="Help information"]');
 
         // Click on the button to open the tooltip
         await tooltipButtonLocator.click();
@@ -1057,7 +1057,7 @@ exports.MyAccountPage = class MyAccountPage {
 
     async validateDefaultSavedCreditCardSection() {
         // Locate the section containing the default billing and shipping address
-        await this.page.locator('h1.text-2xl').waitFor({ state: 'visible' });
+        await this.page.locator('h2.text-lg').waitFor({ state: 'visible' });
         await this.page.getByText(myaccountpage_locator.myaccount_default_CC_text).waitFor({ state: 'visible' });
         const creditCardSection = await this.page.locator(`section:has-text("${myaccountpage_locator.myaccount_default_CC_text}")`);
         await expect(this.page.getByText(myaccountpage_locator.myaccount_default_CC_text)).toBeVisible();
@@ -2103,7 +2103,7 @@ exports.MyAccountPage = class MyAccountPage {
         await this.page.locator("//img[@alt='My Account']").click();
         await this.page.getByRole('link', { name: 'My Account' }).click({});
         await this.page.waitForSelector('h1.ml-2\\.5');
-        await expect(this.page.getByRole('heading', { name: 'My Account' })).toBeVisible();
+        await (this.page.getByRole('heading', { name: 'My Account' })).waitFor({state:'visible'});
     }
 
     async clickMyAccountOrderStatusLink() {

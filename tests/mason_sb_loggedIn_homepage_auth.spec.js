@@ -7,7 +7,7 @@ import { MyAccountPage } from '../pages/mason_myaccount_page';
 import { allure } from 'allure-playwright';
 import fs from 'fs';
 require('dotenv').config();
-const creditUserFile = './credituser.json';
+const creditUserFile = './clarkDPQUser.json';
 const nonCreditUserFile = './noncredituser.json';
 const newUserFile = './clarkDPQUser.json';
 const profileUserFile = './profileuser.json';
@@ -23,7 +23,7 @@ test.describe("Mason LoggedIn User HomePage", () => {
 
   test.beforeEach(async ({ page, isMobile }, testInfo) => {
     test.slow();
-    const storageStatePath = isMobile ? newUserFile : newUserFile;
+    const storageStatePath = isMobile ? creditUserFile : creditUserFile;
 
     if (fs.existsSync(storageStatePath)) {
       await page.context().addCookies(JSON.parse(fs.readFileSync(storageStatePath, 'utf-8')).cookies);

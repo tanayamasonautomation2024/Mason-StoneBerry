@@ -198,7 +198,7 @@ exports.CLPPage = class CLPPage{
 
     async validateBestSellerWidget() {
       // Locate the heading for "Best Sellers"
-      const bestSellersHeading = this.page.locator('strong.text-lg:has-text("Best Sellers")');
+      const bestSellersHeading = this.page.locator('strong.text-2xl:has-text("Best Sellers")');
     
       // Ensure the heading is visible and scroll into view if needed
       await bestSellersHeading.scrollIntoViewIfNeeded();
@@ -486,7 +486,7 @@ async validateStyleFinder() {
   // await expect(this.page.locator('section').filter({ hasText: /^All Colors$/ }).nth(2)).toBeVisible();
   // await expect(this.page.locator('button').filter({ hasText: 'All Sizes' })).toBeVisible();
  // await expect(this.page.locator('#mainContent')).toContainText('All Departments');
-  //await expect(this.page.locator('#mainContent')).toContainText('All Widths');
+  await expect(this.page.locator('#mainContent')).toContainText('All Widths');
   await expect(this.page.locator('#mainContent')).toContainText('All Categories');
   await expect(this.page.locator('#mainContent')).toContainText('All Colors');
   await expect(this.page.locator('#mainContent')).toContainText('All Sizes');

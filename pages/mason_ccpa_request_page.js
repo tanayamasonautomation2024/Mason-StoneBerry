@@ -75,8 +75,8 @@ exports.MasonCCPARequestPage = class MasonCCPARequestPage{
         await expect(this.page.locator('select[name="requestPurpose"]')).toBeVisible();
         await expect(this.page.locator('section').filter({ hasText: /^Submit$/ })).toBeVisible();
         await expect(this.page.locator('#mainContent')).toContainText('Two-step verification is required. After successful form submission, please check your email to complete the process.');
-        await expect(this.page.locator('section').filter({ hasText: /^-C2$/ }).getByLabel('tooltip')).toBeVisible();
-        await this.page.locator('section').filter({ hasText: /^-C2$/ }).getByLabel('tooltip').click();
+        await expect(this.page.locator('section').filter({ hasText: /^-C2Help$/ }).getByLabel('Help information')).toBeVisible();
+        await this.page.locator('section').filter({ hasText: /^-C2Help$/ }).getByLabel('Help information').click();
         await expect(this.page.getByText('Customer Account Number').nth(1)).toBeVisible();
         await expect(this.page.getByText('Your Customer Account Number').first()).toBeVisible();
         await expect(this.page.getByRole('img', { name: 'CatalogID' }).first()).toBeVisible();

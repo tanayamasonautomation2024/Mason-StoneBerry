@@ -247,7 +247,7 @@ exports.OrderConfDownPayment = class OrderConfDownPayment {
         // Second <p> tag
         const secondP = pTags.nth(1);
         await expect(secondP).toBeVisible();
-        await expect(secondP).toHaveText('Your Stoneberry Account');
+        await expect(secondP).toHaveText('Your Stoneberry Credit');
 
         // Third <p> tag
         const thirdP = pTags.nth(2);

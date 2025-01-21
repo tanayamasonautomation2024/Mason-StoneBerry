@@ -59,7 +59,7 @@ test.describe("Mason New User Account Scenarios", () => {
     await createAccountPage.clickOnCreateAccount();
     await createAccountPage.accountCreationSuccessMessage();
     const myaccountPage = new MyAccountPage(page);
-    await myaccountPage.redirectToMyAccount();
+    //await myaccountPage.redirectToMyAccount();
     const newuser_myaccountPage = new NewUserMyAccountPage(page);
     //checks for PreQualified Link and Learn More Link 
     //navigates to url(checks for expected url) and back

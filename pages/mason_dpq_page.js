@@ -250,7 +250,7 @@ exports.MasonDPQPage = class MasonDPQPage {
   
 
   async validateCreateAccountSection() {
-    await (this.page.getByText('Create Account')).waitFor({state:'visible'});
+    await (this.page.getByText('Create an Account')).waitFor({state:'visible'});
     await expect(this.page.getByText(create_account_text)).toBeVisible();
     await expect(this.page.getByLabel('*Email Address')).toBeVisible();
     await expect(this.page.getByLabel('*Password')).toBeVisible();

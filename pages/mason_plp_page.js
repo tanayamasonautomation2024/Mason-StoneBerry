@@ -501,7 +501,8 @@ async validateChooseOptionDrawer(){
 }
 
 async closeChooseOptionDrawer(){
-   await this.page.locator('section').filter({ hasText: /^Choose Options$/ }).getByRole('button').click();
+    await (this.page.getByRole('button', { name: 'Choose Options' }).getByRole('button')).waitFor({state:'visible'});
+   await this.page.getByRole('button', { name: 'Choose Options' }).getByRole('button').click();
   
 }
 
@@ -518,7 +519,7 @@ async validateNavigationArrows() {
         await this.page.waitForSelector(divSelector);
 
         // Check if the right navigation button is present inside the div
-        const rightButtonSelector = `${divSelector} button.absolute.right-4`;
+        const rightButtonSelector = `${divSelector} button.absolute.right-2\\.5`;
         const isRightButtonPresent = await this.page.waitForSelector(rightButtonSelector, { state: 'visible' }).then(() => true).catch(() => false);
 
         // Log a message if the right navigation button is not found
@@ -530,7 +531,7 @@ async validateNavigationArrows() {
             console.log('Clicked on the right navigation button.');
 
             // After clicking on the right button, wait for the left button to appear
-            const leftButtonSelector = `${divSelector} button.absolute.left-4`;
+            const leftButtonSelector = `${divSelector} button.absolute.left-2\\.5`;
             const isLeftButtonPresent = await this.page.waitForSelector(leftButtonSelector, { state: 'visible' }).then(() => true).catch(() => false);
 
             // Log a message if the left navigation button is not found
@@ -549,12 +550,12 @@ async validateNavigationArrows() {
 
 
 async validateMonthlyCreditInfo(){
-    await expect(this.page.getByLabel('tooltip')).toBeVisible();
-    await this.page.getByLabel('tooltip').click();
+    await expect(this.page.getByLabel('Help information')).toBeVisible();
+    await this.page.getByLabel('Help information').click();
     await expect(this.page.getByText('Price Per Month').nth(1)).toBeVisible();
     await expect(this.page.getByText('The price per month reflects').first()).toBeVisible();
     await expect(this.page.getByRole('link', { name: 'terms and conditions' }).first()).toBeVisible();
-    await this.page.locator('.absolute > path').first().click();
+   // await this.page.locator('.absolute > path').first().click();
 }
 
 

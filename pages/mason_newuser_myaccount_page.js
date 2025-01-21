@@ -64,9 +64,17 @@ exports.NewUserMyAccountPage = class NewUserMyAccountPage{
     }
 
     async validateNewUserStoneBerryCreditSection(firstLinkName,secondLinkName){
-        // Verify Stoneberry logo display
-        const logo = await this.page.$('section.h-9.w-72 img[alt="Credit Logo"]');
-        expect(logo).not.toBeNull();
+        // Wait for the logo to appear in the DOM
+        const logoSelector = 'section.h-9.w-72 img[alt="Credit Logo"]';
+        
+        // Wait for the logo to be visible on the page
+        await this.page.waitForSelector(logoSelector, { state: 'visible' });
+
+        // Now select the logo element
+        const logo = await this.page.$(logoSelector);
+
+        // Verify that the logo element is not null
+        expect(logo).not.toBeNull();   
 
         const logoSrc = await logo.getAttribute('src');
         expect(logoSrc).toContain('ZBSite-creditPaymentLogo');
@@ -157,8 +165,8 @@ exports.NewUserMyAccountPage = class NewUserMyAccountPage{
     }
 
     async clickOnTooltip(){
-        await this.page.locator("//button[@aria-label='tooltip']").click();
-        const tooltipLocator = this.page.locator('button[data-state="instant-open"][aria-label="tooltip"]');
+        await this.page.locator("//button[@aria-label='Help information']").click();
+        const tooltipLocator = this.page.locator('button[data-state="instant-open"][aria-label="Help information"]');
         // Wait for the tooltip to appear
         await tooltipLocator.waitFor();
         await expect(tooltipLocator).toBeVisible();

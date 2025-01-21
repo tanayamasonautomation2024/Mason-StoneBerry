@@ -1119,11 +1119,11 @@ exports.GuestCheckOutPage = class GuestCheckOutPage {
     const isShippingSurchargeVisible = await this.page.getByText('Shipping Surcharge:').isVisible();
     if (isShippingSurchargeVisible) {
       await expect(this.page.getByText('Shipping Surcharge:')).toBeVisible();
-      await expect(this.page.locator('li').filter({ hasText: 'Shipping Surcharge:$' }).getByLabel('tooltip')).toBeVisible();
+      await expect(this.page.locator('li').filter({ hasText: 'Shipping Surcharge:$' }).getByLabel('Help information')).toBeVisible();
     }
     await expect(this.page.getByText('Estimated Sales Tax:')).toBeVisible();
     await expect(this.page.getByText('Order Total:')).toBeVisible();
-    await expect(this.page.locator('li').filter({ hasText: 'Estimated Sales Tax:$' }).getByLabel('tooltip')).toBeVisible();
+    await expect(this.page.locator('li').filter({ hasText: 'Estimated Sales Tax:' }).getByLabel('Help information')).toBeVisible();
     // await expect(this.page.locator('li').filter({ hasText: 'Shipping Surcharge:$' }).getByLabel('tooltip')).toBeVisible();
     // await expect(this.page.getByRole('button', { name: 'Apply Promo Code (optional)' })).toBeVisible();
     // await expect(this.page.getByRole('button', { name: 'Apply Promo Code (optional)' }).getByLabel('tooltip')).toBeVisible();
