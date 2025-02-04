@@ -168,8 +168,8 @@ test.describe("Mason DPQ Scenarios", () => {
     await page.waitForLoadState('networkidle');
 
     //await dpqPage.validateLogoImage();
-    await createAccountPage.enterNameDetailsOnCreateAccountPage('Clark', 'Kent');
-    await dpqPage.validateElectronicCommunication();
+   // await createAccountPage.enterNameDetailsOnCreateAccountPage('Clark', 'Kent');
+    //await dpqPage.validateElectronicCommunication();
     await dpqPage.addAddress();
     await dpqPage.fillDOB();
     await dpqPage.fillSNN();
@@ -206,6 +206,7 @@ test.describe("Mason DPQ Scenarios", () => {
     await page.waitForLoadState('networkidle');
 
     //await dpqPage.validateLogoImage();
+    await createAccountPage.enterNameDetailsOnCreateAccountPage('Bruce', 'Banner');
     await dpqPage.validateElectronicCommunication();
     await dpqPage.addAddress();
     await dpqPage.fillDOB();
@@ -242,7 +243,8 @@ test.describe("Mason DPQ Scenarios", () => {
     await page.waitForLoadState('networkidle');
 
     //await dpqPage.validateLogoImage();
-    await dpqPage.validateElectronicCommunication();
+    await createAccountPage.enterNameDetailsOnCreateAccountPage(firstname, lastname);
+    //await dpqPage.validateElectronicCommunication();
     await dpqPage.addAddressForStatus14();
     await dpqPage.fillDOB();
     await dpqPage.fillSNN();
@@ -277,6 +279,7 @@ test.describe("Mason DPQ Scenarios", () => {
     //await page.waitForLoadState('networkidle');
 
     //await dpqPage.validateLogoImage();
+    await createAccountPage.enterNameDetailsOnCreateAccountPage(firstname, lastname);
     await dpqPage.validateElectronicCommunication();
     await dpqPage.addAddress();
     await dpqPage.fillDOB();

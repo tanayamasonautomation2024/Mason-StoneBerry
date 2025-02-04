@@ -205,8 +205,8 @@ async selectRandomSubCategory() {
     const matchingMenuItem = mainMenuItems.locator('a.cursor-pointer', { hasText: l1Category, exact: true });
 
     // Wait for the L1 category link to be visible and click it
-    await matchingMenuItem.waitFor({ state: 'visible' });
-    await matchingMenuItem.hover();
+    await matchingMenuItem.first().waitFor({ state: 'visible' });
+    await matchingMenuItem.first().hover();
 
     const subcategoryMenu = matchingMenuItem.locator('+ div.custom-scrollbar');
 

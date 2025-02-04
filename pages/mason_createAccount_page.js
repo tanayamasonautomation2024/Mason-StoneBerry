@@ -33,8 +33,8 @@ exports.CreateAccountPage = class CreateAccountPage{
         this.account_creation_success=this.page.getByText(createAccountpage_data.account_creation_success);
 
         this.account_drawer_header=this.page.getByText(createAccount_locator.account_drawer_header);
-        this.account_drawer_credit_button=page.getByRole('button', { name: createAccount_locator.account_drawer_credit_button }); 
-        this.account_drawer_make_payment_button=page.getByRole('button', { name: createAccount_locator.account_drawer_make_payment_button }); 
+        this.account_drawer_credit_button=page.getByRole('link', { name: createAccount_locator.account_drawer_credit_button }); 
+        this.account_drawer_make_payment_button=page.getByRole('link', { name: createAccount_locator.account_drawer_make_payment_button }); 
 
         this.account_drawer_order_link=page.getByRole('link', { name: createAccount_locator.account_drawer_order_link }); 
          
@@ -204,6 +204,7 @@ exports.CreateAccountPage = class CreateAccountPage{
     //await expect(this.page).toHaveURL(/.*dashboard/);
     //await new Promise(resolve => setTimeout(resolve, 3000)).then(() => expect(this.page).toHaveURL(/.*dashboard/));
     await this.page.waitForURL(/.*dashboard/);
+   //await this.page.waitForURL(dashboard_url);
     await expect(this.page.getByText(`Hi, ${firstName}!`).first()).toBeVisible();
     const currentURL = await this.page.url();
     expect(currentURL).toContain(dashboard_url);
@@ -222,7 +223,7 @@ exports.CreateAccountPage = class CreateAccountPage{
     await expect(this.account_drawer_wishlist_link).toBeVisible();
     await expect(this.account_drawer_needHelp_link).toBeVisible();
     await expect(this.account_drawer_header).toBeVisible();
-    await expect(this.page.getByRole('button').nth(4)).toBeVisible();
+    await expect(this.page.getByRole('link').nth(4)).toBeVisible();
     
 
 }

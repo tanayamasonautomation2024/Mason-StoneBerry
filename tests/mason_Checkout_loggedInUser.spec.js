@@ -183,7 +183,7 @@ test.describe("Mason Checkout - LoggedIn Users - Scenarios", () => {
   });
 
   test.describe("Checkout Scenario for the loggedIn user - go to shipping scenario - check shipping methods", () => {
-    test.use({ storageState: './newuser.json' });
+    //test.use({ storageState: './newuser.json' });
     test('Verify Shipping Methods - Checkout Scenario for the loggedIn user - go to shipping scenario', async ({ page }) => {
       // Navigate to the page containing the popular search terms
       const guestCheckoutPage = new GuestCheckOutPage(page);
@@ -191,6 +191,23 @@ test.describe("Mason Checkout - LoggedIn Users - Scenarios", () => {
       const homePage = new HomePage(page);
       const pdpPage = new PDPPage(page);
       const signinPageNew = new SignInPageNew(page);
+      // await page.goto(checkout_data.add_to_cart_pdp_url);
+      await homePage.clickOnHomePageSignIn();
+      // await signinPage.clickSignIn();
+      // await signinPage.login(process.env.NEW_USER,process.env.NON_CREDIT_PASSWORD);
+      // await signinPage.clickSignIn();
+      const createAccountPage = new CreateAccountPage(page);
+      const firstname = String.fromCharCode(65 + Math.floor(Math.random() * 26)) + [...Array(9)].map(() => String.fromCharCode(97 + Math.floor(Math.random() * 26))).join('');
+      const lastname = String.fromCharCode(65 + Math.floor(Math.random() * 26)) + [...Array(9)].map(() => String.fromCharCode(97 + Math.floor(Math.random() * 26))).join('');
+      const email = `${firstname.toLowerCase()}.${lastname.toLowerCase()}@automation.com`;
+      const password = [...Array(6)].map(() => String.fromCharCode(Math.random() * 26 + 97 | 0)).join('') + String.fromCharCode(Math.random() * 26 + 65 | 0) + (Math.random() * 10 | 0);
+      await signinPage.clickCreateAnAccount();
+      await createAccountPage.clickOnCreateAccount();
+      await createAccountPage.enterNameDetailsOnCreateAccountPage(firstname, lastname);
+      await createAccountPage.enterEmailOnAccountPage(email);
+      await createAccountPage.enterPasswordOnCreateAccountPage(password);
+      await createAccountPage.clickOnCreateAccount();
+      await createAccountPage.accountCreationSuccessMessage();
       await pdpPage.clickOnPDPColorVariantButton();
       await pdpPage.clickOnPDPSizeVariantButton();
       await guestCheckoutPage.clickAddToCart();
@@ -264,7 +281,7 @@ test.describe("Mason Checkout - LoggedIn Users - Scenarios", () => {
 
 
   test.describe("Checkout Scenario for the loggedIn user - go to shipping scenario - check Gift Message", () => {
-    test.use({ storageState: './newuser.json' });
+   // test.use({ storageState: './newuser.json' });
     test('Verify Gift Message Options - Checkout Scenario for the loggedIn user - go to shipping section', async ({ page }) => {
       // Navigate to the page containing the popular search terms
       const guestCheckoutPage = new GuestCheckOutPage(page);
@@ -272,6 +289,23 @@ test.describe("Mason Checkout - LoggedIn Users - Scenarios", () => {
       const homePage = new HomePage(page);
       const pdpPage = new PDPPage(page);
       const signinPageNew = new SignInPageNew(page);
+      // await page.goto(checkout_data.add_to_cart_pdp_url);
+      await homePage.clickOnHomePageSignIn();
+      // await signinPage.clickSignIn();
+      // await signinPage.login(process.env.NEW_USER,process.env.NON_CREDIT_PASSWORD);
+      // await signinPage.clickSignIn();
+      const createAccountPage = new CreateAccountPage(page);
+      const firstname = String.fromCharCode(65 + Math.floor(Math.random() * 26)) + [...Array(9)].map(() => String.fromCharCode(97 + Math.floor(Math.random() * 26))).join('');
+      const lastname = String.fromCharCode(65 + Math.floor(Math.random() * 26)) + [...Array(9)].map(() => String.fromCharCode(97 + Math.floor(Math.random() * 26))).join('');
+      const email = `${firstname.toLowerCase()}.${lastname.toLowerCase()}@automation.com`;
+      const password = [...Array(6)].map(() => String.fromCharCode(Math.random() * 26 + 97 | 0)).join('') + String.fromCharCode(Math.random() * 26 + 65 | 0) + (Math.random() * 10 | 0);
+      await signinPage.clickCreateAnAccount();
+      await createAccountPage.clickOnCreateAccount();
+      await createAccountPage.enterNameDetailsOnCreateAccountPage(firstname, lastname);
+      await createAccountPage.enterEmailOnAccountPage(email);
+      await createAccountPage.enterPasswordOnCreateAccountPage(password);
+      await createAccountPage.clickOnCreateAccount();
+      await createAccountPage.accountCreationSuccessMessage();
       await pdpPage.clickOnPDPColorVariantButton();
       await pdpPage.clickOnPDPSizeVariantButton();
 
@@ -414,7 +448,7 @@ test.describe("Mason Checkout - LoggedIn Users - Scenarios", () => {
       await guestCheckoutPage.clickOnContinueToPayment();
       await guestCheckoutPage.validatePaymentMethods();
       await guestCheckoutPage.validateMyCreditIsSelectedbyDefault();
-      await guestCheckoutPage.clickCreditCard();
+     // await guestCheckoutPage.clickCreditCard();
       //await guestCheckoutPage.clickNewCard();
       await guestCheckoutPage.clickSameAsShippingCheckbox();
       await guestCheckoutPage.validateDifferentAddressMessage();

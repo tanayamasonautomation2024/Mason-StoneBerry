@@ -959,18 +959,18 @@ exports.PDPPage = class PDPPage {
         await this.page.evaluate(() => {
             window.scrollTo(0, document.body.scrollHeight / 2);
         });
-        const similarItemsSection = this.page.locator('section[id="relatedItems"]');
+        const similarItemsSection = this.page.locator('section[id="similarItems"]').first();
         
         // Scroll the 'Related Items' section into view if it's not already visible
         await similarItemsSection.scrollIntoViewIfNeeded();
-       await this.page.waitForSelector('section[id="relatedItems"]');
+       await this.page.waitForSelector('section[id="similarItems"]');
         // Locate the 'Similar Items' section
         //const similarItemsSection = this.page.locator('section[id="similarItems"]');
         //const similarItemsSection = this.page.locator('section[id="relatedItems"]');
 
         // Assert that the 'Similar Items' header is present
        // const similarItemsHeader = this.page.locator('strong:text("Similar Items")');
-       const similarItemsHeader = this.page.locator('strong:text("Related Products")');
+       const similarItemsHeader = this.page.locator('strong:text("Similar Items")');
         await expect(similarItemsHeader).toBeVisible();
 
         // Locate all similar item products
